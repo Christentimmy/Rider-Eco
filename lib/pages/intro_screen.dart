@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/signup_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class IntroScreen extends StatelessWidget {
@@ -44,7 +45,9 @@ class IntroScreen extends StatelessWidget {
             ),
             child: PageView.builder(
               onPageChanged: (value) {
-                if (value == _pages.length - 1) {}
+                if (value == _pages.length - 1) {
+                  Get.to(()=> SignUpScreen());
+                }
               },
               itemCount: _pages.length,
               itemBuilder: (context, index) {
