@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:rider/pages/splash_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -12,16 +14,17 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Colors.green,
-        body:  CustomShapeWidget(),
+      theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(),
       ),
+      home: SplashScreen(),
     );
   }
 }
 
-
 class CustomShapeWidget extends StatelessWidget {
+  const CustomShapeWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ClipPath(
@@ -29,7 +32,7 @@ class CustomShapeWidget extends StatelessWidget {
       child: Container(
         width: Get.width * 0.9,
         height: Get.height,
-        color: Colors.white,
+        color: Colors.black,
         child: Center(
           child: Text(
             'Hello!',
@@ -47,9 +50,11 @@ class RightBottomArchClipper extends CustomClipper<Path> {
     final Path path = Path();
 
     // Arch dimensions
-    final double cutoutWidth = 60; // Width of the arch
-    final double cutoutHeight = 140; // Height of the arch
-    final double archBottomOffset = 150; // Distance from the bottom edge to the arch's base
+    const double cutoutWidth = 80; // Width of the arch
+    const double cutoutHeight = 180; // Height of the arch
+    const double archBottomOffset =
+        150; // Distance from the bottom edge to the arch's base
+    const double smoothRadius = 10; // Radius for the smooth curve at the bottom
 
     // Start from the top-left corner
     path.moveTo(0, 0);
@@ -68,11 +73,19 @@ class RightBottomArchClipper extends CustomClipper<Path> {
       size.height - archBottomOffset + cutoutHeight / 2, // End point Y
     );
 
+    // Smooth curve transition
+    path.quadraticBezierTo(
+      size.width, // Start from the end of the arch
+      size.height - smoothRadius, // Control point to create the smooth curve
+      size.width - smoothRadius, // End X
+      size.height, // End Y (bottom of the container)
+    );
+
     // Bottom edge
-    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
 
     // Left edge
-    path.lineTo(0, size.height);
+    path.lineTo(0, 0);
 
     path.close();
     return path;
