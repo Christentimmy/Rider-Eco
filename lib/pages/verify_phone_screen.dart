@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 import 'package:rider/controller/timer_controller.dart';
+import 'package:rider/pages/create_profile_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class VerifyPhoneNumberScreen extends StatelessWidget {
@@ -58,7 +59,7 @@ class VerifyPhoneNumberScreen extends StatelessWidget {
               child: Pinput(
                 closeKeyboardWhenCompleted: true,
                 onCompleted: (value) {
-                  // Get.to(() => CreateProfileScreen());
+                  Get.to(() => CreateProfileScreen());
                 },
                 focusedPinTheme: PinTheme(
                   height: 60,
