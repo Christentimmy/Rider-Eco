@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/soure_destination_screen.dart';
 import 'package:rider/resources/colors.dart';
+import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -19,32 +21,19 @@ class HomeScreen extends StatelessWidget {
             height: Get.height,
             fit: BoxFit.cover,
           ),
-          _buildIconButton(),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 50,
+            ),
+            child: buildIconButton(
+              icon: Icons.menu,
+              onTap: () {},
+            ),
+          ),
           _buildBottomWidget(),
         ],
       ),
-    );
-  }
-
-  Container _buildIconButton() {
-    return Container(
-      height: 45,
-      width: 45,
-      margin: const EdgeInsets.symmetric(
-        horizontal: 15,
-        vertical: 50,
-      ),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 1,
-              spreadRadius: 1,
-            ),
-          ]),
-      child: const Icon(Icons.menu),
     );
   }
 
@@ -104,6 +93,7 @@ class HomeScreen extends StatelessWidget {
 
   ListTile _buildListTile() {
     return ListTile(
+      onTap: () => Get.to(() => SoureDestinationScreen()),
       contentPadding: EdgeInsets.zero,
       minTileHeight: 40,
       leading: Container(
