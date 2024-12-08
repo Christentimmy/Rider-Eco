@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rider/pages/reset_password_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class PasswordRecoveryScreen extends StatelessWidget {
@@ -75,7 +76,7 @@ class PasswordRecoveryScreen extends StatelessWidget {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
+                    borderSide: const BorderSide(
                       width: 2,
                       color: AppColors.primaryColor,
                     ),
@@ -84,17 +85,17 @@ class PasswordRecoveryScreen extends StatelessWidget {
               ),
               SizedBox(height: Get.height / 5.5),
               GestureDetector(
-                // onTap: () => Get.to(() => ResetPasswordScreen()),
+                onTap: () => Get.to(() => ResetPasswordScreen()),
                 child: Container(
                   height: 45,
                   width: Get.width / 1.5,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    gradient: LinearGradient(
+                    gradient: const LinearGradient(
                       colors: [
                         AppColors.primaryColor,
-                        const Color.fromARGB(212, 37, 37, 37)
+                        Color.fromARGB(212, 37, 37, 37)
                       ],
                     ),
                   ),
