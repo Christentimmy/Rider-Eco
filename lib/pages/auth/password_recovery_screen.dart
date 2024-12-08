@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rider/pages/reset_password_screen.dart';
+import 'package:rider/pages/auth/reset_password_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class PasswordRecoveryScreen extends StatelessWidget {

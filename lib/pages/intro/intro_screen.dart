@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rider/pages/signup_screen.dart';
+import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class IntroScreen extends StatelessWidget {

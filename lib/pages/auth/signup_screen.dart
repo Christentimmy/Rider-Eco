@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:country_code_picker/country_code_picker.dart';
-import 'package:rider/pages/verify_phone_screen.dart';
+import 'package:rider/pages/auth/verify_phone_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
 

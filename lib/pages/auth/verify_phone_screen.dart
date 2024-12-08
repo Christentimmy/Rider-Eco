@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 import 'package:rider/controller/timer_controller.dart';
-import 'package:rider/pages/create_profile_screen.dart';
+import 'package:rider/pages/auth/create_profile_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class VerifyPhoneNumberScreen extends StatelessWidget {

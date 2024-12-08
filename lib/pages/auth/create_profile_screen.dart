@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:rider/pages/setup_finger_print_screen.dart';
+import 'package:rider/pages/auth/setup_finger_print_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/utils/image_picker.dart';
 import 'package:rider/widgets/custom_button.dart';
@@ -78,7 +78,6 @@ class CreateProfileScreen extends StatelessWidget {
         child: CommonButton(
           text: "Continue",
           ontap: () {
-            // Get.to(() => BankDetailsScreen());
             Get.to(()=> SetUpFingerScreen());
           },
         ),
