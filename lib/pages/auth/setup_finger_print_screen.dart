@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class SetUpFingerScreen extends StatelessWidget {
@@ -30,7 +31,7 @@ class SetUpFingerScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
             ),
@@ -86,7 +87,7 @@ class SetUpFingerScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
             ),
@@ -112,7 +113,7 @@ class SetUpFingerScreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Get.to(() => BottomNavigationScreen());
+                    Get.to(() => HomeScreen());
                   },
                   child: Container(
                     height: 45,

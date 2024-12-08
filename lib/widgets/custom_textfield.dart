@@ -10,6 +10,8 @@ class CustomTextField extends StatelessWidget {
   TextInputType? textInputType;
   TextStyle? textStyle;
   final TextEditingController textController;
+  Color? bgColor;
+  TextStyle? hintStyle;
   CustomTextField({
     super.key,
     required this.hintText,
@@ -18,46 +20,54 @@ class CustomTextField extends StatelessWidget {
     this.onSuffixClick,
     this.textInputType,
     this.textStyle,
+    this.bgColor,
+    this.hintStyle,
     required this.textController,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      keyboardType: textInputType,
-      style: textStyle,
-      controller: textController,
-      decoration: InputDecoration(
-        hintText: hintText,
-        prefixIcon: prefixIcon != null
-            ? Icon(
-                prefixIcon,
-                color: Colors.grey,
-              )
-            : null,
-        suffixIcon: IconButton(
-          onPressed: onSuffixClick,
-          icon: Icon(
-            suffixIcon,
-            color: Colors.grey,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: bgColor,
+      ),
+      child: TextFormField(
+        keyboardType: textInputType,
+        style: textStyle,
+        controller: textController,
+        decoration: InputDecoration(
+          hintText: hintText,
+          prefixIcon: prefixIcon != null
+              ? Icon(
+                  prefixIcon,
+                  color: Colors.grey,
+                )
+              : null,
+          suffixIcon: IconButton(
+            onPressed: onSuffixClick,
+            icon: Icon(
+              suffixIcon,
+              color: Colors.grey,
+            ),
           ),
-        ),
-        hintStyle: const TextStyle(
-          fontSize: 12,
-          color: Color.fromARGB(218, 158, 158, 158),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: const BorderSide(
-            width: 2,
-            color: Colors.grey,
+          hintStyle:  hintStyle ?? const TextStyle(
+            fontSize: 12,
+            color: Color.fromARGB(218, 158, 158, 158),
           ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(
-            width: 2,
-            color: AppColors.primaryColor,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(
+              width: 2,
+              color: Colors.grey,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(
+              width: 2,
+              color: AppColors.primaryColor,
+            ),
           ),
         ),
       ),

@@ -46,7 +46,9 @@ class IntroScreen extends StatelessWidget {
             child: PageView.builder(
               onPageChanged: (value) {
                 if (value == _pages.length - 1) {
-                  Get.to(()=> SignUpScreen());
+                  Future.delayed(const Duration(seconds: 1), () {
+                    Get.to(() => SignUpScreen());
+                  });
                 }
               },
               itemCount: _pages.length,

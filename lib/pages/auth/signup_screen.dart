@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:rider/pages/auth/verify_phone_screen.dart';
+import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
 
@@ -172,7 +173,7 @@ class SignUpScreen extends StatelessWidget {
             const SizedBox(height: 25),
             CommonButton(
               ontap: () {
-                // Get.to(() => BottomNavigationScreen());
+                Get.to(() => HomeScreen());
               },
               text: "Login",
             ),
@@ -228,10 +229,6 @@ class SignUpScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const EmailTextField(),
-            // CustomTextField(
-            //   hintText: "name@gmail.com",
-            //   textController: _textController,
-            // ),
             const SizedBox(height: 10),
             Container(
               decoration: BoxDecoration(
