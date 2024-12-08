@@ -15,6 +15,8 @@ class MainApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
+        useMaterial3: true,
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       home: SplashScreen(),
