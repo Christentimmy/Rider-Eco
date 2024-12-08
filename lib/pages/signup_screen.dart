@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:rider/pages/verify_phone_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
 
@@ -278,7 +279,7 @@ class SignUpScreen extends StatelessWidget {
             const SizedBox(height: 25),
             CommonButton(
               ontap: () {
-                // Get.to(() => VerifyPhoneNumberScreen());
+                Get.to(() => VerifyPhoneNumberScreen());
               },
               text: "Sign Up",
             ),
