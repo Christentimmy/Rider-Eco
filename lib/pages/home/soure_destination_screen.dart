@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/find_a_ride_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
@@ -80,17 +81,18 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return const ListTile(
+        return ListTile(
+          onTap: () => Get.to(() => FindARideScreen()),
           contentPadding: EdgeInsets.zero,
-          leading: Icon(Icons.timelapse_sharp),
-          title: Text(
+          leading: const Icon(Icons.timelapse_sharp),
+          title: const Text(
             "Soft Bank",
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: Text("364 Stillwater Ave. Attleboro, MA 027"),
+          subtitle: const Text("364 Stillwater Ave. Attleboro, MA 027"),
         );
       },
     );
