@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/notifcation_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_button.dart';
@@ -27,45 +28,49 @@ class RequestRideScreen extends StatelessWidget {
           ),
           _buildNavBar(),
           _buildBottomWidget(),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 180,
-              margin: EdgeInsets.only(bottom: Get.height * 0.38),
-              child: ListView.builder(
-                itemCount: _cars.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: 230,
-                    height: 180,
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: _buildBackgroundCar(
-                            title: _cars[index][0],
-                          ),
-                        ),
-                        Positioned(
-                          left: 20,
-                          top: 10,
-                          child: Image.asset(
-                            _cars[index][1],
-                            width: 150,
-                            height: 60,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
+          _buildCarDisplays(),
         ],
+      ),
+    );
+  }
+
+  Align _buildCarDisplays() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: 180,
+        margin: EdgeInsets.only(bottom: Get.height * 0.38),
+        child: ListView.builder(
+          itemCount: _cars.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            return Container(
+              width: 230,
+              height: 180,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: _buildBackgroundCar(
+                      title: _cars[index][0],
+                    ),
+                  ),
+                  Positioned(
+                    left: 20,
+                    top: 10,
+                    child: Image.asset(
+                      _cars[index][1],
+                      width: 150,
+                      height: 60,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -153,7 +158,7 @@ class RequestRideScreen extends StatelessWidget {
           const Spacer(),
           GestureDetector(
             onTap: () {
-              // Get.to(() => NotificationScreen());
+              Get.to(() => NotificationScreen());
             },
             child: Container(
               height: 35,
