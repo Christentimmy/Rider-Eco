@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/request_ride_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_button.dart';
@@ -107,7 +108,7 @@ class FindARideScreen extends StatelessWidget {
             const SizedBox(height: 20),
             CommonButton(
               text: "Find a ride",
-              ontap: () {},
+              ontap: ()=> Get.to(()=> RequestRideScreen()),
             ),
           ],
         ),
