@@ -6,6 +6,8 @@ import 'package:rider/resources/colors.dart';
 class IntroScreen extends StatelessWidget {
   IntroScreen({super.key});
 
+  final _pageController = PageController();
+  final _currentPage = 0.obs;
   final List _pages = [
     [
       "Multiplied",
@@ -44,7 +46,9 @@ class IntroScreen extends StatelessWidget {
               ),
             ),
             child: PageView.builder(
+              controller: _pageController,
               onPageChanged: (value) {
+                _currentPage.value = value;
                 if (value == _pages.length - 1) {
                   Future.delayed(const Duration(seconds: 1), () {
                     Get.to(() => SignUpScreen());
@@ -65,7 +69,19 @@ class IntroScreen extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.centerRight,
-            child: Image.asset("assets/images/splash1.png"),
+            child: GestureDetector(
+              onTap: () {
+                if (_currentPage.value == _pages.length - 1) {
+                  Get.to(() => SignUpScreen());
+                } else {
+                  _pageController.nextPage(
+                    duration: const Duration(milliseconds: 1000),
+                    curve: Curves.ease,
+                  );
+                }
+              },
+              child: Image.asset("assets/images/splash1.png"),
+            ),
           ),
         ],
       ),

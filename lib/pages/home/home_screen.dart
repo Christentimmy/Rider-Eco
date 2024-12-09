@@ -37,7 +37,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Align _buildBottomWidget() {
+  Widget _buildBottomWidget() {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(

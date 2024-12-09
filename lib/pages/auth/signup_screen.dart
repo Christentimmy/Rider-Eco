@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:rider/pages/auth/password_recovery_screen.dart';
 import 'package:rider/pages/auth/verify_phone_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/colors.dart';
@@ -181,7 +182,7 @@ class SignUpScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 GestureDetector(
-                  // onTap: () => Get.to(() => const PasswordRecoveryScreen()),
+                  onTap: () => Get.to(() => const PasswordRecoveryScreen()),
                   child: const Padding(
                     padding: EdgeInsets.only(top: 5),
                     child: Text(
@@ -366,16 +367,25 @@ class VectorDiagram extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: Image.asset("assets/images/OBJECTS.png"),
           ),
-          Obx(
-            () => Positioned(
-              bottom: 85,
-              right: 60,
-              child: Image.asset(
-                currentPage.value == 0
-                    ? "assets/images/car.png"
-                    : "assets/images/ecoLogo.png",
-                width: 250,
-                height: 250,
+          Positioned(
+            bottom: 85,
+            right: 60,
+            child: Obx(
+              () => AnimatedCrossFade(
+                firstChild: Image.asset(
+                  "assets/images/car.png",
+                  width: 250,
+                  height: 250,
+                ),
+                secondChild: Image.asset(
+                  "assets/images/ecoLogo.png",
+                  width: 250,
+                  height: 250,
+                ),
+                crossFadeState: currentPage.value == 0
+                    ? CrossFadeState.showFirst
+                    : CrossFadeState.showSecond,
+                duration: const Duration(milliseconds: 800),
               ),
             ),
           ),
