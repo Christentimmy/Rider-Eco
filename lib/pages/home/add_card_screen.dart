@@ -106,7 +106,7 @@ class AddCardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 30),
               CommonButton(text: "Save", ontap: () {
-                Get.off(()=> PaymentMethodScreen());
+                Get.off(()=> const PaymentMethodScreen());
               }),
             ],
           ),

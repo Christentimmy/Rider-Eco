@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/add_card_screen.dart';
+import 'package:rider/pages/home/pay_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class PaymentMethodScreen extends StatelessWidget {
@@ -85,6 +86,9 @@ class PaymentMethodScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
+          onTap: (){
+            Get.to(()=> PayScreen());
+          },
           leading: FaIcon(
             icon,
             color: iconColor,
