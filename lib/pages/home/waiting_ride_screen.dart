@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/home_screen.dart';
+import 'package:rider/pages/home/trip_details_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
 
@@ -148,7 +149,9 @@ class WaitingRideScreen extends StatelessWidget {
                       Expanded(
                         child: CommonButton(
                           text: "Find Trip",
-                          ontap: () {},
+                          ontap: () {
+                            Get.to(()=> TripDetailsScreen());
+                          },
                         ),
                       ),
                     ],
