@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/add_card_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class PaymentMethodScreen extends StatelessWidget {
@@ -55,14 +56,15 @@ class PaymentMethodScreen extends StatelessWidget {
                 ),
               ),
             ),
-            const ListTile(
-              leading: FaIcon(
+            ListTile(
+              onTap: ()=> Get.to(()=> AddCardScreen()),
+              leading: const FaIcon(
                 FontAwesomeIcons.creditCard,
                 color: AppColors.primaryColor,
               ),
-              title: Text(
+              title: const Text(
                 "Add Payment Card",
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
                 ),
               ),
@@ -85,7 +87,7 @@ class PaymentMethodScreen extends StatelessWidget {
         ListTile(
           leading: FaIcon(
             icon,
-            color:iconColor,
+            color: iconColor,
           ),
           title: Text(
             title,
