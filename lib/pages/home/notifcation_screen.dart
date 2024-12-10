@@ -90,18 +90,14 @@ class NotificationScreen extends StatelessWidget {
         style: TextStyle(
           fontWeight: FontWeight.w600,
           color: Colors.white,
+          fontSize: 15,
         ),
       ),
-      leading: CircleAvatar(
-        radius: 15,
-        backgroundColor: Colors.white,
-        child: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-          ),
+      leading: IconButton(
+        onPressed: () => Get.back(),
+        icon: const Icon(
+          Icons.arrow_back,
+          color: Colors.white,
         ),
       ),
       actions: const [

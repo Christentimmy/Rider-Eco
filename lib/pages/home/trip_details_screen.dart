@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/home_screen.dart';
+import 'package:rider/pages/home/notifcation_screen.dart';
+import 'package:rider/pages/home/payment_method_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
 
@@ -198,19 +201,20 @@ class TripDetailsScreen extends StatelessWidget {
               Expanded(
                 child: CommonButton(
                   text: "Payment",
-                  ontap: () {},
+                  ontap: () {
+                    Get.to(()=> PaymentMethodScreen());
+                  },
                   bgColor: Colors.black,
-                  border: Border.all(
-                    width: 1,
-                    color: Colors.white
-                  ),
+                  border: Border.all(width: 1, color: Colors.white),
                 ),
               ),
               const SizedBox(width: 15),
               Expanded(
                 child: CommonButton(
                   text: "Cancel Trip",
-                  ontap: () {},
+                  ontap: () {
+                    Get.offAll(() => HomeScreen());
+                  },
                 ),
               ),
             ],
@@ -239,7 +243,7 @@ class TripDetailsScreen extends StatelessWidget {
           const Spacer(),
           GestureDetector(
             onTap: () {
-              // Get.to(() => NotificationScreen());
+              Get.to(() => NotificationScreen());
             },
             child: Container(
               height: 35,
