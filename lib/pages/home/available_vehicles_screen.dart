@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/waiting_ride_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_button.dart';
@@ -292,7 +293,9 @@ class _EachCarDetailsState extends State<EachCarDetails> {
           const SizedBox(height: 30),
           CommonButton(
             text: "Select Vehicle",
-            ontap: () {},
+            ontap: () {
+              Get.to(()=> const WaitingRideScreen());
+            },
           )
         ],
       ),

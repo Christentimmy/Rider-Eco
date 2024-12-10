@@ -9,12 +9,14 @@ class CommonButton extends StatelessWidget {
   Color? bgColor;
   Color? textColor;
   final VoidCallback ontap;
+  BoxBorder? border;
   CommonButton({
     super.key,
     required this.text,
     this.bgColor,
     required this.ontap,
     this.textColor,
+    this.border,
   });
 
   @override
@@ -26,6 +28,7 @@ class CommonButton extends StatelessWidget {
         alignment: Alignment.center,
         width: Get.width,
         decoration: BoxDecoration(
+          border: border,
           borderRadius: BorderRadius.circular(15),
           color: bgColor,
           gradient: bgColor == null ?  const LinearGradient(
