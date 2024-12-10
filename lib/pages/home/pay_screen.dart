@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:rider/pages/home/trip_status_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
@@ -92,9 +93,12 @@ class PayScreen extends StatelessWidget {
             ),
             SizedBox(height: Get.height * 0.1),
             CommonButton(
-              text: "Withdraw",
+              text: "Pay",
               ontap: () {
                 displayDiaogBox(context);
+                Future.delayed(const Duration(seconds: 1), () {
+                  Get.to(()=> TripStatusScreen());
+                });
               },
             ),
           ],

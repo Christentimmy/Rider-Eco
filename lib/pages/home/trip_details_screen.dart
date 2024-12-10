@@ -35,7 +35,7 @@ class TripDetailsScreen extends StatelessWidget {
 
   Container _buildWidgetBelowMap() {
     return Container(
-      height: 340,
+      height: Get.height * 0.4,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: const BoxDecoration(
