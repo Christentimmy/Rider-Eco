@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/notifcation_screen.dart';
+import 'package:rider/pages/home/panic_mode_screen.dart';
 
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
@@ -221,7 +222,9 @@ class TripStatusScreen extends StatelessWidget {
               ),
               const Spacer(),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Get.to(()=> PanicModeScreen());
+                },
                 child: const Column(
                   children: [
                     FaIcon(
@@ -264,93 +267,7 @@ class TripStatusScreen extends StatelessWidget {
                     text: "Emergency",
                     textColor: Colors.yellow,
                     ontap: () {
-                      showBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return Container(
-                            height: Get.height * 0.6,
-                            width: Get.width,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 30,
-                            ),
-                            decoration: const BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20),
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                IconButton(
-                                  onPressed: () => Get.back(),
-                                  icon: const Icon(
-                                    Icons.arrow_back,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                const Center(
-                                  child: Text(
-                                    "Emergency",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                CommonButton(
-                                  text: "Contact Support",
-                                  ontap: () {},
-                                  bgColor: Colors.black,
-                                  border: Border.all(
-                                    width: 1,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                  textColor: AppColors.primaryColor,
-                                ),
-                                const SizedBox(height: 10),
-                                CommonButton(
-                                  text: "Car been hijacked",
-                                  ontap: () {},
-                                  bgColor: Colors.black,
-                                  border: Border.all(
-                                    width: 1,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                  textColor: AppColors.primaryColor,
-                                ),
-                                const SizedBox(height: 10),
-                                CommonButton(
-                                  text: "Rude driver and attitude",
-                                  ontap: () {},
-                                  bgColor: Colors.black,
-                                  border: Border.all(
-                                    width: 1,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                  textColor: AppColors.primaryColor,
-                                ),
-                                const SizedBox(height: 10),
-                                CommonButton(
-                                  text: "Other",
-                                  ontap: () {},
-                                  bgColor: Colors.black,
-                                  border: Border.all(
-                                    width: 1,
-                                    color: AppColors.primaryColor,
-                                  ),
-                                  textColor: AppColors.primaryColor,
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
+                      displayEmergencySheet(context);
                     },
                     bgColor: Colors.black,
                     border: Border.all(width: 1, color: Colors.yellow),
@@ -370,6 +287,98 @@ class TripStatusScreen extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+
+  displayEmergencySheet(
+    BuildContext context,
+  ) {
+    return showBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: Get.height * 0.6,
+          width: Get.width,
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 30,
+          ),
+          decoration: const BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () => Get.back(),
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Center(
+                child: Text(
+                  "Emergency",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              CommonButton(
+                text: "Contact Support",
+                ontap: () {},
+                bgColor: Colors.black,
+                border: Border.all(
+                  width: 1,
+                  color: AppColors.primaryColor,
+                ),
+                textColor: AppColors.primaryColor,
+              ),
+              const SizedBox(height: 10),
+              CommonButton(
+                text: "Car been hijacked",
+                ontap: () {},
+                bgColor: Colors.black,
+                border: Border.all(
+                  width: 1,
+                  color: AppColors.primaryColor,
+                ),
+                textColor: AppColors.primaryColor,
+              ),
+              const SizedBox(height: 10),
+              CommonButton(
+                text: "Rude driver and attitude",
+                ontap: () {},
+                bgColor: Colors.black,
+                border: Border.all(
+                  width: 1,
+                  color: AppColors.primaryColor,
+                ),
+                textColor: AppColors.primaryColor,
+              ),
+              const SizedBox(height: 10),
+              CommonButton(
+                text: "Other",
+                ontap: () {},
+                bgColor: Colors.black,
+                border: Border.all(
+                  width: 1,
+                  color: AppColors.primaryColor,
+                ),
+                textColor: AppColors.primaryColor,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
