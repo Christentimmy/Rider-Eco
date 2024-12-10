@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-
 Widget buildIconButton({
   required IconData icon,
   EdgeInsetsGeometry? margin,
   required VoidCallback onTap,
   double? height,
   double? width,
+  BoxShape? shape,
 }) {
   return GestureDetector(
     onTap: onTap,
@@ -15,7 +15,8 @@ Widget buildIconButton({
       width: width ?? 45,
       margin: margin,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        shape: shape ?? BoxShape.rectangle,
+        borderRadius: shape != null ? null : BorderRadius.circular(12),
         color: Colors.white,
         boxShadow: [
           BoxShadow(
