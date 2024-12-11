@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/resources/colors.dart';
 
-
 // ignore: must_be_immutable
 class CommonButton extends StatelessWidget {
   final String text;
@@ -10,6 +9,7 @@ class CommonButton extends StatelessWidget {
   Color? textColor;
   final VoidCallback ontap;
   BoxBorder? border;
+  BorderRadiusGeometry? borderRadius;
   CommonButton({
     super.key,
     required this.text,
@@ -17,6 +17,7 @@ class CommonButton extends StatelessWidget {
     required this.ontap,
     this.textColor,
     this.border,
+    this.borderRadius,
   });
 
   @override
@@ -29,23 +30,25 @@ class CommonButton extends StatelessWidget {
         width: Get.width,
         decoration: BoxDecoration(
           border: border,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: borderRadius ?? BorderRadius.circular(15),
           color: bgColor,
-          gradient: bgColor == null ?  const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.primaryColor,
-               Color.fromARGB(255, 17, 99, 14),
-            ],
-          ) : null,
+          gradient: bgColor == null
+              ? const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    AppColors.primaryColor,
+                    Color.fromARGB(255, 17, 99, 14),
+                  ],
+                )
+              : null,
         ),
         child: Text(
           text,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 13,
-            color:  textColor ?? Colors.white,
+            color: textColor ?? Colors.white,
           ),
         ),
       ),

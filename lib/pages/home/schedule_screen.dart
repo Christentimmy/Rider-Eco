@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/home_screen.dart';
+import 'package:rider/pages/home/schedule_details_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
@@ -108,7 +109,9 @@ class ScheduleScreen extends StatelessWidget {
 
   GestureDetector _buildFilterCards() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Get.to(()=> ScheduleDetailsScreen());
+      },
       child: Container(
         // height: 200,
         width: double.infinity,
@@ -215,7 +218,7 @@ class ScheduleScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 5),
-            const Divider(color: Colors.white),
+            const Divider(),
             const SizedBox(height: 10),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
