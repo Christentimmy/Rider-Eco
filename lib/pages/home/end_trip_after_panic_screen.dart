@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rider/pages/home/end_trip_after_panic_screen.dart';
+import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 
-class ActivatedPanicModeScreen extends StatelessWidget {
-  const ActivatedPanicModeScreen({super.key});
+class EndTripAfterPanicScreen extends StatelessWidget {
+  const EndTripAfterPanicScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,39 +52,24 @@ class ActivatedPanicModeScreen extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 15),
-            const Text(
-              "Your location has been shared with\nauthourities! You are being Tracked bbiw",
-              textAlign: TextAlign.center,
+            Text(
+              "Are you sure you want to end ride?",
               style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
                 color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
             ),
             const SizedBox(height: 20),
-            const Icon(
-              Icons.error,
-              color: Colors.red,
-              size: 50,
-            ),
-            const SizedBox(height: 5),
-            const Text(
-              "PANIC MODE",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Divider(),
-            const SizedBox(height: 25),
+            Divider(),
+            const SizedBox(height: 20),
             SizedBox(
               width: Get.width / 1.7,
               child: ElevatedButton(
                 onPressed: () {
-                  Get.to(() => EndTripAfterPanicScreen());
+                  Get.offAll(()=> HomeScreen());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
@@ -99,6 +84,31 @@ class ActivatedPanicModeScreen extends StatelessWidget {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            // No Button
+            SizedBox(
+              width: Get.width / 1.7,
+              child: OutlinedButton(
+                onPressed: () {
+                 Get.to(()=> HomeScreen());
+                },
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Colors.white),
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  "No",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
