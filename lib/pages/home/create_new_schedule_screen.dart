@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:rider/pages/home/schedule_details_screen.dart';
+import 'package:rider/pages/home/schedule_payment_screen.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
 class CreateNewScheduleScreen extends StatelessWidget {
@@ -152,7 +154,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return ListTile(
-          // onTap: () => Get.to(() => FindARideScreen()),
+          onTap: () => Get.to(() => SchedulePaymentScreen()),
           contentPadding: EdgeInsets.zero,
           leading: CircleAvatar(
             radius: 18,
