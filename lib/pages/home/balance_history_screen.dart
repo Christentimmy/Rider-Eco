@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/history_rode_details.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
@@ -84,6 +85,9 @@ class BalanceAndHistoryScreen extends StatelessWidget {
 
   Widget _filterCardsBudget() {
     return GestureDetector(
+      onTap: (){
+        Get.to(()=> HistoryRodeDetails());
+      },
       child: Container(
         width: Get.width,
         padding: const EdgeInsets.symmetric(
