@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:rider/pages/home/schedule_details_screen.dart';
 import 'package:rider/pages/home/schedule_payment_screen.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 

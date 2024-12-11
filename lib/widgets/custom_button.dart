@@ -10,6 +10,7 @@ class CommonButton extends StatelessWidget {
   final VoidCallback ontap;
   BoxBorder? border;
   BorderRadiusGeometry? borderRadius;
+  double? height;
   CommonButton({
     super.key,
     required this.text,
@@ -18,6 +19,7 @@ class CommonButton extends StatelessWidget {
     this.textColor,
     this.border,
     this.borderRadius,
+    this.height,
   });
 
   @override
@@ -25,7 +27,7 @@ class CommonButton extends StatelessWidget {
     return GestureDetector(
       onTap: ontap,
       child: Container(
-        height: 55,
+        height: height ?? 55,
         alignment: Alignment.center,
         width: Get.width,
         decoration: BoxDecoration(

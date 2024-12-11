@@ -14,6 +14,8 @@ class CustomTextField extends StatelessWidget {
   TextStyle? hintStyle;
   InputBorder? enabledBorder;
   InputBorder? focusedBorder;
+  double? height;
+  BorderRadius? borderRadius;
   CustomTextField({
     super.key,
     required this.hintText,
@@ -26,12 +28,15 @@ class CustomTextField extends StatelessWidget {
     this.hintStyle,
     this.enabledBorder,
     this.focusedBorder,
+    this.height,
+    this.borderRadius,
     required this.textController,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: bgColor,
@@ -62,7 +67,7 @@ class CustomTextField extends StatelessWidget {
               ),
           enabledBorder: enabledBorder ??
               OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: borderRadius ?? BorderRadius.circular(15),
                 borderSide: BorderSide(
                   width: 1,
                   color: Colors.grey.withOpacity(0.5),
@@ -70,7 +75,7 @@ class CustomTextField extends StatelessWidget {
               ),
           focusedBorder: focusedBorder ??
               OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius:  borderRadius ?? BorderRadius.circular(15),
                 borderSide: const BorderSide(
                   width: 1,
                   color: AppColors.primaryColor,
