@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/schedule_screen.dart';
 import 'package:rider/pages/home/soure_destination_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/build_icon_button.dart';
@@ -13,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: _buildSideBar(),
+      drawer: buildSideBar(),
       body: Stack(
         children: [
           Image.asset(
@@ -137,130 +138,157 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Drawer _buildSideBar() {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          DrawerHeader(
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 19, 19, 19),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset("assets/images/avater2.png", width: 0,),
-                const SizedBox(width: 10),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Jonathon Smith",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+Drawer buildSideBar() {
+  return Drawer(
+    child: ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        DrawerHeader(
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 19, 19, 19),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "assets/images/avater2.png",
+                width: 60,
+              ),
+              const SizedBox(width: 10),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Jonathon Smith",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                        ),
-                        Text(
-                          "4.8 (5000)",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                Builder(
-                  builder: (context) {
-                    return IconButton(
-                      onPressed: () {
-                        Scaffold.of(context).closeDrawer();
-                      },
-                      icon: const Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.white,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star,
+                        color: Colors.yellow,
                       ),
-                    );
-                  },
-                )
-              ],
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.account_circle),
-            title: const Text(
-              'Profile',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+                      Text(
+                        "4.8 (5000)",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            onTap: () {
-              // Get.to(() => SettingScreen());
-            },
+              const Spacer(),
+              Builder(
+                builder: (context) {
+                  return IconButton(
+                    onPressed: () {
+                      Scaffold.of(context).closeDrawer();
+                    },
+                    icon: const Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                    ),
+                  );
+                },
+              )
+            ],
           ),
-          ListTile(
-            leading: const Icon(Icons.history),
-            title: const Text(
-              'Request History',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.account_circle),
+          title: const Text(
+            'Profile',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
             ),
-            onTap: () {
-              // Get.to(() => RequestHistoryScreen());
-            },
           ),
-          ListTile(
-            leading: const Icon(Icons.message),
-            title: const Text(
-              'Inbox',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+          onTap: () {
+            // Get.to(() => SettingScreen());
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.history),
+          title: const Text(
+            'Balance & History',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
             ),
-            onTap: () {
-              // Get.to(() => ChatScreen());
-            },
           ),
-          ListTile(
-            leading: const Icon(Icons.contact_support_rounded),
-            title: const Text(
-              'FAQ',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
+          onTap: () {
+            // Get.to(() => RequestHistoryScreen());
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.calendar_month),
+          title: const Text(
+            'Schedule',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
             ),
-            onTap: () {
-              // Get.to(() => FaqScreen());
-            },
           ),
-          ListTile(
-            leading: const Icon(Icons.contact_support_rounded),
-            title: const Text(
-              'Logout',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
-              ),
+          onTap: () {
+            Get.to(() => ScheduleScreen());
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.credit_card),
+          title: const Text(
+            'Payments',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
             ),
-            onTap: () {
-              // Get.offAll(() => SignUpScreen());
-            },
           ),
-        ],
-      ),
-    );
-  }
+          onTap: () {
+            // Get.to(() => ChatScreen());
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.settings),
+          title: const Text(
+            'Settings',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          onTap: () {
+            // Get.to(() => FaqScreen());
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.support_agent),
+          title: const Text(
+            'Support',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          onTap: () {
+            // Get.to(() => FaqScreen());
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.contact_support_rounded),
+          title: const Text(
+            'Logout',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          onTap: () {
+            // Get.offAll(() => SignUpScreen());
+          },
+        ),
+      ],
+    ),
+  );
 }
