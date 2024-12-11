@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/activated_panic_mode_screen.dart';
 
 class PanicModeScreen extends StatelessWidget {
   const PanicModeScreen({super.key});
@@ -56,7 +57,7 @@ class PanicModeScreen extends StatelessWidget {
                   width: Get.width / 1.7,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Handle Yes Action
+                      Get.to(()=> ActivatedPanicModeScreen());
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
