@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
 
@@ -136,7 +137,9 @@ class ScheduleDetailsScreen extends StatelessWidget {
                   text: "Cancel Ride",
                   borderRadius: BorderRadius.circular(45),
                   textColor: AppColors.primaryColor,
-                  ontap: () {},
+                  ontap: () {
+                    displayCancelRideBottomSheet(context);
+                  },
                   bgColor: Colors.white,
                   border: Border.all(
                     width: 0.8,
@@ -148,6 +151,74 @@ class ScheduleDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> displayCancelRideBottomSheet(
+    BuildContext context,
+  ) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 25),
+          height: Get.height * 0.3,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Do you want to cancel\nthis schedule?",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: Get.width / 3.5,
+                      height: 42,
+                      child: CommonButton(
+                        text: "No",
+                        ontap: () {
+                          Get.back();
+                        },
+                        border: Border.all(
+                          width: 0.8,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
+                    SizedBox(
+                      width: Get.width / 3.5,
+                      height: 42,
+                      child: CommonButton(
+                        text: "Yes",
+                        textColor: AppColors.primaryColor,
+                        ontap: () {
+                          Get.offAll(() => HomeScreen());
+                        },
+                        bgColor: Colors.white,
+                        border: Border.all(
+                          width: 2,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
