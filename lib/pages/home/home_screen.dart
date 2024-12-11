@@ -13,6 +13,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: _buildSideBar(),
       body: Stack(
         children: [
           Image.asset(
@@ -21,15 +22,21 @@ class HomeScreen extends StatelessWidget {
             height: Get.height,
             fit: BoxFit.cover,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15,
-              vertical: 50,
-            ),
-            child: buildIconButton(
-              icon: Icons.menu,
-              onTap: () {},
-            ),
+          Builder(
+            builder: (context) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 50,
+                ),
+                child: buildIconButton(
+                  icon: Icons.menu,
+                  onTap: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
+              );
+            },
           ),
           _buildBottomWidget(),
         ],
@@ -127,6 +134,132 @@ class HomeScreen extends StatelessWidget {
           color: AppColors.primaryColor.withOpacity(0.4),
           fontSize: 12,
         ),
+      ),
+    );
+  }
+
+  Drawer _buildSideBar() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 19, 19, 19),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset("assets/images/avater2.png", width: 0,),
+                const SizedBox(width: 10),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Jonathon Smith",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                        ),
+                        Text(
+                          "4.8 (5000)",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Builder(
+                  builder: (context) {
+                    return IconButton(
+                      onPressed: () {
+                        Scaffold.of(context).closeDrawer();
+                      },
+                      icon: const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                      ),
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.account_circle),
+            title: const Text(
+              'Profile',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () {
+              // Get.to(() => SettingScreen());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.history),
+            title: const Text(
+              'Request History',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () {
+              // Get.to(() => RequestHistoryScreen());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.message),
+            title: const Text(
+              'Inbox',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () {
+              // Get.to(() => ChatScreen());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.contact_support_rounded),
+            title: const Text(
+              'FAQ',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () {
+              // Get.to(() => FaqScreen());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.contact_support_rounded),
+            title: const Text(
+              'Logout',
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () {
+              // Get.offAll(() => SignUpScreen());
+            },
+          ),
+        ],
       ),
     );
   }
