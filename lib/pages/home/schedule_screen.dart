@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/create_new_schedule_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/schedule_details_screen.dart';
 import 'package:rider/resources/colors.dart';
@@ -45,7 +46,9 @@ class ScheduleScreen extends StatelessWidget {
                 width: Get.width / 1.7,
                 child: CommonButton(
                   text: "New Schedule",
-                  ontap: () {},
+                  ontap: () {
+                    Get.to(()=> CreateNewScheduleScreen());
+                  },
                 ),
               ),
             ),

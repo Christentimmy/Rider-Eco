@@ -6,13 +6,19 @@ import 'package:rider/pages/auth/verify_phone_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
+import 'package:rider/widgets/custom_textfield.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
 
   final RxBool _isLoginWithNumber = true.obs;
   final RxInt _currentPage = 0.obs;
-  // final _textController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _loginEmailController = TextEditingController();
+  final _loginPasswordController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -166,11 +172,17 @@ class SignUpScreen extends StatelessWidget {
               if (_isLoginWithNumber.value) {
                 return const PhoneNumberTextField();
               } else {
-                return const EmailTextField();
+                return CustomTextField(
+                  hintText: "john@email.com",
+                  textController: _loginEmailController,
+                );
               }
             }),
             const SizedBox(height: 10),
-            const PasswordTextField(),
+            CustomTextField(
+              hintText: "password",
+              textController: _loginPasswordController,
+            ),
             const SizedBox(height: 25),
             CommonButton(
               ontap: () {
@@ -229,14 +241,18 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const EmailTextField(),
+            // const EmailTextField(),
+            CustomTextField(
+              hintText: "John@email.com",
+              textController: _emailController,
+            ),
             const SizedBox(height: 10),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  width: 2,
-                  color: Colors.grey,
+                  width: 1,
+                  color: Colors.grey.withOpacity(0.5),
                 ),
               ),
               child: Row(
@@ -251,12 +267,13 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: TextFormField(
+                      controller: _phoneNumberController,
                       keyboardType: TextInputType.number,
                       decoration: const InputDecoration(
                         hintText: "mobile number",
                         hintStyle: TextStyle(
                           fontSize: 12,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w400,
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide.none,
@@ -271,9 +288,17 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            const PasswordTextField(),
+            // const PasswordTextField(),
+            CustomTextField(
+              hintText: "password",
+              textController: _passwordController,
+            ),
             const SizedBox(height: 10),
-            const ConfirmPassswordTextField(),
+            // const ConfirmPassswordTextField(),
+            CustomTextField(
+              hintText: "confirm password",
+              textController: _confirmPasswordController,
+            ),
             const SizedBox(height: 25),
             CommonButton(
               ontap: () {
@@ -306,8 +331,8 @@ class PhoneNumberTextField extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          width: 2,
-          color: Colors.grey,
+          width: 1,
+          color: Colors.grey.withOpacity(0.5),
         ),
       ),
       child: Row(
@@ -390,113 +415,6 @@ class VectorDiagram extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class ConfirmPassswordTextField extends StatelessWidget {
-  const ConfirmPassswordTextField({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      obscureText: true,
-      style: const TextStyle(
-        fontWeight: FontWeight.bold,
-      ),
-      decoration: InputDecoration(
-        hintText: "confirm password",
-        hintStyle: const TextStyle(
-          fontSize: 12,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            width: 2,
-            color: Colors.black,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            width: 2,
-            color: Colors.grey,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PasswordTextField extends StatelessWidget {
-  const PasswordTextField({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      obscureText: true,
-      style: const TextStyle(
-        fontWeight: FontWeight.bold,
-      ),
-      decoration: InputDecoration(
-        hintText: "password",
-        hintStyle: const TextStyle(
-          fontSize: 12,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            width: 2,
-            color: Colors.black,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            width: 2,
-            color: Colors.grey,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class EmailTextField extends StatelessWidget {
-  const EmailTextField({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      style: const TextStyle(
-        fontWeight: FontWeight.bold,
-      ),
-      decoration: InputDecoration(
-        hintText: "name@example.com",
-        hintStyle: const TextStyle(
-          fontSize: 12,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            width: 2,
-            color: Colors.black,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            width: 2,
-            color: Colors.grey,
-          ),
-        ),
       ),
     );
   }
