@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/chat_customer_service_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_textfield.dart';
@@ -108,34 +109,41 @@ class SupportScreen extends StatelessWidget {
                   ListView.builder(
                     itemCount: _contactUsList.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              spreadRadius: 1,
-                              blurRadius: 1,
-                              color: Colors.black.withOpacity(0.1),
-                            )
-                          ],
-                        ),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: FaIcon(
-                            _contactUsList[index][1],
-                            color: const Color(0xff3E8B01),
+                      return GestureDetector(
+                        onTap: (){
+                          if (index == 0) {
+                            Get.to(()=> ChatCustomerServiceScreen());
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 10,
+                            horizontal: 5,
                           ),
-                          title: Text(
-                            _contactUsList[index][0],
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                spreadRadius: 1,
+                                blurRadius: 1,
+                                color: Colors.black.withOpacity(0.1),
+                              )
+                            ],
+                          ),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: FaIcon(
+                              _contactUsList[index][1],
+                              color: const Color(0xff3E8B01),
+                            ),
+                            title: Text(
+                              _contactUsList[index][0],
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
