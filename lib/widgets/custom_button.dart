@@ -11,6 +11,7 @@ class CommonButton extends StatelessWidget {
   BoxBorder? border;
   BorderRadiusGeometry? borderRadius;
   double? height;
+  double? width;
   CommonButton({
     super.key,
     required this.text,
@@ -20,6 +21,7 @@ class CommonButton extends StatelessWidget {
     this.border,
     this.borderRadius,
     this.height,
+    this.width,
   });
 
   @override
@@ -29,7 +31,7 @@ class CommonButton extends StatelessWidget {
       child: Container(
         height: height ?? 55,
         alignment: Alignment.center,
-        width: Get.width,
+        width: width ?? Get.width,
         decoration: BoxDecoration(
           border: border,
           borderRadius: borderRadius ?? BorderRadius.circular(15),

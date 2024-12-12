@@ -34,8 +34,8 @@ class ChatCustomerServiceScreen extends StatelessWidget {
                       vertical: 15,
                       horizontal: 15,
                     ),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20),
                         bottomLeft: Radius.circular(20),
@@ -186,7 +186,7 @@ class ChatCustomerServiceScreen extends StatelessWidget {
       actions: [
         IconButton(
           onPressed: () {},
-          icon: Icon(
+          icon: const Icon(
             Icons.call,
             color: Colors.black,
           ),
@@ -202,4 +202,5 @@ class ChatCustomerServiceScreen extends StatelessWidget {
       ),
     );
   }
+
 }

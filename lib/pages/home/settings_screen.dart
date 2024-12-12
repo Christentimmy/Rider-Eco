@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/home_screen.dart';
+import 'package:rider/pages/home/profile_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class SettingScreen extends StatelessWidget {
       "Edit Profile",
       Icons.account_circle_sharp,
       () {
-        // Get.to(()=> ProfileScreen());
+        Get.to(() => ProfileScreen());
       }
     ],
     [
@@ -88,7 +89,7 @@ class SettingScreen extends StatelessWidget {
                     icon: _settingList[index][1],
                     text: _settingList[index][0],
                     onTap: () {
-                      // Get.to(() => ProfileScreen());
+                      _settingList[index][2].call();
                     },
                   );
                 },
