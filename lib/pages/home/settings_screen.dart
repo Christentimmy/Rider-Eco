@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/change_password_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/profile_screen.dart';
 import 'package:rider/resources/colors.dart';
@@ -19,7 +20,7 @@ class SettingScreen extends StatelessWidget {
       "Change Password",
       Icons.lock,
       () {
-        // Get.to(()=> ChangePasswordScreen());
+        Get.to(()=> ChangePasswordScreen());
       }
     ],
     [

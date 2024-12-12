@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/custom_button.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -107,4 +106,5 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
+
 }

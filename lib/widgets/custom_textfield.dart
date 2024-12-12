@@ -31,7 +31,6 @@ class CustomTextField extends StatelessWidget {
     this.height,
     this.borderRadius,
     required this.textController,
-
   });
 
   @override
