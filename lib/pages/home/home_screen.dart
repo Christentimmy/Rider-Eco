@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:rider/pages/home/balance_history_screen.dart';
 import 'package:rider/pages/home/schedule_screen.dart';
 import 'package:rider/pages/home/soure_destination_screen.dart';
+import 'package:rider/pages/home/support_screen.dart';
 import 'package:rider/resources/colors.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
@@ -273,7 +274,7 @@ Drawer buildSideBar() {
             ),
           ),
           onTap: () {
-            // Get.to(() => FaqScreen());
+            Get.to(() => SupportScreen());
           },
         ),
         ListTile(

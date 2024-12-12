@@ -31,6 +31,7 @@ class CustomTextField extends StatelessWidget {
     this.height,
     this.borderRadius,
     required this.textController,
+
   });
 
   @override
@@ -75,7 +76,7 @@ class CustomTextField extends StatelessWidget {
               ),
           focusedBorder: focusedBorder ??
               OutlineInputBorder(
-                borderRadius:  borderRadius ?? BorderRadius.circular(15),
+                borderRadius: borderRadius ?? BorderRadius.circular(15),
                 borderSide: const BorderSide(
                   width: 1,
                   color: AppColors.primaryColor,
