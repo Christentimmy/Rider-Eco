@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
 import 'package:rider/resources/colors.dart';
 
 class ChatCustomerServiceScreen extends StatelessWidget {
   ChatCustomerServiceScreen({super.key});
 
   final _typeController = TextEditingController();
-  RxString _typed = "".obs;
+  final RxString _typed = "".obs;
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +118,7 @@ class ChatCustomerServiceScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: TextFormField(
+                      controller: _typeController,
                       onChanged: (value) {
                         _typed.value = value;
                       },
@@ -159,8 +159,8 @@ class ChatCustomerServiceScreen extends StatelessWidget {
                           radius: 28,
                           backgroundColor: Color.fromARGB(255, 86, 187, 4),
                           child: Icon(
-                          FontAwesomeIcons.paperPlane,
-                          size: 17,
+                            FontAwesomeIcons.paperPlane,
+                            size: 17,
                             color: Colors.white,
                           ),
                         ),
