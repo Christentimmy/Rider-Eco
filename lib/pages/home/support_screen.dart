@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/colors.dart';
@@ -10,10 +11,14 @@ class SupportScreen extends StatelessWidget {
   final RxInt _currentPage = 0.obs;
   final _pageController = PageController(initialPage: 0);
 
-  final _fagList = ["General", "Account", "Service", "Payment"];
-  final _faqSelectedCard = (-1).obs;
-  final _faqSearchController = TextEditingController();
-  final RxBool _isFaqCardExpand = true.obs;
+  final List _contactUsList = [
+    ["Customer Service", FontAwesomeIcons.userShield],
+    ["Whatsapp", FontAwesomeIcons.whatsapp],
+    ["Website", FontAwesomeIcons.globe],
+    ["Facebook", FontAwesomeIcons.facebook],
+    ["Twitter", FontAwesomeIcons.twitter],
+    ["Instagram", FontAwesomeIcons.instagram],
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -99,136 +104,43 @@ class SupportScreen extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 controller: _pageController,
                 children: [
-                  SizedBox(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 30),
-                        SizedBox(
-                          height: 35,
-                          width: Get.width,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _fagList.length,
-                            itemBuilder: (context, index) {
-                              return Obx(
-                                () {
-                                  return InkWell(
-                                    splashFactory: NoSplash.splashFactory,
-                                    splashColor: Colors.transparent,
-                                    onTap: () {
-                                      _faqSelectedCard.value = index;
-                                    },
-                                    child: Container(
-                                      height: 4350,
-                                      alignment: Alignment.center,
-                                      margin: const EdgeInsets.only(right: 10),
-                                      constraints: const BoxConstraints(
-                                        minWidth: 80,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: _faqSelectedCard.value == index
-                                            ? AppColors.primaryColor
-                                            : null,
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: _faqSelectedCard.value == index
-                                            ? null
-                                            : Border.all(
-                                                width: 1,
-                                                color: AppColors.primaryColor,
-                                              ),
-                                      ),
-                                      child: Text(
-                                        _fagList[index],
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: _faqSelectedCard.value == index
-                                              ? Colors.white
-                                              : Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
+                  FaqWidget(),
+                  ListView.builder(
+                    itemCount: _contactUsList.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                              color: Colors.black.withOpacity(0.1),
+                            )
+                          ],
+                        ),
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: FaIcon(
+                            _contactUsList[index][1],
+                            color: const Color(0xff3E8B01),
+                          ),
+                          title: Text(
+                            _contactUsList[index][0],
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 30),
-                        CustomTextField(
-                          bgColor: const Color(0xffF5F5F5),
-                          hintText: "Search",
-                          textController: _faqSearchController,
-                          prefixIcon: Icons.search_rounded,
-                        ),
-                        const SizedBox(height: 30),
-                        Container(
-                          width: Get.width,
-                          margin: const EdgeInsets.symmetric(horizontal: 5),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 2,
-                                spreadRadius: 1,
-                                color: Colors.grey.withOpacity(0.2),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Text(
-                                    "What is EcoExpress?",
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Obx(
-                                    () => IconButton(
-                                      onPressed: () {
-                                        _isFaqCardExpand.value =
-                                            !_isFaqCardExpand.value;
-                                      },
-                                      icon: Icon(
-                                        _isFaqCardExpand.value
-                                            ? Icons.keyboard_arrow_up_rounded
-                                            : Icons.keyboard_arrow_down_rounded,
-                                        color: AppColors.primaryColor,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Obx(
-                                () => _isFaqCardExpand.value
-                                    ? const Text(
-                                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras scelerisque leo non dignissim blandit",
-                                        style: TextStyle(color: Colors.black),
-                                      )
-                                    : const SizedBox(),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        const FaqCard(text: "How do I pay for appointments"),
-                        const FaqCard(text: "How to add reviews?"),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    color: Colors.blue,
-                    height: 37,
+                      );
+                    },
                   ),
                 ],
               ),
@@ -259,6 +171,144 @@ class SupportScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class FaqWidget extends StatelessWidget {
+  FaqWidget({super.key});
+  final _fagList = ["General", "Account", "Service", "Payment"];
+  final _faqSelectedCard = (-1).obs;
+  final _faqSearchController = TextEditingController();
+  final RxBool _isFaqCardExpand = true.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: Column(
+        children: [
+          const SizedBox(height: 30),
+          SizedBox(
+            height: 35,
+            width: Get.width,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _fagList.length,
+              itemBuilder: (context, index) {
+                return Obx(
+                  () {
+                    return InkWell(
+                      splashFactory: NoSplash.splashFactory,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        _faqSelectedCard.value = index;
+                      },
+                      child: Container(
+                        height: 4350,
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(right: 10),
+                        constraints: const BoxConstraints(
+                          minWidth: 80,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _faqSelectedCard.value == index
+                              ? AppColors.primaryColor
+                              : null,
+                          borderRadius: BorderRadius.circular(20),
+                          border: _faqSelectedCard.value == index
+                              ? null
+                              : Border.all(
+                                  width: 1,
+                                  color: AppColors.primaryColor,
+                                ),
+                        ),
+                        child: Text(
+                          _fagList[index],
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: _faqSelectedCard.value == index
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 30),
+          CustomTextField(
+            bgColor: const Color(0xffF5F5F5),
+            hintText: "Search",
+            textController: _faqSearchController,
+            prefixIcon: Icons.search_rounded,
+          ),
+          const SizedBox(height: 30),
+          Container(
+            width: Get.width,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 10,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 2,
+                  spreadRadius: 1,
+                  color: Colors.grey.withOpacity(0.2),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Text(
+                      "What is EcoExpress?",
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const Spacer(),
+                    Obx(
+                      () => IconButton(
+                        onPressed: () {
+                          _isFaqCardExpand.value = !_isFaqCardExpand.value;
+                        },
+                        icon: Icon(
+                          _isFaqCardExpand.value
+                              ? Icons.keyboard_arrow_up_rounded
+                              : Icons.keyboard_arrow_down_rounded,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Obx(
+                  () => _isFaqCardExpand.value
+                      ? const Text(
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras scelerisque leo non dignissim blandit",
+                          style: TextStyle(color: Colors.black),
+                        )
+                      : const SizedBox(),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 15),
+          const FaqCard(text: "How do I pay for appointments"),
+          const FaqCard(text: "How to add reviews?"),
+        ],
       ),
     );
   }
