@@ -62,7 +62,7 @@ class ChangePasswordScreen extends StatelessWidget {
               hintText: "Confirm Password",
               textController: _confirmPassword,
               prefixIcon: Icons.lock,
-              hintStyle: TextStyle(
+              hintStyle: const TextStyle(
                 color: Colors.black,
                 fontSize: 12,
               ),
