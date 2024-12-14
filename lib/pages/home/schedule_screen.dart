@@ -110,8 +110,8 @@ class ScheduleScreen extends StatelessWidget {
     );
   }
 
-  GestureDetector _buildFilterCards() {
-    return GestureDetector(
+  InkWell _buildFilterCards() {
+    return InkWell(
       onTap: () {
         Get.to(()=> ScheduleDetailsScreen());
       },

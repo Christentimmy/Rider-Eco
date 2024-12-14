@@ -86,7 +86,7 @@ class TripDetailsScreen extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   // Get.to(() => ChatScreen());
                 },
@@ -105,7 +105,7 @@ class TripDetailsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 // onTap: () => Get.to(() => CallScreen()),
                 child: Container(
                   height: 45,
@@ -229,7 +229,7 @@ class TripDetailsScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
         children: [
-          GestureDetector(
+          InkWell(
             onTap: () => Get.back(),
             child: const CircleAvatar(
               radius: 20,
@@ -241,7 +241,7 @@ class TripDetailsScreen extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          GestureDetector(
+          InkWell(
             onTap: () {
               Get.to(() => NotificationScreen());
             },

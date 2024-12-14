@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/home/edit_profile_screen.dart';
 import 'package:rider/widgets/custom_button.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -36,7 +37,9 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 20),
             CommonButton(
               text: "Edit Profile",
-              ontap: () {},
+              ontap: () {
+                Get.to(()=> EditProfileScreen());
+              },
               width: Get.width * 0.4,
               textColor: const Color.fromARGB(255, 90, 182, 15),
               bgColor: Colors.white,

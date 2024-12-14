@@ -88,7 +88,7 @@ class SignUpScreen extends StatelessWidget {
       child: Row(
         children: [
           Obx(
-            () => GestureDetector(
+            () => InkWell(
               onTap: () {
                 CrossFadeState.showFirst;
                 _currentPage.value = 0;
@@ -106,7 +106,7 @@ class SignUpScreen extends StatelessWidget {
           ),
           const Spacer(),
           Obx(
-            () => GestureDetector(
+            () => InkWell(
               onTap: () {
                 CrossFadeState.showSecond;
                 _currentPage.value = 1;
@@ -150,7 +150,7 @@ class SignUpScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Obx(() {
-                  return GestureDetector(
+                  return InkWell(
                     onTap: () {
                       _isLoginWithNumber.value = !_isLoginWithNumber.value;
                     },
@@ -193,7 +193,7 @@ class SignUpScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                GestureDetector(
+                InkWell(
                   onTap: () => Get.to(() => const PasswordRecoveryScreen()),
                   child: const Padding(
                     padding: EdgeInsets.only(top: 5),

@@ -69,7 +69,7 @@ class IntroScreen extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.centerRight,
-            child: GestureDetector(
+            child: InkWell(
               onTap: () {
                 if (_currentPage.value == _pages.length - 1) {
                   Get.to(() => SignUpScreen());

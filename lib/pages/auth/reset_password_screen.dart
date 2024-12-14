@@ -227,7 +227,7 @@ class ResetPasswordScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: Get.height / 7.5),
-              GestureDetector(
+              InkWell(
                 // onTap: () => Get.to(() => ResetPasswordScreen()),
                 child: Container(
                   height: 45,

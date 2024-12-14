@@ -109,7 +109,7 @@ class SupportScreen extends StatelessWidget {
                   ListView.builder(
                     itemCount: _contactUsList.length,
                     itemBuilder: (context, index) {
-                      return GestureDetector(
+                      return InkWell(
                         onTap: (){
                           if (index == 0) {
                             Get.to(()=> ChatCustomerServiceScreen());

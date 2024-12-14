@@ -8,7 +8,7 @@ Widget buildIconButton({
   double? width,
   BoxShape? shape,
 }) {
-  return GestureDetector(
+  return InkWell(
     onTap: onTap,
     child: Container(
       height: height ?? 45,

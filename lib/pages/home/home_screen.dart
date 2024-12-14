@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/home/balance_history_screen.dart';
+import 'package:rider/pages/home/payment_method_screen.dart';
+import 'package:rider/pages/home/profile_screen.dart';
 import 'package:rider/pages/home/schedule_screen.dart';
 import 'package:rider/pages/home/settings_screen.dart';
 import 'package:rider/pages/home/soure_destination_screen.dart';
@@ -215,7 +218,7 @@ Drawer buildSideBar() {
             ),
           ),
           onTap: () {
-            // Get.to(() => SettingScreen());
+            Get.to(() => const ProfileScreen());
           },
         ),
         ListTile(
@@ -251,7 +254,7 @@ Drawer buildSideBar() {
             ),
           ),
           onTap: () {
-            // Get.to(() => ChatScreen());
+            Get.to(() => PaymentMethodScreen());
           },
         ),
         ListTile(
@@ -288,7 +291,7 @@ Drawer buildSideBar() {
             ),
           ),
           onTap: () {
-            // Get.offAll(() => SignUpScreen());
+            Get.offAll(() => SignUpScreen());
           },
         ),
       ],

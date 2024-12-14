@@ -14,7 +14,7 @@ class TripStatusScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
+      body: InkWell(
         onTap: () {},
         child: Container(
           padding: const EdgeInsets.only(top: 25),
@@ -128,7 +128,7 @@ class TripStatusScreen extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   // Get.to(() => ChatScreen());
                 },
@@ -147,7 +147,7 @@ class TripStatusScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 // onTap: () => Get.to(() => CallScreen()),
                 child: Container(
                   height: 45,
@@ -221,7 +221,7 @@ class TripStatusScreen extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   Get.to(()=> PanicModeScreen());
                 },
@@ -387,7 +387,7 @@ class TripStatusScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
         children: [
-          GestureDetector(
+          InkWell(
             onTap: () => Get.back(),
             child: const CircleAvatar(
               radius: 20,
@@ -399,7 +399,7 @@ class TripStatusScreen extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          GestureDetector(
+          InkWell(
             onTap: () {
               Get.to(() => NotificationScreen());
             },

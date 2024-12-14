@@ -36,7 +36,7 @@ class SetUpFingerScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: Get.height / 9.5),
-            GestureDetector(
+            InkWell(
               onTap: () {
                 showDialog(
                   context: context,
@@ -111,7 +111,7 @@ class SetUpFingerScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                GestureDetector(
+                InkWell(
                   onTap: () {
                     Get.to(() => HomeScreen());
                   },

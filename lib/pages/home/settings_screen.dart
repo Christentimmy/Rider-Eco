@@ -97,7 +97,7 @@ class SettingScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Center(
-                child: GestureDetector(
+                child: InkWell(
                   onTap: () {
                     displayDeleteWidget(context);
                   },

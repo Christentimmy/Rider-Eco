@@ -18,6 +18,8 @@ class MainApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
         useMaterial3: true,
         textTheme: GoogleFonts.poppinsTextTheme(),
+        splashColor: Colors.transparent,
+        splashFactory: NoSplash.splashFactory,
       ),
       home: const SplashScreen(),
     );

@@ -90,7 +90,7 @@ class VerifyPhoneNumberScreen extends StatelessWidget {
                   ),
                 ),
                 Obx(
-                  () => GestureDetector(
+                  () => InkWell(
                     onTap: () {
                       _timeController.startTimer();
                     },

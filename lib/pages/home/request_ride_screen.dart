@@ -157,7 +157,7 @@ class RequestRideScreen extends StatelessWidget {
             onTap: () => Get.back(),
           ),
           const Spacer(),
-          GestureDetector(
+          InkWell(
             onTap: () {
               Get.to(() => NotificationScreen());
             },

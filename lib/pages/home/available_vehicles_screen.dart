@@ -41,7 +41,7 @@ class AvailableVehiclesScreen extends StatelessWidget {
       body: ListView.builder(
         itemCount: 4,
         itemBuilder: (context, index) {
-          return GestureDetector(
+          return InkWell(
             onTap: () {
               // showModalBottomSheet(
               //   context: context,

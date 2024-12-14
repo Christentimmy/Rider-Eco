@@ -91,7 +91,7 @@ class SchedulePaymentScreen extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   // Get.to(() => ChatScreen());
                 },
@@ -110,7 +110,7 @@ class SchedulePaymentScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              GestureDetector(
+              InkWell(
                 // onTap: () => Get.to(() => CallScreen()),
                 child: Container(
                   height: 45,
@@ -184,7 +184,7 @@ class SchedulePaymentScreen extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   Get.to(() => const PanicModeScreen());
                 },
@@ -360,7 +360,7 @@ class SchedulePaymentScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Row(
         children: [
-          GestureDetector(
+          InkWell(
             onTap: () => Get.back(),
             child: const CircleAvatar(
               radius: 20,
@@ -372,7 +372,7 @@ class SchedulePaymentScreen extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          GestureDetector(
+          InkWell(
             onTap: () {
               Get.to(() => NotificationScreen());
             },

@@ -84,7 +84,7 @@ class BalanceAndHistoryScreen extends StatelessWidget {
   }
 
   Widget _filterCardsBudget() {
-    return GestureDetector(
+    return InkWell(
       onTap: (){
         Get.to(()=> HistoryRodeDetails());
       },

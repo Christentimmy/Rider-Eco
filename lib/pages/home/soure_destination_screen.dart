@@ -49,7 +49,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
                     ),
                   ),
                   const Spacer(),
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       _inputFields.clear();
                       _inputFields.add(null);
@@ -159,7 +159,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
   Row _buildFromLocationField() {
     return Row(
       children: [
-        GestureDetector(
+        InkWell(
           onTap: () => Get.back(),
           child: Container(
             height: 45,

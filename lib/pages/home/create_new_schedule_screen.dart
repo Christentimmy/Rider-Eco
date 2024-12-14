@@ -50,7 +50,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
             const SizedBox(height: 15),
             Row(
               children: [
-                GestureDetector(
+                InkWell(
                   onTap: () async {
                     _selectDate.value = await showDatePicker(
                       context: context,
@@ -91,7 +91,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                GestureDetector(
+                InkWell(
                   onTap: () async {
                     _selectTime.value = await showTimePicker(
                       context: context,
