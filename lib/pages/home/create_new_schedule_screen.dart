@@ -148,7 +148,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
 
   ListView _recentSearched() {
     return ListView.builder(
-      itemCount: 1,
+      itemCount: 2,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:rider/pages/home/change_password_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/profile_screen.dart';
+import 'package:rider/pages/home/save_places_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -13,7 +14,7 @@ class SettingScreen extends StatelessWidget {
       "Edit Profile",
       Icons.account_circle_sharp,
       () {
-        Get.to(() => ProfileScreen());
+        Get.to(() => const ProfileScreen());
       }
     ],
     [
@@ -27,16 +28,16 @@ class SettingScreen extends StatelessWidget {
       "Save Address",
       Icons.location_pin,
       () {
-        // Get.to(()=> VehicleProfileScreen());
+        Get.to(()=> SavePlacesScreen());
       }
     ],
-    [
-      "Password Reset",
-      Icons.lock,
-      () {
-        // Get.to(()=> FaqScreen());
-      }
-    ],
+    // [
+    //   "Password Reset",
+    //   Icons.lock,
+    //   () {
+    //     // Get.to(()=> FaqScreen());
+    //   }
+    // ],
     [
       "Terms & Conditon",
       Icons.local_police_rounded,
