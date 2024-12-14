@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/change_password_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
+import 'package:rider/pages/home/privacy_policy_screen.dart';
 import 'package:rider/pages/home/profile_screen.dart';
 import 'package:rider/pages/home/save_places_screen.dart';
 import 'package:rider/resources/colors.dart';
@@ -49,7 +50,7 @@ class SettingScreen extends StatelessWidget {
       "Policy",
       Icons.local_police_rounded,
       () {
-        // Get.to(()=> ReferFriendsScreen());
+        Get.to(()=> PrivacyPolicyScreen());
       }
     ],
   ];
