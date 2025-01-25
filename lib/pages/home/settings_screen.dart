@@ -5,6 +5,7 @@ import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/privacy_policy_screen.dart';
 import 'package:rider/pages/home/profile_screen.dart';
 import 'package:rider/pages/home/save_places_screen.dart';
+import 'package:rider/pages/home/terms_and_condition_screen.dart';
 import 'package:rider/resources/colors.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -43,7 +44,7 @@ class SettingScreen extends StatelessWidget {
       "Terms & Conditon",
       Icons.local_police_rounded,
       () {
-        // Get.to(()=> DateAndDistanceScreen());
+        Get.to(()=> TermsAndConditionScreen());
       }
     ],
     [

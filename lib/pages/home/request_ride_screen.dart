@@ -40,7 +40,7 @@ class RequestRideScreen extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Container(
         height: 180,
-        margin: EdgeInsets.only(bottom: Get.height * 0.38),
+        margin: EdgeInsets.only(bottom: Get.height * 0.42),
         child: ListView.builder(
           itemCount: _cars.length,
           scrollDirection: Axis.horizontal,
@@ -184,7 +184,7 @@ class RequestRideScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: Get.height * 0.36,
+        height: Get.height * 0.4,
         width: Get.width,
         padding: const EdgeInsets.symmetric(
           horizontal: 15,

@@ -39,7 +39,7 @@ class FindARideScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: Get.height * 0.36,
+        height: Get.height * 0.4,
         width: Get.width,
         padding: const EdgeInsets.symmetric(
           horizontal: 15,

@@ -17,7 +17,7 @@ class WaitingRideScreen extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: Get.height * 0.7,
+              height: Get.height * 0.72,
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
                 vertical: 5,

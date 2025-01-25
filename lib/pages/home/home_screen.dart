@@ -55,7 +55,7 @@ class HomeScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: Get.height * 0.389,
+        height: Get.height * 0.45,
         width: Get.width,
         padding: const EdgeInsets.symmetric(
           horizontal: 15,
@@ -208,6 +208,18 @@ Drawer buildSideBar() {
               )
             ],
           ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.home),
+          title: const Text(
+            'Home Screen',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          onTap: () {
+            Get.to(() => HomeScreen());
+          },
         ),
         ListTile(
           leading: const Icon(Icons.account_circle),

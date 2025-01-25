@@ -167,7 +167,7 @@ class _EachCarDetailsState extends State<EachCarDetails> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Get.height * 0.7,
+      height: Get.height * 0.75,
       width: Get.width,
       padding: const EdgeInsets.symmetric(
         horizontal: 20,

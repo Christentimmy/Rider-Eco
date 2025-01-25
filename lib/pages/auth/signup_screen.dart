@@ -38,9 +38,9 @@ class SignUpScreen extends StatelessWidget {
       // physics: NeverScrollableScrollPhysics(),
       child: Center(
         child: Container(
-          height: Get.height * 0.61,
+          height: Get.height * 0.7,
           width: Get.width * 0.92,
-          margin: EdgeInsets.only(top: Get.height * 0.35),
+          margin: EdgeInsets.only(top: Get.height * 0.28),
           padding: const EdgeInsets.symmetric(
             horizontal: 10,
             vertical: 10,
@@ -228,7 +228,7 @@ class SignUpScreen extends StatelessWidget {
         horizontal: 10,
       ),
       child: SizedBox(
-        height: Get.height * 0.51,
+        height: Get.height * 0.55,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -381,31 +381,31 @@ class VectorDiagram extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 400,
       child: Stack(
-        alignment: Alignment.center,
         children: [
           Container(
-            height: 400,
+            height: Get.height * 0.2,
             color: AppColors.primaryColor,
             width: Get.width,
-            alignment: Alignment.bottomCenter,
-            child: Image.asset("assets/images/OBJECTS.png"),
+          ),
+          Image.asset(
+            "assets/images/OBJECTS.png",
           ),
           Positioned(
-            bottom: 85,
+            bottom: Get.height * 0.24,
             right: 60,
             child: Obx(
               () => AnimatedCrossFade(
                 firstChild: Image.asset(
                   "assets/images/car.png",
-                  width: 250,
-                  height: 250,
+                  width: Get.width * 0.7,
+                  height: Get.height * 0.25,
                 ),
                 secondChild: Image.asset(
                   "assets/images/ecoLogo.png",
-                  width: 250,
-                  height: 250,
+                  width: Get.width * 0.76,
+                  fit: BoxFit.contain,
+                  height: Get.height * 0.25,
                 ),
                 crossFadeState: currentPage.value == 0
                     ? CrossFadeState.showFirst

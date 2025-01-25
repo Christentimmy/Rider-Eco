@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rider/pages/chat/call_screen.dart';
+import 'package:rider/pages/chat/chat_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/notifcation_screen.dart';
 import 'package:rider/pages/home/panic_mode_screen.dart';
@@ -42,7 +44,7 @@ class TripStatusScreen extends StatelessWidget {
     required BuildContext context,
   }) {
     return Container(
-      height: Get.height * 0.5,
+      height: Get.height * 0.52,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: const BoxDecoration(
@@ -130,7 +132,7 @@ class TripStatusScreen extends StatelessWidget {
               const Spacer(),
               InkWell(
                 onTap: () {
-                  // Get.to(() => ChatScreen());
+                  Get.to(() => const ChatScreen());
                 },
                 child: Container(
                   height: 45,
@@ -148,7 +150,7 @@ class TripStatusScreen extends StatelessWidget {
                 ),
               ),
               InkWell(
-                // onTap: () => Get.to(() => CallScreen()),
+                onTap: () => Get.to(() => const CallScreen()),
                 child: Container(
                   height: 45,
                   width: 45,
