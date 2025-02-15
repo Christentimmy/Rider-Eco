@@ -2,7 +2,7 @@ import 'package:rider/pages/auth/upload_eac_doc_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/pages/auth/personal_document_screen.dart';
 import 'package:rider/pages/auth/set_up_finger_screen.dart';
-import 'package:rider/widget/custom_button.dart';
+import 'package:rider/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

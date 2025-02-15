@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:rider/utils/image_picker.dart';
-import 'package:rider/widget/custom_button.dart';
+import 'package:rider/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';

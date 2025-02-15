@@ -1,9 +1,9 @@
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/pages/auth/personal_document_screen.dart';
-import 'package:rider/widget/custom_button.dart';
-import 'package:rider/widget/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/widgets/custom_button.dart';
+import 'package:rider/widgets/custom_textfield.dart';
 
 class BankDetailsScreen extends StatelessWidget {
   BankDetailsScreen({super.key});
@@ -47,60 +47,60 @@ class BankDetailsScreen extends StatelessWidget {
 
   Center _buildPolicyText() {
     return Center(
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  children: [
-                    const TextSpan(
-                      text:
-                          "By continuing, I confirm that I have read & agree to the\n",
-                    ),
-                    TextSpan(
-                      text: "Terms & conditions",
-                      style: TextStyle(
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                    const TextSpan(
-                      text: " and ",
-                    ),
-                    TextSpan(
-                        text: "Privacy policy",
-                        style: TextStyle(
-                          color: AppColors.primaryColor,
-                        )),
-                  ],
-                ),
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            const TextSpan(
+              text:
+                  "By continuing, I confirm that I have read & agree to the\n",
+            ),
+            TextSpan(
+              text: "Terms & conditions",
+              style: TextStyle(
+                color: AppColors.primaryColor,
               ),
-            );
+            ),
+            const TextSpan(
+              text: " and ",
+            ),
+            TextSpan(
+                text: "Privacy policy",
+                style: TextStyle(
+                  color: AppColors.primaryColor,
+                )),
+          ],
+        ),
+      ),
+    );
   }
 
   Form _buildTextFieldsForBankDetails() {
     return Form(
-              child: Column(
-                children: [
-                  CustomTextField(
-                    hintText: "Bank Name",
-                    textController: _bankNameController,
-                  ),
-                  const SizedBox(height: 15),
-                  CustomTextField(
-                    hintText: "Account Holder Name",
-                    textController: _accountHolderController,
-                  ),
-                  const SizedBox(height: 15),
-                  CustomTextField(
-                    hintText: "Account Number",
-                    textController: _accountNumberController,
-                  ),
-                  const SizedBox(height: 15),
-                  CustomTextField(
-                    hintText: "Swift/FSC code",
-                    textController: _swiftController,
-                  ),
-                ],
-              ),
-            );
+      child: Column(
+        children: [
+          CustomTextField(
+            hintText: "Bank Name",
+            textController: _bankNameController,
+          ),
+          const SizedBox(height: 15),
+          CustomTextField(
+            hintText: "Account Holder Name",
+            textController: _accountHolderController,
+          ),
+          const SizedBox(height: 15),
+          CustomTextField(
+            hintText: "Account Number",
+            textController: _accountNumberController,
+          ),
+          const SizedBox(height: 15),
+          CustomTextField(
+            hintText: "Swift/FSC code",
+            textController: _swiftController,
+          ),
+        ],
+      ),
+    );
   }
 
   AppBar _buildAppBar() {

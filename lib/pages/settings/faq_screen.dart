@@ -1,5 +1,5 @@
 import 'package:rider/resources/color_resources.dart';
-import 'package:rider/widget/custom_textfield.dart';
+import 'package:rider/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

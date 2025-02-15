@@ -1,6 +1,6 @@
 import 'package:rider/resources/color_resources.dart';
-import 'package:rider/widget/custom_button.dart';
-import 'package:rider/widget/custom_textfield.dart';
+import 'package:rider/widgets/custom_button.dart';
+import 'package:rider/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -75,7 +75,7 @@ class AddCardScreen extends StatelessWidget {
                     color: Colors.grey,
                   ),
                 ),
-                child: ListTile(
+                child: const ListTile(
                   trailing: Icon(
                     Icons.keyboard_arrow_down_outlined,
                     color: Colors.white,

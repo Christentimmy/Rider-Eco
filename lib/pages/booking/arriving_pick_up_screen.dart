@@ -1,7 +1,7 @@
 import 'package:rider/pages/home/notification_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/pages/booking/start_trip_screen.dart';
-import 'package:rider/widget/custom_button.dart';
+import 'package:rider/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

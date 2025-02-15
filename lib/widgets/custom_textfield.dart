@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rider/resources/color_resources.dart';
 
-
 // ignore: must_be_immutable
 class CustomTextField extends StatelessWidget {
   final String hintText;
@@ -50,12 +49,14 @@ class CustomTextField extends StatelessWidget {
         validator: validator ??
             (value) {
               if (value?.isEmpty == true) {
-                return "field required";
+                return " ";
               }
               return null;
             },
         controller: textController,
         decoration: InputDecoration(
+          errorText: null,
+          errorStyle: const TextStyle(fontSize: 0, height: 0),
           hintText: hintText,
           prefixIcon: prefixIcon != null
               ? Icon(
@@ -91,6 +92,20 @@ class CustomTextField extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
               ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(
+              width: 1,
+              color: Colors.red,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(
+              width: 1,
+              color: Colors.red,
+            ),
+          ),
         ),
       ),
     );

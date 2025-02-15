@@ -1,7 +1,7 @@
 import 'package:rider/pages/auth/upload_eac_doc_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/pages/auth/vehicle_document_screen.dart';
-import 'package:rider/widget/custom_button.dart';
+import 'package:rider/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -172,7 +172,7 @@ class UploadDocCard extends StatelessWidget {
           color: Colors.white.withOpacity(0.5),
         ),
       ),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.arrow_forward,
         color: Colors.white,
       ),

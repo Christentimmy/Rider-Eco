@@ -12,6 +12,7 @@ class SignUpScreen extends StatelessWidget {
 
   final RxBool _isLoginWithNumber = true.obs;
   final RxInt _currentPage = 0.obs;
+  final RxBool _isNumberValidated = false.obs;
   final _formSignUpKey = GlobalKey<FormState>();
   final _formloginKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
@@ -254,49 +255,55 @@ class SignUpScreen extends StatelessWidget {
                 textController: _emailController,
               ),
               const SizedBox(height: 10),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    width: 1,
-                    color: Colors.grey.withOpacity(0.5),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    CountryCodePicker(
-                      onChanged: (value) {},
-                      initialSelection: '+234',
-                      showCountryOnly: false,
-                      showOnlyCountryWhenClosed: false,
-                      alignLeft: false,
+              Obx(
+                () => Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      width: 1,
+                      color: _isNumberValidated.value
+                          ? Colors.red
+                          : Colors.grey.withOpacity(0.5),
                     ),
-                    Expanded(
-                      child: TextFormField(
-                        controller: _phoneNumberController,
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value?.isEmpty == true) {
-                            return "field required";
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                          hintText: "mobile number",
-                          hintStyle: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide.none,
+                  ),
+                  child: Row(
+                    children: [
+                      CountryCodePicker(
+                        onChanged: (value) {},
+                        initialSelection: '+234',
+                        showCountryOnly: false,
+                        showOnlyCountryWhenClosed: false,
+                        alignLeft: false,
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _phoneNumberController,
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value?.isEmpty == true) {
+                              _isNumberValidated.value = true;
+                              return null;
+                            }
+                            _isNumberValidated.value = false;
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: "mobile number",
+                            hintStyle: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
