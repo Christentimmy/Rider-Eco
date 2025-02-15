@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/chat_customer_service_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
 class SupportScreen extends StatelessWidget {
@@ -110,9 +110,9 @@ class SupportScreen extends StatelessWidget {
                     itemCount: _contactUsList.length,
                     itemBuilder: (context, index) {
                       return InkWell(
-                        onTap: (){
+                        onTap: () {
                           if (index == 0) {
-                            Get.to(()=> ChatCustomerServiceScreen());
+                            Get.to(() => ChatCustomerServiceScreen());
                           }
                         },
                         child: Container(
@@ -360,7 +360,7 @@ class FaqCard extends StatelessWidget {
           const Spacer(),
           IconButton(
             onPressed: () {},
-            icon: const Icon(
+            icon: Icon(
               Icons.keyboard_arrow_down_rounded,
               color: AppColors.primaryColor,
             ),

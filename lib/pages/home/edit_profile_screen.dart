@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rider/pages/home/home_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/utils/image_picker.dart';
 import 'package:rider/widgets/custom_button.dart';
 
@@ -165,7 +165,7 @@ class EditProfileScreen extends StatelessWidget {
                 onPressed: () {
                   pickImage();
                 },
-                icon: const Icon(
+                icon: Icon(
                   Icons.camera,
                   size: 17,
                   color: AppColors.primaryColor,

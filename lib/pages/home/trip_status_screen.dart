@@ -6,8 +6,7 @@ import 'package:rider/pages/chat/chat_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/notifcation_screen.dart';
 import 'package:rider/pages/home/panic_mode_screen.dart';
-
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 
 class TripStatusScreen extends StatelessWidget {
@@ -70,7 +69,7 @@ class TripStatusScreen extends StatelessWidget {
               ),
               color: Colors.white,
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -83,7 +82,7 @@ class TripStatusScreen extends StatelessWidget {
                 CircleAvatar(
                   radius: 10,
                   backgroundColor: AppColors.primaryColor,
-                  child: Icon(
+                  child: const Icon(
                     Icons.done,
                     color: Colors.white,
                     size: 12,
@@ -169,13 +168,13 @@ class TripStatusScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          const Row(
+          Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on,
                 color: Colors.white,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -196,7 +195,7 @@ class TripStatusScreen extends StatelessWidget {
               )
             ],
           ),
-          const Divider(color: AppColors.primaryColor),
+          Divider(color: AppColors.primaryColor),
           Row(
             children: [
               const Icon(
@@ -204,7 +203,7 @@ class TripStatusScreen extends StatelessWidget {
                 color: Colors.white,
               ),
               const SizedBox(width: 10),
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -225,7 +224,7 @@ class TripStatusScreen extends StatelessWidget {
               const Spacer(),
               InkWell(
                 onTap: () {
-                  Get.to(()=> PanicModeScreen());
+                  Get.to(() => const PanicModeScreen());
                 },
                 child: const Column(
                   children: [

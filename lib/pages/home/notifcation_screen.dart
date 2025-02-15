@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 
 class NotificationScreen extends StatelessWidget {
   NotificationScreen({super.key});
@@ -58,7 +58,7 @@ class NotificationScreen extends StatelessWidget {
                       ),
                       title: Text(
                         _notifactionList[index][0],
-                        style: const TextStyle(
+                        style:  TextStyle(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
                         ),
@@ -100,11 +100,11 @@ class NotificationScreen extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      actions: const [
+      actions:  [
         CircleAvatar(
           radius: 18,
           backgroundColor: AppColors.primaryColor,
-          child: Text(
+          child: const Text(
             "12",
             style: TextStyle(
               fontSize: 13,
@@ -112,7 +112,7 @@ class NotificationScreen extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
       ],
     );
   }

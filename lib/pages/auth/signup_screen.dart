@@ -4,7 +4,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:rider/pages/auth/password_recovery_screen.dart';
 import 'package:rider/pages/auth/verify_phone_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
@@ -13,6 +13,8 @@ class SignUpScreen extends StatelessWidget {
 
   final RxBool _isLoginWithNumber = true.obs;
   final RxInt _currentPage = 0.obs;
+  final _formSignUpKey = GlobalKey<FormState>();
+  final _formloginKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _loginEmailController = TextEditingController();
   final _loginPasswordController = TextEditingController();
@@ -134,89 +136,92 @@ class SignUpScreen extends StatelessWidget {
       ),
       child: SizedBox(
         height: 400,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 20),
-            const Text(
-              "Login Into Your Account",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+        child: Form(
+          key: _formloginKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              const Text(
+                "Login Into Your Account",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
-            ),
-            const SizedBox(height: 25),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Obx(() {
-                  return InkWell(
-                    onTap: () {
-                      _isLoginWithNumber.value = !_isLoginWithNumber.value;
-                    },
-                    child: Text(
-                      _isLoginWithNumber.value
-                          ? "Use Email Instead"
-                          : "Change to number",
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
+              const SizedBox(height: 25),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Obx(() {
+                    return InkWell(
+                      onTap: () {
+                        _isLoginWithNumber.value = !_isLoginWithNumber.value;
+                      },
+                      child: Text(
+                        _isLoginWithNumber.value
+                            ? "Use Email Instead"
+                            : "Change to number",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                    );
+                  }),
+                ],
+              ),
+              Obx(() {
+                if (_isLoginWithNumber.value) {
+                  return const PhoneNumberTextField();
+                } else {
+                  return CustomTextField(
+                    hintText: "john@email.com",
+                    textController: _loginEmailController,
                   );
-                }),
-              ],
-            ),
-            Obx(() {
-              if (_isLoginWithNumber.value) {
-                return const PhoneNumberTextField();
-              } else {
-                return CustomTextField(
-                  hintText: "john@email.com",
-                  textController: _loginEmailController,
-                );
-              }
-            }),
-            const SizedBox(height: 10),
-            CustomTextField(
-              hintText: "password",
-              textController: _loginPasswordController,
-            ),
-            const SizedBox(height: 25),
-            CommonButton(
-              ontap: () {
-                Get.to(() => HomeScreen());
-              },
-              text: "Login",
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                  onTap: () => Get.to(() => const PasswordRecoveryScreen()),
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 5),
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
+                }
+              }),
+              const SizedBox(height: 10),
+              CustomTextField(
+                hintText: "password",
+                textController: _loginPasswordController,
+              ),
+              const SizedBox(height: 25),
+              CommonButton(
+                ontap: () {
+                  Get.to(() => HomeScreen());
+                },
+                text: "Login",
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  InkWell(
+                    onTap: () => Get.to(() => const PasswordRecoveryScreen()),
+                    child: const Padding(
+                      padding: EdgeInsets.only(top: 5),
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const Spacer(),
-            const Text(
-              "By clicking start, you agree to our Terms and Conditions",
-              style: TextStyle(
-                fontSize: 9,
+                ],
               ),
-            ),
-            Container(),
-          ],
+              const Spacer(),
+              const Text(
+                "By clicking start, you agree to our Terms and Conditions",
+                style: TextStyle(
+                  fontSize: 9,
+                ),
+              ),
+              Container(),
+            ],
+          ),
         ),
       ),
     );
@@ -229,91 +234,104 @@ class SignUpScreen extends StatelessWidget {
       ),
       child: SizedBox(
         height: Get.height * 0.55,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 10),
-            const Text(
-              "Create Account",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 20),
-            // const EmailTextField(),
-            CustomTextField(
-              hintText: "John@email.com",
-              textController: _emailController,
-            ),
-            const SizedBox(height: 10),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  width: 1,
-                  color: Colors.grey.withOpacity(0.5),
+        child: Form(
+          key: _formSignUpKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              const Text(
+                "Create Account",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
               ),
-              child: Row(
-                children: [
-                  CountryCodePicker(
-                    onChanged: (value) {},
-                    initialSelection: '+234',
-                    showCountryOnly: false,
-                    showOnlyCountryWhenClosed: false,
-                    // optional. aligns the flag and the Text left
-                    alignLeft: false,
+              const SizedBox(height: 20),
+              // const EmailTextField(),
+              CustomTextField(
+                hintText: "John@email.com",
+                textController: _emailController,
+              ),
+              const SizedBox(height: 10),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    width: 1,
+                    color: Colors.grey.withOpacity(0.5),
                   ),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _phoneNumberController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        hintText: "mobile number",
-                        hintStyle: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
+                ),
+                child: Row(
+                  children: [
+                    CountryCodePicker(
+                      onChanged: (value) {},
+                      initialSelection: '+234',
+                      showCountryOnly: false,
+                      showOnlyCountryWhenClosed: false,
+                      alignLeft: false,
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _phoneNumberController,
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value?.isEmpty == true) {
+                            return "field required";
+                          }
+                          return null;
+                        },
+                        decoration: const InputDecoration(
+                          hintText: "mobile number",
+                          hintStyle: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            // const PasswordTextField(),
-            CustomTextField(
-              hintText: "password",
-              textController: _passwordController,
-            ),
-            const SizedBox(height: 10),
-            // const ConfirmPassswordTextField(),
-            CustomTextField(
-              hintText: "confirm password",
-              textController: _confirmPasswordController,
-            ),
-            const SizedBox(height: 25),
-            CommonButton(
-              ontap: () {
-                Get.to(() => VerifyPhoneNumberScreen());
-              },
-              text: "Sign Up",
-            ),
-            const Spacer(),
-            const Text(
-              "By clicking start, you agree to our Terms and Conditions",
-              style: TextStyle(
-                fontSize: 9,
+              const SizedBox(height: 10),
+              // const PasswordTextField(),
+              CustomTextField(
+                hintText: "password",
+                textController: _passwordController,
               ),
-            )
-          ],
+              const SizedBox(height: 10),
+              // const ConfirmPassswordTextField(),
+              CustomTextField(
+                hintText: "confirm password",
+                textController: _confirmPasswordController,
+              ),
+              const SizedBox(height: 25),
+              CommonButton(
+                ontap: () {
+                  if (!_formSignUpKey.currentState!.validate()) {
+                    return;
+                  }
+
+                  // Get.to(() => VerifyPhoneNumberScreen());
+                },
+                text: "Sign Up",
+              ),
+              const Spacer(),
+              const Text(
+                "By clicking start, you agree to our Terms and Conditions",
+                style: TextStyle(
+                  fontSize: 9,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -384,7 +402,7 @@ class VectorDiagram extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            height: Get.height * 0.2,
+            height: Get.height * 0.4,
             color: AppColors.primaryColor,
             width: Get.width,
           ),
@@ -392,7 +410,7 @@ class VectorDiagram extends StatelessWidget {
             "assets/images/OBJECTS.png",
           ),
           Positioned(
-            bottom: Get.height * 0.24,
+            bottom: Get.height * 0.2,
             right: 60,
             child: Obx(
               () => AnimatedCrossFade(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   ResetPasswordScreen({super.key});
@@ -105,7 +105,7 @@ class ResetPasswordScreen extends StatelessWidget {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(
+                      borderSide: BorderSide(
                         width: 2,
                         color: AppColors.primaryColor,
                       ),
@@ -235,10 +235,10 @@ class ResetPasswordScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    gradient: const LinearGradient(
+                    gradient: LinearGradient(
                       colors: [
                         AppColors.primaryColor,
-                        Color.fromARGB(212, 37, 37, 37)
+                        const Color.fromARGB(212, 37, 37, 37)
                       ],
                     ),
                   ),

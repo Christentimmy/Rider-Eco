@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/notifcation_screen.dart';
 import 'package:rider/pages/home/payment_method_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 
 class TripDetailsScreen extends StatelessWidget {
@@ -125,13 +125,13 @@ class TripDetailsScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          const Row(
+          Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on,
                 color: Colors.white,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -152,14 +152,14 @@ class TripDetailsScreen extends StatelessWidget {
               )
             ],
           ),
-          const Divider(color: AppColors.primaryColor),
-          const Row(
+          Divider(color: AppColors.primaryColor),
+          Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on,
                 color: Colors.white,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -202,7 +202,7 @@ class TripDetailsScreen extends StatelessWidget {
                 child: CommonButton(
                   text: "Payment",
                   ontap: () {
-                    Get.to(()=> PaymentMethodScreen());
+                    Get.to(() => const PaymentMethodScreen());
                   },
                   bgColor: Colors.black,
                   border: Border.all(width: 1, color: Colors.white),

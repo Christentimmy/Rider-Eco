@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:rider/pages/home/trip_status_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
@@ -65,7 +65,7 @@ class PayScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40),
-            const Text(
+            Text(
               "Enter Amount",
               style: TextStyle(
                 fontSize: 15,

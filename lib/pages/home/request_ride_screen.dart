@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/available_vehicles_screen.dart';
 import 'package:rider/pages/home/notifcation_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_button.dart';
 
@@ -254,7 +254,7 @@ class RequestRideScreen extends StatelessWidget {
             CommonButton(
               text: "Request",
               ontap: () {
-                Get.to(()=> AvailableVehiclesScreen());
+                Get.to(() => AvailableVehiclesScreen());
               },
             ),
           ],
@@ -276,7 +276,7 @@ class RequestRideScreen extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.primaryColor,
           fontSize: 16,
           fontWeight: FontWeight.bold,

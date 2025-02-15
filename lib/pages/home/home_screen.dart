@@ -8,7 +8,7 @@ import 'package:rider/pages/home/schedule_screen.dart';
 import 'package:rider/pages/home/settings_screen.dart';
 import 'package:rider/pages/home/soure_destination_screen.dart';
 import 'package:rider/pages/home/support_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
@@ -71,7 +71,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Good Morning, John",
               style: TextStyle(
                 color: AppColors.primaryColor,

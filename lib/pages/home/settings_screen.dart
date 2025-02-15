@@ -6,7 +6,7 @@ import 'package:rider/pages/home/privacy_policy_screen.dart';
 import 'package:rider/pages/home/profile_screen.dart';
 import 'package:rider/pages/home/save_places_screen.dart';
 import 'package:rider/pages/home/terms_and_condition_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 
 class SettingScreen extends StatelessWidget {
   SettingScreen({super.key});
@@ -23,14 +23,14 @@ class SettingScreen extends StatelessWidget {
       "Change Password",
       Icons.lock,
       () {
-        Get.to(()=> ChangePasswordScreen());
+        Get.to(() => ChangePasswordScreen());
       }
     ],
     [
       "Save Address",
       Icons.location_pin,
       () {
-        Get.to(()=> SavePlacesScreen());
+        Get.to(() => SavePlacesScreen());
       }
     ],
     // [
@@ -44,14 +44,14 @@ class SettingScreen extends StatelessWidget {
       "Terms & Conditon",
       Icons.local_police_rounded,
       () {
-        Get.to(()=> TermsAndConditionScreen());
+        Get.to(() => TermsAndConditionScreen());
       }
     ],
     [
       "Policy",
       Icons.local_police_rounded,
       () {
-        Get.to(()=> PrivacyPolicyScreen());
+        Get.to(() => PrivacyPolicyScreen());
       }
     ],
   ];
@@ -143,7 +143,7 @@ class SettingScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Do you want to delete\nyour account?",
                 textAlign: TextAlign.center,
                 style: TextStyle(

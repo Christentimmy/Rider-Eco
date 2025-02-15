@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 
 class ChatCustomerServiceScreen extends StatelessWidget {
   ChatCustomerServiceScreen({super.key});
@@ -34,8 +34,8 @@ class ChatCustomerServiceScreen extends StatelessWidget {
                       vertical: 15,
                       horizontal: 15,
                     ),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(20),
                         topRight: Radius.circular(20),
                         bottomLeft: Radius.circular(20),
@@ -202,5 +202,4 @@ class ChatCustomerServiceScreen extends StatelessWidget {
       ),
     );
   }
-
 }

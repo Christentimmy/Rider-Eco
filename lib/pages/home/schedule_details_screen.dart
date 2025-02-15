@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/home_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 
 class ScheduleDetailsScreen extends StatelessWidget {
@@ -51,14 +51,14 @@ class ScheduleDetailsScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
-            const Row(
+            Row(
               children: [
                 Icon(
                   Icons.location_on,
                   color: AppColors.primaryColor,
                 ),
-                SizedBox(width: 10),
-                Column(
+                const SizedBox(width: 10),
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -82,14 +82,14 @@ class ScheduleDetailsScreen extends StatelessWidget {
             ),
             // const SizedBox(height: 20),
             const Divider(color: Color.fromARGB(255, 41, 117, 43)),
-            const Row(
+            Row(
               children: [
                 Icon(
                   Icons.location_on,
                   color: AppColors.primaryColor,
                 ),
-                SizedBox(width: 10),
-                Column(
+                const SizedBox(width: 10),
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(

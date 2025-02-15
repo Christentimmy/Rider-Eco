@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 
 class IntroScreen extends StatelessWidget {
   IntroScreen({super.key});
@@ -117,7 +117,7 @@ class IntroScreen extends StatelessWidget {
         const SizedBox(height: 45),
         Text(
           text1,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.primaryColor,
             fontWeight: FontWeight.bold,
             fontSize: 40,
@@ -134,7 +134,7 @@ class IntroScreen extends StatelessWidget {
               ),
             ),
             SizedBox(width: Get.width * 0.15),
-            const CircleAvatar(
+            CircleAvatar(
               radius: 5,
               backgroundColor: AppColors.primaryColor,
             ),

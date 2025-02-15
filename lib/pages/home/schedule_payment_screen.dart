@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/notifcation_screen.dart';
 import 'package:rider/pages/home/panic_mode_screen.dart';
-
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 
 class SchedulePaymentScreen extends StatelessWidget {
@@ -130,13 +128,13 @@ class SchedulePaymentScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          const Row(
+          Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on,
                 color: Colors.white,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -157,7 +155,7 @@ class SchedulePaymentScreen extends StatelessWidget {
               )
             ],
           ),
-          const Divider(color: AppColors.primaryColor),
+          Divider(color: AppColors.primaryColor),
           Row(
             children: [
               const Icon(
@@ -165,7 +163,7 @@ class SchedulePaymentScreen extends StatelessWidget {
                 color: Colors.white,
               ),
               const SizedBox(width: 10),
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -287,7 +285,7 @@ class SchedulePaymentScreen extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  Get.offAll(()=> HomeScreen());
+                  Get.offAll(() => HomeScreen());
                 },
                 icon: const Icon(
                   Icons.arrow_back,
@@ -320,7 +318,7 @@ class SchedulePaymentScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 horizontalTitleGap: 10,
                 minTileHeight: 35,
-                leading: const Icon(
+                leading: Icon(
                   Icons.location_pin,
                   color: AppColors.primaryColor,
                 ),
@@ -336,7 +334,7 @@ class SchedulePaymentScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 horizontalTitleGap: 10,
                 minTileHeight: 35,
-                leading: const Icon(
+                leading: Icon(
                   Icons.notifications_active_outlined,
                   color: AppColors.primaryColor,
                 ),

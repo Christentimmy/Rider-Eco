@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/trip_details_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 
 class WaitingRideScreen extends StatelessWidget {
@@ -54,7 +54,7 @@ class WaitingRideScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          const Text(
+                          Text(
                             "Cancel",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -135,7 +135,7 @@ class WaitingRideScreen extends StatelessWidget {
                         child: CommonButton(
                           text: "Cancel Trip",
                           ontap: () {
-                            Get.offAll(()=> HomeScreen());
+                            Get.offAll(() => HomeScreen());
                           },
                           textColor: AppColors.primaryColor,
                           bgColor: Colors.white,
@@ -150,7 +150,7 @@ class WaitingRideScreen extends StatelessWidget {
                         child: CommonButton(
                           text: "Find Trip",
                           ontap: () {
-                            Get.to(()=> TripDetailsScreen());
+                            Get.to(() => TripDetailsScreen());
                           },
                         ),
                       ),

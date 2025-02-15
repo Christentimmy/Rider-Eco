@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/payment_method_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
@@ -43,7 +43,7 @@ class AddCardScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: Get.height * 0.05),
-              const Text(
+              Text(
                 "Account Name",
                 style: TextStyle(
                   fontSize: 14,
@@ -57,7 +57,7 @@ class AddCardScreen extends StatelessWidget {
                 textController: _accountNameController,
               ),
               const SizedBox(height: 30),
-              const Text(
+              Text(
                 "Bank Name",
                 style: TextStyle(
                   fontSize: 14,
@@ -91,7 +91,7 @@ class AddCardScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
-              const Text(
+              Text(
                 "Account Number",
                 style: TextStyle(
                   fontSize: 14,
@@ -105,9 +105,11 @@ class AddCardScreen extends StatelessWidget {
                 textController: _accountNameController,
               ),
               const SizedBox(height: 30),
-              CommonButton(text: "Save", ontap: () {
-                Get.off(()=> const PaymentMethodScreen());
-              }),
+              CommonButton(
+                  text: "Save",
+                  ontap: () {
+                    Get.off(() => const PaymentMethodScreen());
+                  }),
             ],
           ),
         ),

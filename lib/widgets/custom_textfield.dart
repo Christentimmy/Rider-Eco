@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
+
 
 // ignore: must_be_immutable
 class CustomTextField extends StatelessWidget {
@@ -16,6 +17,7 @@ class CustomTextField extends StatelessWidget {
   InputBorder? focusedBorder;
   double? height;
   BorderRadius? borderRadius;
+  String? Function(String?)? validator;
   CustomTextField({
     super.key,
     required this.hintText,
@@ -31,6 +33,7 @@ class CustomTextField extends StatelessWidget {
     this.height,
     this.borderRadius,
     required this.textController,
+    this.validator,
   });
 
   @override
@@ -44,6 +47,13 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         keyboardType: textInputType,
         style: textStyle,
+        validator: validator ??
+            (value) {
+              if (value?.isEmpty == true) {
+                return "field required";
+              }
+              return null;
+            },
         controller: textController,
         decoration: InputDecoration(
           hintText: hintText,
@@ -76,7 +86,7 @@ class CustomTextField extends StatelessWidget {
           focusedBorder: focusedBorder ??
               OutlineInputBorder(
                 borderRadius: borderRadius ?? BorderRadius.circular(15),
-                borderSide: const BorderSide(
+                borderSide: BorderSide(
                   width: 1,
                   color: AppColors.primaryColor,
                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/find_a_ride_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
 class SoureDestinationScreen extends StatefulWidget {
@@ -40,7 +40,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
               const SizedBox(height: 30),
               Row(
                 children: [
-                  const Text(
+                  Text(
                     'Recent',
                     style: TextStyle(
                       fontSize: 16,
@@ -55,7 +55,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
                       _inputFields.add(null);
                       _inputFields.refresh();
                     },
-                    child: const Text(
+                    child: Text(
                       'Clear All',
                       style: TextStyle(
                         fontSize: 13,
@@ -181,7 +181,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
             hintText: "Soft bank",
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(
+                borderSide: BorderSide(
                   width: 2,
                   color: AppColors.primaryColor,
                 )),

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:rider/pages/home/create_new_schedule_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/schedule_details_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
@@ -25,7 +25,7 @@ class ScheduleScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Create Schedule",
               style: TextStyle(
                 fontSize: 18,
@@ -47,7 +47,7 @@ class ScheduleScreen extends StatelessWidget {
                 child: CommonButton(
                   text: "New Schedule",
                   ontap: () {
-                    Get.to(()=> CreateNewScheduleScreen());
+                    Get.to(() => CreateNewScheduleScreen());
                   },
                 ),
               ),
@@ -113,7 +113,7 @@ class ScheduleScreen extends StatelessWidget {
   InkWell _buildFilterCards() {
     return InkWell(
       onTap: () {
-        Get.to(()=> ScheduleDetailsScreen());
+        Get.to(() => const ScheduleDetailsScreen());
       },
       child: Container(
         // height: 200,
@@ -132,14 +132,14 @@ class ScheduleScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const Row(
+            Row(
               children: [
                 Icon(
                   Icons.location_on,
                   color: AppColors.primaryColor,
                 ),
-                SizedBox(width: 10),
-                Column(
+                const SizedBox(width: 10),
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -159,8 +159,8 @@ class ScheduleScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                Spacer(),
-                Column(
+                const Spacer(),
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -183,14 +183,14 @@ class ScheduleScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            const Row(
+            Row(
               children: [
                 Icon(
                   Icons.location_on,
                   color: AppColors.primaryColor,
                 ),
-                SizedBox(width: 10),
-                Column(
+                const SizedBox(width: 10),
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -210,8 +210,8 @@ class ScheduleScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                Spacer(),
-                Text(
+                const Spacer(),
+                const Text(
                   "Express",
                   style: TextStyle(
                     color: Colors.grey,

@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:rider/pages/auth/setup_finger_print_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 import 'package:rider/utils/image_picker.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
@@ -25,7 +25,7 @@ class CreateProfileScreen extends StatelessWidget {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
+            colorScheme: ColorScheme.light(
               primary: AppColors.primaryColor, // Customize the primary color
               onPrimary: Colors.white, // Text color on selected date
               onSurface: Colors.black, // Default text color
@@ -145,7 +145,7 @@ class CreateProfileScreen extends StatelessWidget {
                         onPressed: () {
                           pickImage();
                         },
-                        icon: const Icon(
+                        icon:  Icon(
                           Icons.camera,
                           size: 17,
                           color: AppColors.primaryColor,

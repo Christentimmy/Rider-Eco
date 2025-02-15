@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/home_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 
 class SetUpFingerScreen extends StatelessWidget {
   const SetUpFingerScreen({super.key});
@@ -121,10 +121,10 @@ class SetUpFingerScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         colors: [
                           AppColors.primaryColor,
-                          Color.fromARGB(255, 8, 44, 10),
+                          const Color.fromARGB(255, 8, 44, 10),
                         ],
                       ),
                     ),

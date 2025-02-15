@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 import 'package:rider/controller/timer_controller.dart';
 import 'package:rider/pages/auth/create_profile_screen.dart';
-import 'package:rider/resources/colors.dart';
+import 'package:rider/resources/color_resources.dart';
 
 class VerifyPhoneNumberScreen extends StatelessWidget {
   VerifyPhoneNumberScreen({super.key});
@@ -98,7 +98,7 @@ class VerifyPhoneNumberScreen extends StatelessWidget {
                       _timeController.secondsLeft.value <= 0
                           ? "Resend"
                           : _timeController.secondsLeft.value.toString(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.primaryColor,
                         fontWeight: FontWeight.bold,
                       ),
