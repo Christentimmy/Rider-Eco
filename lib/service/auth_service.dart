@@ -14,7 +14,7 @@ class AuthService {
       final response = await client
           .post(
             Uri.parse("$baseUrl/auth/register"),
-            headers: {"Accept": "application/json"},
+            headers: {"Content-Type": "application/json"},
             body: userModel.toJson(),
           )
           .timeout(const Duration(seconds: 15));
@@ -41,7 +41,7 @@ class AuthService {
     try {
       http.Response response = await client.post(
         Uri.parse("$baseUrl/auth/login"),
-        headers: {"Accept": "application/json"},
+        headers: {"Content-Type": "application/json"},
         body: {
           "email": email,
           "password": password,
@@ -61,6 +61,45 @@ class AuthService {
     } catch (e) {
       throw Exception("unexpected error $e");
     }
+  }
+
+  Future<http.Response?> verifyOtp({
+    required String otpCode,
+    required String token,
+    String? email,
+    String? phoneNumber,
+  }) async {
+    try {
+      final response = await client.post(
+        Uri.parse("$baseUrl/auth/verify-otp"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
+        },
+        body: {
+          "otp": otpCode,
+        },
+      ).timeout(const Duration(seconds: 15));
+      return response;
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
+  }
+
+  Future<http.Response?> sendOtp({required String token}) async {
+    try {
+      final response = await client.post(
+        Uri.parse("$baseUrl/send-otp"),
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ).timeout(const Duration(seconds: 15));
+      return response;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
   }
 
 }
