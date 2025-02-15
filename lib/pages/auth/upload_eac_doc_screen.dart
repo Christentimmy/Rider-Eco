@@ -1,10 +1,9 @@
-import 'dart:typed_data';
+import 'dart:io';
 import 'package:rider/utils/image_picker.dart';
 import 'package:rider/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 
 class UploadEacDocScreen extends StatelessWidget {
   final String title;
@@ -13,10 +12,10 @@ class UploadEacDocScreen extends StatelessWidget {
     required this.title,
   });
 
-  final Rxn<Uint8List> _image = Rxn<Uint8List>();
+  final Rxn<File> _image = Rxn<File>();
 
   void _pickImage() async {
-    final im = await selectImageFromGallery(ImageSource.gallery);
+    final im = await pickImage();
     if (im != null) {
       _image.value = im;
     }
@@ -30,14 +29,14 @@ class UploadEacDocScreen extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           onPressed: () => Get.back(),
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios,
             color: Colors.white,
           ),
         ),
         title: Text(
           title,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 18,
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -65,7 +64,7 @@ class UploadEacDocScreen extends StatelessWidget {
                   height: Get.height * 0.6,
                   width: Get.width,
                   child: _image.value != null
-                      ? Image.memory(
+                      ? Image.file(
                           _image.value!,
                           fit: BoxFit.cover,
                           height: Get.height * 0.6,

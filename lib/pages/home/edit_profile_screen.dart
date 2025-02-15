@@ -1,7 +1,6 @@
-import 'dart:typed_data';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/utils/image_picker.dart';
@@ -10,10 +9,10 @@ import 'package:rider/widgets/custom_button.dart';
 class EditProfileScreen extends StatelessWidget {
   EditProfileScreen({super.key});
 
-  final Rxn<Uint8List> _image = Rxn<Uint8List>();
+  final Rxn<File> _image = Rxn<File>();
 
-  void pickImage() async {
-    Uint8List? im = await selectImageFromGallery(ImageSource.gallery);
+  void selectImageForUser() async {
+    File? im = await pickImage();
     if (im != null) {
       _image.value = im;
     }
@@ -148,7 +147,7 @@ class EditProfileScreen extends StatelessWidget {
               () => ClipRRect(
                   borderRadius: BorderRadius.circular(80),
                   child: _image.value != null
-                      ? Image.memory(
+                      ? Image.file(
                           _image.value!,
                           fit: BoxFit.cover,
                         )

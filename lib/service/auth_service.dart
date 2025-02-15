@@ -93,8 +93,39 @@ class AuthService {
         Uri.parse("$baseUrl/send-otp"),
         headers: {
           "Authorization": "Bearer $token",
+          "Content-Type": "application/json"
         },
       ).timeout(const Duration(seconds: 15));
+      return response;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.StreamedResponse?> completeProfile({
+    required UserModel userModel,
+    required String token,
+    required File imageFile,
+  }) async {
+    try {
+      var uri = Uri.parse("$baseUrl/auth/complete-profile");
+
+      var request = http.MultipartRequest('POST', uri)
+        ..headers['Authorization'] = 'Bearer $token' 
+        ..headers['Content-Type'] = 'multipart/form-data'
+        ..fields['first_name'] = userModel.firstName!
+        ..fields['last_name'] = userModel.lastName!
+        ..fields['dob'] = userModel.dob!
+        ..fields['address'] = userModel.address!
+        ..files.add(
+          await http.MultipartFile.fromPath(
+            'avater',
+            imageFile.path,
+          ),
+        );
+
+      var response = await request.send().timeout(const Duration(seconds: 15));
       return response;
     } catch (e) {
       debugPrint(e.toString());

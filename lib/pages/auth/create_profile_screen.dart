@@ -1,9 +1,8 @@
-import 'dart:typed_data';
+import 'dart:io';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:rider/pages/auth/setup_finger_print_screen.dart';
 import 'package:rider/resources/color_resources.dart';
@@ -52,10 +51,10 @@ class CreateProfileScreen extends StatelessWidget {
   final _emailController = TextEditingController();
   final _dobController = TextEditingController();
 
-  final Rxn<Uint8List> _image = Rxn<Uint8List>();
+  final Rxn<File> _image = Rxn<File>();
 
-  void pickImage() async {
-    Uint8List? im = await selectImageFromGallery(ImageSource.gallery);
+  void selectImageForUser() async {
+    File? im = await pickImage();
     if (im != null) {
       _image.value = im;
     }
@@ -78,7 +77,8 @@ class CreateProfileScreen extends StatelessWidget {
         child: CommonButton(
           text: "Continue",
           ontap: () {
-            Get.to(()=> SetUpFingerScreen());
+            // ignore: prefer_const_constructors
+            Get.to(() => SetUpFingerScreen());
           },
         ),
       ),
@@ -125,7 +125,7 @@ class CreateProfileScreen extends StatelessWidget {
                       () => ClipRRect(
                         borderRadius: BorderRadius.circular(80),
                         child: _image.value != null
-                            ? Image.memory(
+                            ? Image.file(
                                 _image.value!,
                                 fit: BoxFit.cover,
                               )
@@ -145,7 +145,7 @@ class CreateProfileScreen extends StatelessWidget {
                         onPressed: () {
                           pickImage();
                         },
-                        icon:  Icon(
+                        icon: Icon(
                           Icons.camera,
                           size: 17,
                           color: AppColors.primaryColor,
