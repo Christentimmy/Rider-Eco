@@ -3,17 +3,39 @@ import 'package:get/get.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/trip_details_screen.dart';
 import 'package:rider/resources/color_resources.dart';
+import 'package:rider/service/socket_service.dart';
 import 'package:rider/widgets/custom_button.dart';
 
-class WaitingRideScreen extends StatelessWidget {
+class WaitingRideScreen extends StatefulWidget {
   const WaitingRideScreen({super.key});
+
+  @override
+  State<WaitingRideScreen> createState() => _WaitingRideScreenState();
+}
+
+class _WaitingRideScreenState extends State<WaitingRideScreen> {
+  final socketService = Get.find<SocketService>();
+  @override
+  void initState() {
+    print("build");
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!socketService.socket.connected) {
+        socketService.connect();
+      }
+      print("Socket Connected ${socketService.socket.connected}");
+      print("Socket DisConnected ${socketService.socket.disconnected}");
+      socketService.connect();
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          Image.asset("assets/images/map3.png"),
+          // Image.asset("assets/images/map3.png"),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -54,7 +76,7 @@ class WaitingRideScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 20),
-                           Text(
+                          Text(
                             "Cancel",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -135,7 +157,7 @@ class WaitingRideScreen extends StatelessWidget {
                         child: CommonButton(
                           text: "Cancel Trip",
                           ontap: () {
-                            Get.offAll(()=> HomeScreen());
+                            Get.offAll(() => HomeScreen());
                           },
                           textColor: AppColors.primaryColor,
                           bgColor: Colors.white,
@@ -150,7 +172,7 @@ class WaitingRideScreen extends StatelessWidget {
                         child: CommonButton(
                           text: "Find Trip",
                           ontap: () {
-                            Get.to(()=> TripDetailsScreen());
+                            Get.to(() => TripDetailsScreen());
                           },
                         ),
                       ),

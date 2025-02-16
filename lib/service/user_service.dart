@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -38,7 +39,8 @@ class UserService {
     int? radius,
   }) async {
     try {
-      var url = "$baseUrl/user/get-nearby-drivers?longitude=${fromLocation.longitude}&latitude=${fromLocation.latitude}";
+      var url =
+          "$baseUrl/user/get-nearby-drivers?longitude=${fromLocation.longitude}&latitude=${fromLocation.latitude}";
       if (radius != null && radius != 0) {
         url += "&radius=$radius";
       }
@@ -50,6 +52,107 @@ class UserService {
           "Content-Type": "application/json",
         },
       );
+      return response;
+    } on SocketException catch (e) {
+      CustomSnackbar.showErrorSnackBar("Check internet connection, $e");
+      debugPrint("No internet connection");
+    } on TimeoutException {
+      CustomSnackbar.showErrorSnackBar(
+        "Request timeout, probably bad network, try again",
+      );
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> getUserById({
+    required String token,
+    required String userId,
+  }) async {
+    try {
+      final response = await client.get(
+        Uri.parse('$baseUrl/user/get-user-with-id/$userId'),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      ).timeout(const Duration(seconds: 15));
+      return response;
+    } on SocketException catch (e) {
+      CustomSnackbar.showErrorSnackBar("Check internet connection, $e");
+      debugPrint("No internet connection");
+    } on TimeoutException {
+      CustomSnackbar.showErrorSnackBar(
+        "Request timeout, probably bad network, try again",
+      );
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> requestRide({
+    required String token,
+    required String driverId,
+    required LatLng fromLocation,
+    required String fromLocationName,
+    required LatLng toLocation,
+    required String toLocationName,
+    required String paymentMethod,
+  }) async {
+    print(driverId);
+    try {
+      final response = await client.post(
+        Uri.parse('$baseUrl/user/ride/request-ride'),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(
+          {
+            "driverId": driverId,
+            "pickup_location": {
+              "lng": fromLocation.longitude,
+              "lat": fromLocation.latitude,
+              "address": fromLocationName,
+            },
+            "dropoff_location": {
+              "lat": toLocation.latitude,
+              "lng": toLocation.longitude,
+              "address": toLocationName,
+            },
+            "payment_method": paymentMethod.toLowerCase(),
+          },
+        ),
+      );
+      print(response.body);
+      return response;
+    } on SocketException catch (e) {
+      CustomSnackbar.showErrorSnackBar("Check internet connection, $e");
+      debugPrint("No internet connection");
+    } on TimeoutException {
+      CustomSnackbar.showErrorSnackBar(
+        "Request timeout, probably bad network, try again",
+      );
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> getUserDetails({required String token}) async {
+    try {
+      final response = await client.get(
+        Uri.parse("$baseUrl/user/get-user-details"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      ).timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
       CustomSnackbar.showErrorSnackBar("Check internet connection, $e");

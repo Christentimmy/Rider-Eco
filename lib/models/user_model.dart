@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 class UserModel {
+  final String? id;
   final String? email;
   final String? phoneNumber;
   final String? firstName;
@@ -17,6 +18,7 @@ class UserModel {
   String? password;
 
   UserModel({
+    this.id,
     this.email,
     this.phoneNumber,
     this.firstName,
@@ -36,6 +38,7 @@ class UserModel {
   // Factory constructor to create an instance from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
+      id: json['id'] ?? "", // Added password field to JSON mapping
       email: json['email'] ?? "",
       phoneNumber: json['phone_number'] ?? "",
       firstName: json['first_name'] ?? "",
@@ -104,6 +107,6 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(email: $email, phoneNumber: $phoneNumber, firstName: $firstName, lastName: $lastName, dob: $dob, address: $address, profilePicture: $profilePicture, isEmailVerified: $isEmailVerified, isPhoneNumberVerified: $isPhoneNumberVerified, createdAt: $createdAt, role: $role, profileCompleted: $profileCompleted, status: $status)';
+    return 'UserModel(id: $id, email: $email, phoneNumber: $phoneNumber, firstName: $firstName, lastName: $lastName, dob: $dob, address: $address, profilePicture: $profilePicture, isEmailVerified: $isEmailVerified, isPhoneNumberVerified: $isPhoneNumberVerified, createdAt: $createdAt, role: $role, profileCompleted: $profileCompleted, status: $status)';
   }
 }

@@ -206,6 +206,9 @@ class _FindARideScreenState extends State<FindARideScreen> {
                 Get.to(
                   () => AvailableVehiclesScreen(
                     fromLocaton: widget.fromLocaion,
+                    fromLocationName: widget.fromLocationName,
+                    toLocationName: widget.toLocationName,
+                    toLocaton: widget.toLocation,
                   ),
                 );
               },

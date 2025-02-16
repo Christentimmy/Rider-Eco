@@ -4,6 +4,7 @@ import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/intro/intro_screen.dart';
+import 'package:rider/service/socket_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () async {
+    Future.delayed(const Duration(seconds: 1), () async {
       bool newUser = await _storageController.getUserStatus();
       if (newUser) {
         Get.offAll(() => IntroScreen());
@@ -31,7 +32,10 @@ class _SplashScreenState extends State<SplashScreen> {
         Get.off(() => SignUpScreen());
         return;
       }
+      final socketService = Get.find<SocketService>();
       await _userController.getUserStatus();
+      await _userController.getUserStatus();
+      socketService.connect();
     });
   }
 

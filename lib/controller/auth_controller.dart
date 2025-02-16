@@ -3,19 +3,23 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/controller/storage_controller.dart';
+import 'package:rider/controller/user_controller.dart';
 import 'package:rider/models/user_model.dart';
 import 'package:rider/pages/auth/create_profile_screen.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/auth/verify_phone_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/service/auth_service.dart';
+import 'package:rider/service/socket_service.dart';
 import 'package:rider/utils/url_launcher.dart';
 import 'package:rider/widgets/snack_bar.dart';
 
 class AuthController extends GetxController {
   final RxBool isLoading = false.obs;
   final AuthService _authService = AuthService();
+  final _socketService = Get.find<SocketService>();
   final _storageController = Get.find<StorageController>();
+  final _userController = Get.find<UserController>();
 
   Future<void> signUpUSer({required UserModel userModel}) async {
     isLoading.value = true;
@@ -43,6 +47,9 @@ class AuthController extends GetxController {
           nextScreenMethod: () => Get.offAll(() => CreateProfileScreen()),
         ),
       );
+      
+      await _userController.getUserDetails();
+      _socketService.connect();
     } catch (e) {
       debugPrint("Error From Auth Controller: ${e.toString()}");
     } finally {
@@ -171,6 +178,7 @@ class AuthController extends GetxController {
         Get.offAll(() => CreateProfileScreen());
         return;
       }
+      _socketService.connect(id: decoded["userId"]);
       Get.offAll(() => HomeScreen());
     } catch (e) {
       debugPrint(e.toString());

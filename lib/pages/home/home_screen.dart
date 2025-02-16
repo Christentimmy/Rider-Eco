@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rider/controller/storage_controller.dart';
+import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/home/balance_history_screen.dart';
 import 'package:rider/pages/home/payment_method_screen.dart';
@@ -11,6 +13,7 @@ import 'package:rider/pages/home/soure_destination_screen.dart';
 import 'package:rider/pages/home/support_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/service/location_service.dart';
+import 'package:rider/service/socket_service.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
@@ -19,6 +22,7 @@ class HomeScreen extends StatelessWidget {
 
   final TextEditingController _searchController = TextEditingController();
   final RxList<Map<String, dynamic>> _places = <Map<String, dynamic>>[].obs;
+  final _userController = Get.find<UserController>();
 
   void searchPlaces(String query) async {
     List<Map<String, dynamic>> results =
@@ -141,7 +145,8 @@ class HomeScreen extends StatelessWidget {
                         Get.to(
                           () => SoureDestinationScreen(
                             destination: destination,
-                            destinationLatLng: LatLng(double.parse(lat), double.parse(lng)),
+                            destinationLatLng:
+                                LatLng(double.parse(lat), double.parse(lng)),
                           ),
                         );
                       },
@@ -349,7 +354,11 @@ Drawer buildSideBar() {
               fontWeight: FontWeight.bold,
             ),
           ),
-          onTap: () {
+          onTap: () async {
+            final storageController = Get.find<StorageController>();
+            await storageController.deleteToken();
+            final socketService = Get.find<SocketService>();
+            socketService.disconnect();
             Get.offAll(() => SignUpScreen());
           },
         ),
