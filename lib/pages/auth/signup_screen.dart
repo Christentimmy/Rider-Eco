@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:rider/controller/auth_controller.dart';
+import 'package:rider/models/user_model.dart';
 import 'package:rider/pages/auth/password_recovery_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
+import 'package:rider/widgets/loader.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -21,6 +24,7 @@ class SignUpScreen extends StatelessWidget {
   final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -317,17 +321,41 @@ class SignUpScreen extends StatelessWidget {
               CustomTextField(
                 hintText: "confirm password",
                 textController: _confirmPasswordController,
+                validator: (value) {
+                  if (value?.isEmpty == true) {
+                    return " ";
+                  }
+                  if (value != _passwordController.text) {
+                    return "Passwords do not match";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 25),
-              CommonButton(
-                ontap: () {
-                  if (!_formSignUpKey.currentState!.validate()) {
-                    return;
-                  }
-
-                  // Get.to(() => VerifyPhoneNumberScreen());
-                },
-                text: "Sign Up",
+              Obx(
+                () => CommonButton(
+                  ontap: () async {
+                    if (!_formSignUpKey.currentState!.validate()) {
+                      return;
+                    }
+                    UserModel userModel = UserModel(
+                      email: _emailController.text,
+                      phoneNumber: _phoneNumberController.text,
+                      password: _passwordController.text,
+                    );
+                    await _authController.signUpUSer(userModel: userModel);
+                  },
+                  child: _authController.isLoading.value
+                      ? CarLoader()
+                      : const Text(
+                          "Sign Up",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
               ),
               const Spacer(),
               const Text(

@@ -1,14 +1,16 @@
 import 'dart:io';
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:rider/pages/auth/setup_finger_print_screen.dart';
+import 'package:rider/controller/auth_controller.dart';
+import 'package:rider/models/user_model.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/utils/image_picker.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
+import 'package:rider/widgets/loader.dart';
+import 'package:rider/widgets/snack_bar.dart';
 
 class CreateProfileScreen extends StatelessWidget {
   CreateProfileScreen({super.key});
@@ -25,9 +27,9 @@ class CreateProfileScreen extends StatelessWidget {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: AppColors.primaryColor, // Customize the primary color
-              onPrimary: Colors.white, // Text color on selected date
-              onSurface: Colors.black, // Default text color
+              primary: AppColors.primaryColor,
+              onPrimary: Colors.white,
+              onSurface: Colors.black,
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
@@ -48,10 +50,11 @@ class CreateProfileScreen extends StatelessWidget {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _homeAddressController = TextEditingController();
-  final _emailController = TextEditingController();
   final _dobController = TextEditingController();
-
   final Rxn<File> _image = Rxn<File>();
+  final _fomrKey = GlobalKey<FormState>();
+
+  final _authController = Get.find<AuthController>();
 
   void selectImageForUser() async {
     File? im = await pickImage();
@@ -63,25 +66,6 @@ class CreateProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomSheet: Container(
-        height: 90,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(20),
-            topLeft: Radius.circular(20),
-          ),
-          color: Color.fromARGB(255, 22, 22, 22),
-        ),
-        child: CommonButton(
-          text: "Continue",
-          ontap: () {
-            // ignore: prefer_const_constructors
-            Get.to(() => SetUpFingerScreen());
-          },
-        ),
-      ),
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text(
@@ -104,141 +88,161 @@ class CreateProfileScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 10),
-            Center(
-              child: Stack(
-                children: [
-                  Container(
-                    height: 110,
-                    width: 110,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(85),
-                      border: Border.all(
-                        width: 3,
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                    child: Obx(
-                      () => ClipRRect(
-                        borderRadius: BorderRadius.circular(80),
-                        child: _image.value != null
-                            ? Image.file(
-                                _image.value!,
-                                fit: BoxFit.cover,
-                              )
-                            : SvgPicture.asset(
-                                "assets/images/placeholder.svg",
-                              ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 5,
-                    bottom: 5,
-                    child: CircleAvatar(
-                      radius: 17,
-                      backgroundColor: Colors.grey,
-                      child: IconButton(
-                        onPressed: () {
-                          pickImage();
-                        },
-                        icon: Icon(
-                          Icons.camera,
-                          size: 17,
-                          color: AppColors.primaryColor,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+        child: Form(
+          autovalidateMode: AutovalidateMode.onUnfocus,
+          key: _fomrKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              _buildimagePicker(),
+              SizedBox(height: Get.height * 0.05),
+              CustomTextField(
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+                hintText: "First Name",
+                textController: _firstNameController,
               ),
-            ),
-            SizedBox(height: Get.height * 0.05),
-            CustomTextField(
-              hintText: "First Name",
-              textController: _firstNameController,
-            ),
-            const SizedBox(height: 15),
-            CustomTextField(
-              hintText: "Last Name",
-              textController: _lastNameController,
-            ),
-            const SizedBox(height: 15),
-            Obx(
-              () => CustomTextField(
-                hintText: _selectedDate.value != null
-                    ? DateFormat("MMM dd yyyy").format(_selectedDate.value!)
-                    : "Date of birth",
-                suffixIcon: Icons.calendar_month,
-                textController: _dobController,
-                onSuffixClick: () {
-                  selectDateOfBirth(context);
-                },
+              const SizedBox(height: 15),
+              CustomTextField(
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+                hintText: "Last Name",
+                textController: _lastNameController,
               ),
-            ),
-            const SizedBox(height: 15),
-            CustomTextField(
-              hintText: "Email",
-              suffixIcon: Icons.email,
-              textController: _emailController,
-            ),
-            const SizedBox(height: 15),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  width: 2,
-                  color: Colors.grey,
+              const SizedBox(height: 15),
+              Obx(
+                () => CustomTextField(
+                  validator: null,
+                  hintStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                  readOnly: true,
+                  hintText: _selectedDate.value != null
+                      ? DateFormat("MMM dd yyyy").format(_selectedDate.value!)
+                      : "Date of birth",
+                  suffixIcon: Icons.calendar_month,
+                  textController: _dobController,
+                  onSuffixClick: () {
+                    selectDateOfBirth(context);
+                  },
                 ),
               ),
-              child: Row(
-                children: [
-                  CountryCodePicker(
-                    onChanged: (value) {
-                      print(value);
-                    },
-                    initialSelection: '+234',
-                    textStyle: const TextStyle(color: Colors.white),
-                    barrierColor: Colors.transparent,
-                    showCountryOnly: false,
-                    showOnlyCountryWhenClosed: false,
-                    // optional. aligns the flag and the Text left
-                    alignLeft: false,
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        hintText: "Mobile number",
-                        hintStyle: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 15),
+              CustomTextField(
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
+                hintText: "Home Address",
+                suffixIcon: Icons.location_on,
+                textController: _homeAddressController,
               ),
-            ),
-            const SizedBox(height: 15),
-            CustomTextField(
-              hintText: "Home Address",
-              suffixIcon: Icons.location_on,
-              textController: _homeAddressController,
-            ),
-          ],
+              SizedBox(height: Get.height * 0.2),
+              Obx(
+                () => CommonButton(
+                  child: _authController.isLoading.value
+                      ? const CarLoader()
+                      : const Text(
+                          "Continue",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                  ontap: () async {
+                    await completeUserProfile();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Center _buildimagePicker() {
+    return Center(
+      child: Stack(
+        children: [
+          Container(
+            height: 110,
+            width: 110,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(85),
+              border: Border.all(
+                width: 3,
+                color: AppColors.primaryColor,
+              ),
+            ),
+            child: Obx(
+              () => ClipRRect(
+                borderRadius: BorderRadius.circular(80),
+                child: _image.value != null
+                    ? Image.file(
+                        _image.value!,
+                        fit: BoxFit.cover,
+                      )
+                    : SvgPicture.asset(
+                        "assets/images/placeholder.svg",
+                      ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 5,
+            bottom: 5,
+            child: CircleAvatar(
+              radius: 17,
+              backgroundColor: Colors.grey,
+              child: IconButton(
+                onPressed: () {
+                  selectImageForUser();
+                },
+                icon: Icon(
+                  Icons.camera,
+                  size: 17,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> completeUserProfile() async {
+    if (_authController.isLoading.value) {
+      return;
+    }
+    if (!_fomrKey.currentState!.validate()) {
+      return;
+    }
+    if (_image.value == null) {
+      CustomSnackbar.showErrorSnackBar("Image Required");
+      return;
+    }
+    if (_selectedDate.value == null) {
+      CustomSnackbar.showErrorSnackBar("Date of Birth Required");
+      return;
+    }
+    final userModel = UserModel(
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
+      address: _homeAddressController.text,
+      dob: DateFormat("MMM dd yyyy").format(_selectedDate.value!),
+    );
+    await _authController.completeProfileScreen(
+      userModel: userModel,
+      imageFile: _image.value!,
     );
   }
 }

@@ -17,7 +17,9 @@ class CustomTextField extends StatelessWidget {
   double? height;
   BorderRadius? borderRadius;
   String? Function(String?)? validator;
+  bool? readOnly;
   CustomTextField({
+    this.readOnly,
     super.key,
     required this.hintText,
     this.suffixIcon,
@@ -45,6 +47,7 @@ class CustomTextField extends StatelessWidget {
       ),
       child: TextFormField(
         keyboardType: textInputType,
+        readOnly: readOnly ?? false,
         style: textStyle,
         validator: validator ??
             (value) {

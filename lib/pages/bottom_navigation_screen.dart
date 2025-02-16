@@ -12,8 +12,8 @@ class BottomNavigationScreen extends StatelessWidget {
 
   final _pages = [
     MyRideListScreen(),
-    MyIncomeScreen(),
-    MyRatingsScreen(),
+    const MyIncomeScreen(),
+    const MyRatingsScreen(),
     PayScreen(),
   ];
 
@@ -25,7 +25,7 @@ class BottomNavigationScreen extends StatelessWidget {
       bottomNavigationBar: Container(
         margin: const EdgeInsets.symmetric(vertical: 7, horizontal: 5),
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 17, 17, 17),
+          color: const Color.fromARGB(255, 17, 17, 17),
           borderRadius: BorderRadius.circular(25),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -37,7 +37,7 @@ class BottomNavigationScreen extends StatelessWidget {
             showUnselectedLabels: false,
             currentIndex: _selectedIndex.value,
             enableFeedback: false,
-            selectedLabelStyle: TextStyle(
+            selectedLabelStyle: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 12,
             ),

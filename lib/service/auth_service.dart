@@ -14,15 +14,14 @@ class AuthService {
       final response = await client
           .post(
             Uri.parse("$baseUrl/auth/register"),
-            headers: {"Content-Type": "application/json"},
             body: userModel.toJson(),
           )
           .timeout(const Duration(seconds: 15));
 
       return response;
     } on SocketException catch (e) {
-      CustomSnackbar.showErrorSnackBar("Check internet connection, $e");
-      debugPrint("No internet connection");
+      CustomSnackbar.showErrorSnackBar("Check internet connection");
+      debugPrint("SocketException: $e");
     } on TimeoutException {
       CustomSnackbar.showErrorSnackBar(
         "Request timeout, probably Bad network, try again",
@@ -72,13 +71,8 @@ class AuthService {
     try {
       final response = await client.post(
         Uri.parse("$baseUrl/auth/verify-otp"),
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json"
-        },
-        body: {
-          "otp": otpCode,
-        },
+        headers: {"Authorization": "Bearer $token"},
+        body: {"otp": otpCode},
       ).timeout(const Duration(seconds: 15));
       return response;
     } catch (e) {
@@ -90,7 +84,7 @@ class AuthService {
   Future<http.Response?> sendOtp({required String token}) async {
     try {
       final response = await client.post(
-        Uri.parse("$baseUrl/send-otp"),
+        Uri.parse("$baseUrl/auth/send-otp"),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json"
@@ -111,8 +105,8 @@ class AuthService {
     try {
       var uri = Uri.parse("$baseUrl/auth/complete-profile");
 
-      var request = http.MultipartRequest('POST', uri)
-        ..headers['Authorization'] = 'Bearer $token' 
+      var request = http.MultipartRequest('PUT', uri)
+        ..headers['Authorization'] = 'Bearer $token'
         ..headers['Content-Type'] = 'multipart/form-data'
         ..fields['first_name'] = userModel.firstName!
         ..fields['last_name'] = userModel.lastName!
@@ -132,5 +126,4 @@ class AuthService {
     }
     return null;
   }
-
 }

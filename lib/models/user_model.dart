@@ -14,21 +14,23 @@ class UserModel {
   final String? role;
   final bool? profileCompleted;
   final String? status;
+  String? password;
 
   UserModel({
-    required this.email,
-    required this.phoneNumber,
+    this.email,
+    this.phoneNumber,
     this.firstName,
     this.lastName,
     this.dob,
     this.address,
     this.profilePicture,
-    required this.isEmailVerified,
-    required this.isPhoneNumberVerified,
-    required this.createdAt,
-    required this.role,
-    required this.profileCompleted,
-    required this.status,
+    this.isEmailVerified,
+    this.isPhoneNumberVerified,
+    this.createdAt,
+    this.role,
+    this.profileCompleted,
+    this.status,
+    this.password,
   });
 
   // Factory constructor to create an instance from JSON
@@ -52,21 +54,52 @@ class UserModel {
 
   // Convert instance to JSON
   Map<String, dynamic> toJson() {
-    return {
-      'email': email ?? "",
-      'phone_number': phoneNumber ?? "",
-      'first_name': firstName ?? "",
-      'last_name': lastName ?? "",
-      'dob': dob ?? "",
-      'address': address ?? "",
-      'profile_picture': profilePicture ?? "",
-      'is_email_verified': isEmailVerified ?? "",
-      'is_phone_number_verified': isPhoneNumberVerified ?? "",
-      'created_At': createdAt?.toIso8601String() ?? "",
-      'role': role ?? "",
-      'profile_completed': profileCompleted ?? "",
-      'status': status ?? "",
-    };
+    final Map<String, dynamic> data = {};
+
+    if (email?.isNotEmpty == true) {
+      data['email'] = email!;
+    }
+    if (phoneNumber?.isNotEmpty == true) {
+      data['phone_number'] = phoneNumber!;
+    }
+    if (firstName?.isNotEmpty == true) {
+      data['first_name'] = firstName!;
+    }
+    if (lastName?.isNotEmpty == true) {
+      data['last_name'] = lastName!;
+    }
+    if (dob?.isNotEmpty == true) {
+      data['dob'] = dob!;
+    }
+    if (address?.isNotEmpty == true) {
+      data['address'] = address!;
+    }
+    if (profilePicture?.isNotEmpty == true) {
+      data['profile_picture'] = profilePicture!;
+    }
+    if (isEmailVerified != null) {
+      data['is_email_verified'] = isEmailVerified!;
+    }
+    if (isPhoneNumberVerified != null) {
+      data['is_phone_number_verified'] = isPhoneNumberVerified!;
+    }
+    if (createdAt != null) {
+      data['created_At'] = createdAt!.toIso8601String();
+    }
+    if (role?.isNotEmpty == true) {
+      data['role'] = role!;
+    }
+    if (profileCompleted != null) {
+      data['profile_completed'] = profileCompleted!;
+    }
+    if (status?.isNotEmpty == true) {
+      data['status'] = status!;
+    }
+    if (password?.isNotEmpty == true) {
+      data['password'] = password!;
+    }
+
+    return data;
   }
 
   @override
