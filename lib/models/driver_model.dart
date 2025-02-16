@@ -1,4 +1,8 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rider/models/car_model.dart';
+import 'package:rider/models/personal_documents_models.dart';
+import 'package:rider/models/review_model.dart';
+import 'package:rider/models/vehicle_documents_model.dart';
 
 class DriverModel {
   String? id;
@@ -52,98 +56,6 @@ class DriverModel {
       reviews: json["reviews"] != null
           ? Reviews.fromJson(json['reviews'])
           : Reviews(),
-    );
-  }
-}
-
-class Car {
-  String? carNumber;
-  String? model;
-  String? manufacturer;
-  int? yearOfManufacture;
-  String? color;
-  int? capacity;
-
-  Car({
-    this.carNumber,
-    this.model,
-    this.manufacturer = '',
-    this.yearOfManufacture,
-    this.color = '',
-    this.capacity = 4,
-  });
-
-  factory Car.fromJson(Map<String, dynamic> json) {
-    return Car(
-      carNumber: json['car_number'] ?? "",
-      model: json['model'] ?? "",
-      manufacturer: json['manufacturer'] ?? '',
-      yearOfManufacture: json['year_of_manufacture'] ?? 0,
-      color: json['color'] ?? '',
-      capacity: json['capacity'] ?? 4,
-    );
-  }
-}
-
-class PersonalDocuments {
-  String? birthCertificate;
-  String? drivingLicense;
-  String? passport;
-  String? electionCard;
-
-  PersonalDocuments({
-    this.birthCertificate,
-    this.drivingLicense,
-    this.passport,
-    this.electionCard,
-  });
-
-  factory PersonalDocuments.fromJson(Map<String, dynamic> json) {
-    return PersonalDocuments(
-      birthCertificate: json['birth_certificate'] ?? "",
-      drivingLicense: json['driving_license'] ?? "",
-      passport: json['passport'] ?? "",
-      electionCard: json['election_card'] ?? "",
-    );
-  }
-}
-
-class VehicleDocuments {
-  String? vehicleRegistration;
-  String? insurancePolicy;
-  String? ownerCertificate;
-  String? puc;
-
-  VehicleDocuments({
-    this.vehicleRegistration,
-    this.insurancePolicy,
-    this.ownerCertificate,
-    this.puc,
-  });
-
-  factory VehicleDocuments.fromJson(Map<String, dynamic> json) {
-    return VehicleDocuments(
-      vehicleRegistration: json['vehicle_registration'] ?? "",
-      insurancePolicy: json['insurance_policy'] ?? "",
-      ownerCertificate: json['owner_certificate'] ?? "",
-      puc: json['puc'] ?? "",
-    );
-  }
-}
-
-class Reviews {
-  int? totalRatings;
-  double? averageRating;
-
-  Reviews({
-    this.totalRatings,
-    this.averageRating,
-  });
-
-  factory Reviews.fromJson(Map<String, dynamic> json) {
-    return Reviews(
-      totalRatings: json['total_ratings'] ?? 0,
-      averageRating: (json['average_rating'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }

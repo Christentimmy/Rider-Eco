@@ -1,15 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/controller/user_controller.dart';
+import 'package:rider/models/driver_model.dart';
 import 'package:rider/pages/home/waiting_ride_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_button.dart';
+import 'package:rider/widgets/custom_textfield.dart';
 
-class AvailableVehiclesScreen extends StatelessWidget {
-  AvailableVehiclesScreen({super.key});
+class AvailableVehiclesScreen extends StatefulWidget {
+  final LatLng fromLocaton;
+  const AvailableVehiclesScreen({
+    super.key,
+    required this.fromLocaton,
+  });
 
+  @override
+  State<AvailableVehiclesScreen> createState() =>
+      _AvailableVehiclesScreenState();
+}
+
+class _AvailableVehiclesScreenState extends State<AvailableVehiclesScreen> {
   final _userController = Get.find<UserController>();
+
+  final _radiusController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _userController.getNearByDrivers(
+      fromLocation: widget.fromLocaton,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,35 +64,91 @@ class AvailableVehiclesScreen extends StatelessWidget {
           const SizedBox(width: 7),
         ],
       ),
-      body: ListView.builder(
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              // showModalBottomSheet(
-              //   context: context,
-              //   builder: (context) {
-              //     return EachCarDetails();
-              //   },
-              // );
-              showBottomSheet(
-                context: context,
-                builder: (context) {
-                  return const EachCarDetails();
+      body: Obx(() {
+        if (_userController.isloading.value) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primaryColor,
+            ),
+          );
+        } else if (_userController.availableDriverList.isEmpty) {
+          return Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              height: Get.height * 0.5,
+              width: Get.width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "No available vehicles found.",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextField(
+                    textController: _radiusController,
+                    textInputType: TextInputType.number,
+                    hintText: "Default Radius 2100, Increase the radius",
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: Get.width / 1.5,
+                    child: CommonButton(
+                      child: const Text(
+                        "Search",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      ontap: () async {
+                        if (_radiusController.text.isEmpty) {
+                          return;
+                        }
+                        await _userController.getNearByDrivers(
+                          fromLocation: widget.fromLocaton,
+                          radius: int.parse(_radiusController.text),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          return ListView.builder(
+            itemCount: _userController.availableDriverList.length,
+            itemBuilder: (context, index) {
+              DriverModel driverModel =
+                  _userController.availableDriverList[index];
+              return InkWell(
+                onTap: () {
+                  showBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return const EachCarDetails();
+                    },
+                  );
                 },
+                child: CarCards(driverModel: driverModel),
               );
             },
-            child: const CarCards(),
           );
-        },
-      ),
+        }
+      }),
     );
   }
 }
 
 class CarCards extends StatelessWidget {
+  final DriverModel driverModel;
   const CarCards({
     super.key,
+    required this.driverModel,
   });
 
   @override
@@ -136,13 +215,13 @@ class CarCards extends StatelessWidget {
           const Divider(),
           Row(
             children: [
-              Text(
+              const Text(
                 "4 - Seater",
                 style: TextStyle(
                   color: Colors.grey,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Text(
                 "7/km",
                 style: TextStyle(
@@ -233,10 +312,10 @@ class _EachCarDetailsState extends State<EachCarDetails> {
             ],
           ),
           const SizedBox(height: 3),
-           Row(
+          Row(
             children: [
-              Text("From"),
-              SizedBox(width: 30),
+              const Text("From"),
+              const SizedBox(width: 30),
               Text(
                 "7/KM",
                 style: TextStyle(
@@ -297,7 +376,7 @@ class _EachCarDetailsState extends State<EachCarDetails> {
           CommonButton(
             text: "Select Vehicle",
             ontap: () {
-              Get.to(()=> const WaitingRideScreen());
+              Get.to(() => const WaitingRideScreen());
             },
           )
         ],

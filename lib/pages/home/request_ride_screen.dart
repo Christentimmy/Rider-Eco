@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rider/pages/home/available_vehicles_screen.dart';
 import 'package:rider/pages/home/notifcation_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/build_icon_button.dart';
@@ -254,7 +253,7 @@ class RequestRideScreen extends StatelessWidget {
             CommonButton(
               text: "Request",
               ontap: () {
-                Get.to(()=> AvailableVehiclesScreen());
+                // Get.to(()=> AvailableVehiclesScreen());
               },
             ),
           ],

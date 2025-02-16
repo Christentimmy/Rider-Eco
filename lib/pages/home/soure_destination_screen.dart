@@ -144,8 +144,8 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
                                 _searchController.text += title;
                                 _places.clear();
                                 fromLocaion = LatLng(
-                                  double.parse(lat),
                                   double.parse(lng),
+                                  double.parse(lat),
                                 );
                                 _fromLocationName.value = title;
                               },
@@ -173,19 +173,23 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
                     ),
                   ),
                   ontap: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
                     if (_searchController.text.isEmpty) {
                       CustomSnackbar.showErrorSnackBar(
                         "Kindly fill the from field",
                       );
                       return;
                     }
+                    print("Source Screen: $fromLocaion");
 
-                    Get.to(() => FindARideScreen(
-                          fromLocaion: fromLocaion,
-                          toLocation: widget.destinationLatLng,
-                          fromLocationName: _fromLocationName.value,
-                          toLocationName: widget.destination,
-                        ));
+                    Get.to(
+                      () => FindARideScreen(
+                        fromLocaion: fromLocaion,
+                        toLocation: widget.destinationLatLng,
+                        fromLocationName: _fromLocationName.value,
+                        toLocationName: widget.destination,
+                      ),
+                    );
                   },
                 ),
                 const SizedBox(height: 30),

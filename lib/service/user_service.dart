@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:rider/utils/base_url.dart';
 import 'package:rider/widgets/snack_bar.dart';
@@ -33,13 +34,17 @@ class UserService {
 
   Future<http.Response?> getNearByDrivers({
     required String token,
-    required double lat,
-    required double lng,
+    required LatLng fromLocation,
     int? radius,
   }) async {
     try {
+      var url = "$baseUrl/user/get-nearby-drivers?longitude=${fromLocation.longitude}&latitude=${fromLocation.latitude}";
+      if (radius != null && radius != 0) {
+        url += "&radius=$radius";
+      }
+      print(url);
       final response = await client.get(
-        Uri.parse("$baseUrl/user/get-nearby-drivers?latitude=$lat&longitude=$lng&radius=$radius"),
+        Uri.parse(url),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -57,5 +62,6 @@ class UserService {
     } catch (e) {
       debugPrint(e.toString());
     }
+    return null;
   }
 }

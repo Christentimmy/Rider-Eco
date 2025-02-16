@@ -69,18 +69,13 @@ class _FindARideScreenState extends State<FindARideScreen> {
         );
       }
 
-      double distanceInMeters = data["routes"][0]["distance"];
-      double durationInSeconds = data["routes"][0]["duration"];
-      print(data["routes"][0]["duration"]);
+      var distanceInMeters = data["routes"][0]["distance"];
+      var durationInSeconds = data["routes"][0]["duration"];
 
       double distanceInKm = distanceInMeters / 1000;
       double durationInMinutes = durationInSeconds / 60;
 
-      print("Distance: ${distanceInKm.toStringAsFixed(2)} km");
-      print("Duration: ${durationInMinutes.toStringAsFixed(2)} min");
-
-      estimatedTime.value =
-          "${durationInMinutes.toStringAsFixed(2)} min ($estimatedTime)";
+      estimatedTime.value = "${durationInMinutes.toStringAsFixed(2)} min";
       basePrice.value = (distanceInKm * 5000).toStringAsFixed(2);
 
       setState(() {
@@ -103,9 +98,10 @@ class _FindARideScreenState extends State<FindARideScreen> {
             height: Get.height * 0.65,
             width: Get.width,
             child: GoogleMap(
+              mapType: MapType.hybrid,
               initialCameraPosition: CameraPosition(
                 target: widget.fromLocaion,
-                zoom: 8,
+                zoom: 15,
               ),
               markers: _markers,
               polylines: _polylines,
@@ -206,7 +202,12 @@ class _FindARideScreenState extends State<FindARideScreen> {
               text: "Find a ride",
               ontap: () {
                 // Get.to(() => RequestRideScreen());
-                Get.to(() => AvailableVehiclesScreen());
+
+                Get.to(
+                  () => AvailableVehiclesScreen(
+                    fromLocaton: widget.fromLocaion,
+                  ),
+                );
               },
             ),
           ],
