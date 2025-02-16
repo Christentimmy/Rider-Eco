@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/pages/home/find_a_ride_screen.dart';
 import 'package:rider/resources/color_resources.dart';
+import 'package:rider/service/location_service.dart';
+import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
+import 'package:rider/widgets/snack_bar.dart';
 
 class SoureDestinationScreen extends StatefulWidget {
-  const SoureDestinationScreen({super.key});
+  final String destination;
+  final LatLng destinationLatLng;
+  const SoureDestinationScreen({
+    super.key,
+    required this.destination,
+    required this.destinationLatLng,
+  });
 
   @override
   State<SoureDestinationScreen> createState() => _SoureDestinationScreenState();
@@ -14,6 +24,17 @@ class SoureDestinationScreen extends StatefulWidget {
 class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
   final _fromController = TextEditingController();
   final _inputFields = RxList();
+  LatLng fromLocaion = const LatLng(0.0, 0.0);
+  final RxString _fromLocationName = "".obs;
+
+  final TextEditingController _searchController = TextEditingController();
+  final RxList<Map<String, dynamic>> _places = <Map<String, dynamic>>[].obs;
+
+  void searchPlaces(String query) async {
+    List<Map<String, dynamic>> results =
+        await LocationService.searchPlaces(query);
+    _places.value = results;
+  }
 
   @override
   void initState() {
@@ -25,50 +46,181 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 15,
-            vertical: 30,
-          ),
-          child: Column(
-            children: [
-              SizedBox(height: Get.height * 0.05),
-              _buildFromLocationField(),
-              const SizedBox(height: 10),
-              _buildToLocations(),
-              const SizedBox(height: 30),
-              Row(
-                children: [
-                  Text(
-                    'Recent',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.bold,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 30,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () => Get.back(),
+                  child: Container(
+                    height: 45,
+                    width: 45,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.black,
+                    ),
+                    child: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
                     ),
                   ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {
-                      _inputFields.clear();
-                      _inputFields.add(null);
-                      _inputFields.refresh();
-                    },
-                    child:  Text(
-                      'Clear All',
+                ),
+                SizedBox(height: Get.height * 0.03),
+                const Text(
+                  "To (Destination): ",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+                CustomTextField(
+                  readOnly: true,
+                  hintText: widget.destination,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide(
+                      width: 2,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                  hintStyle: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
+                  textController: _fromController,
+                  bgColor: const Color(0xffDADADA),
+                  prefixIcon: Icons.search,
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "From (Source): ",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black,
+                  ),
+                ),
+                CustomTextField(
+                  onChanged: searchPlaces,
+                  hintText: "From Where",
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: BorderSide(
+                      width: 2,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                  hintStyle: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
+                  textController: _searchController,
+                  bgColor: const Color(0xffDADADA),
+                  prefixIcon: Icons.search,
+                ),
+                const SizedBox(height: 10),
+                Obx(
+                  () => _places.isEmpty
+                      ? const SizedBox.shrink()
+                      : ListView.builder(
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          itemCount: _places.length,
+                          itemBuilder: (context, index) {
+                            String title = _places[index]["name"];
+                            String lat = _places[index]["lat"];
+                            String lng = _places[index]["lon"];
+                            return ListTile(
+                              onTap: () {
+                                _searchController.clear();
+                                _searchController.text += title;
+                                _places.clear();
+                                fromLocaion = LatLng(
+                                  double.parse(lat),
+                                  double.parse(lng),
+                                );
+                                _fromLocationName.value = title;
+                              },
+                              contentPadding: EdgeInsets.zero,
+                              leading: const Icon(Icons.timelapse_sharp),
+                              title: Text(
+                                title,
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+                const SizedBox(height: 30),
+                CommonButton(
+                  child: const Text(
+                    "Proceed",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  ontap: () {
+                    if (_searchController.text.isEmpty) {
+                      CustomSnackbar.showErrorSnackBar(
+                        "Kindly fill the from field",
+                      );
+                      return;
+                    }
+
+                    Get.to(() => FindARideScreen(
+                          fromLocaion: fromLocaion,
+                          toLocation: widget.destinationLatLng,
+                          fromLocationName: _fromLocationName.value,
+                          toLocationName: widget.destination,
+                        ));
+                  },
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  children: [
+                    Text(
+                      'Recent',
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 16,
                         color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              const Divider(),
-              _recentSearched(),
-            ],
+                    const Spacer(),
+                    InkWell(
+                      onTap: () {
+                        _inputFields.clear();
+                        _inputFields.add(null);
+                        _inputFields.refresh();
+                      },
+                      child: Text(
+                        'Clear All',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                const Divider(),
+                _recentSearched(),
+              ],
+            ),
           ),
         ),
       ),
@@ -81,120 +233,20 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return ListTile(
-          onTap: () => Get.to(() => FindARideScreen()),
+        return const ListTile(
+          // onTap: () => Get.to(() => const FindARideScreen()),
           contentPadding: EdgeInsets.zero,
-          leading: const Icon(Icons.timelapse_sharp),
-          title: const Text(
+          leading: Icon(Icons.timelapse_sharp),
+          title: Text(
             "Soft Bank",
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: const Text("364 Stillwater Ave. Attleboro, MA 027"),
+          // subtitle: const Text("364 Stillwater Ave. Attleboro, MA 027"),
         );
       },
-    );
-  }
-
-  Obx _buildToLocations() {
-    return Obx(
-      () => ListView.builder(
-        padding: EdgeInsets.zero,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: _inputFields.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 3.0),
-            child: Dismissible(
-              key: UniqueKey(),
-              direction: _inputFields.length - 1 != 0
-                  ? DismissDirection.endToStart
-                  : DismissDirection.none,
-              background: Container(
-                alignment: Alignment.centerRight,
-                color: Colors.red,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: const Icon(Icons.delete, color: Colors.white),
-              ),
-              onDismissed: (direction) {
-                _inputFields.removeAt(index);
-              },
-              child: Row(
-                children: [
-                  Expanded(
-                    child: CustomTextField(
-                      hintText: "Location",
-                      prefixIcon: Icons.search,
-                      enabledBorder: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                      ),
-                      textController: _fromController,
-                      bgColor: const Color(0xffF5F5F5),
-                    ),
-                  ),
-                  if (index == _inputFields.length - 1)
-                    IconButton(
-                      onPressed: () {
-                        _inputFields.add(null);
-                      },
-                      icon: const Icon(
-                        Icons.add,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Row _buildFromLocationField() {
-    return Row(
-      children: [
-        InkWell(
-          onTap: () => Get.back(),
-          child: Container(
-            height: 45,
-            width: 45,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.black,
-            ),
-            child: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: CustomTextField(
-            hintText: "Soft bank",
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-                borderSide:  BorderSide(
-                  width: 2,
-                  color: AppColors.primaryColor,
-                )),
-            hintStyle: const TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-            ),
-            textController: _fromController,
-            bgColor: const Color(0xffDADADA),
-            prefixIcon: Icons.search,
-          ),
-        ),
-      ],
     );
   }
 }

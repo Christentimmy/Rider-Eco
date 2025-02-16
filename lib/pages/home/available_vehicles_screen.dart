@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/home/waiting_ride_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_button.dart';
 
 class AvailableVehiclesScreen extends StatelessWidget {
-  const AvailableVehiclesScreen({super.key});
+  AvailableVehiclesScreen({super.key});
+
+  final _userController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {

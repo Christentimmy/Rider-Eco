@@ -19,7 +19,9 @@ class CustomTextField extends StatelessWidget {
   BorderRadius? borderRadius;
   String? Function(String?)? validator;
   bool? readOnly;
+  Function(String)? onChanged;
   CustomTextField({
+    this.onChanged,
     this.obscureText,
     this.readOnly,
     super.key,
@@ -48,6 +50,7 @@ class CustomTextField extends StatelessWidget {
         color: bgColor,
       ),
       child: TextFormField(
+        onChanged: onChanged,
         obscureText: obscureText ?? false,
         keyboardType: textInputType,
         readOnly: readOnly ?? false,

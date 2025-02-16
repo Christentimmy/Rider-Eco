@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/controller/storage_controller.dart';
+import 'package:rider/controller/user_controller.dart';
+import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/intro/intro_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -10,12 +13,25 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final _storageController = Get.find<StorageController>();
+  final _userController = Get.find<UserController>();
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      Get.offAll(()=> IntroScreen());
+    Future.delayed(const Duration(seconds: 2), () async {
+      bool newUser = await _storageController.getUserStatus();
+      if (newUser) {
+        Get.offAll(() => IntroScreen());
+        await _storageController.saveStatus("notNewAgain");
+        return;
+      }
+      String? token = await _storageController.getToken();
+      if (token?.isEmpty == true) {
+        Get.off(() => SignUpScreen());
+        return;
+      }
+      await _userController.getUserStatus();
     });
   }
 

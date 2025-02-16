@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/home/balance_history_screen.dart';
 import 'package:rider/pages/home/payment_method_screen.dart';
@@ -9,13 +10,26 @@ import 'package:rider/pages/home/settings_screen.dart';
 import 'package:rider/pages/home/soure_destination_screen.dart';
 import 'package:rider/pages/home/support_screen.dart';
 import 'package:rider/resources/color_resources.dart';
+import 'package:rider/service/location_service.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  final _textController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+  final RxList<Map<String, dynamic>> _places = <Map<String, dynamic>>[].obs;
+
+  void searchPlaces(String query) async {
+    List<Map<String, dynamic>> results =
+        await LocationService.searchPlaces(query);
+    _places.value = results;
+  }
+
+  final CameraPosition _initialPosition = const CameraPosition(
+    target: LatLng(59.9139, 10.7522),
+    zoom: 15,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +37,20 @@ class HomeScreen extends StatelessWidget {
       drawer: buildSideBar(),
       body: Stack(
         children: [
-          Image.asset(
-            "assets/images/map.png",
+          // Image.asset(
+          //   "assets/images/map.png",
+          //   width: Get.width,
+          //   height: Get.height,
+          //   fit: BoxFit.cover,
+          // ),
+          SizedBox(
+            height: Get.height * 0.65,
             width: Get.width,
-            height: Get.height,
-            fit: BoxFit.cover,
+            child: GoogleMap(
+              initialCameraPosition: _initialPosition,
+              mapType: MapType.hybrid,
+              onTap: (argument) async {},
+            ),
           ),
           Builder(
             builder: (context) {
@@ -89,27 +112,58 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 10),
             CustomTextField(
               hintText: "Search destination",
-              textController: _textController,
+              textStyle: const TextStyle(
+                color: Colors.white,
+                fontSize: 13,
+              ),
+              textController: _searchController,
+              onChanged: searchPlaces,
               bgColor: Colors.white.withOpacity(0.3),
-              hintStyle: TextStyle(
-                color: Colors.black.withOpacity(0.5),
+              hintStyle: const TextStyle(
+                color: Colors.white,
                 fontSize: 13,
               ),
             ),
-            const SizedBox(height: 15),
-            _buildListTile(),
-            _buildListTile(),
+            const SizedBox(height: 10),
+            Obx(
+              () => Expanded(
+                child: ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: _places.length,
+                  itemBuilder: (context, index) {
+                    return _buildListTile(
+                      title: _places[index]["name"],
+                      onTap: () {
+                        String destination = _places[index]["name"];
+                        String lat = _places[index]["lat"];
+                        String lng = _places[index]["lon"];
+                        print("Selected Place: $lat $lng");
+                        Get.to(
+                          () => SoureDestinationScreen(
+                            destination: destination,
+                            destinationLatLng: LatLng(double.parse(lat), double.parse(lng)),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  ListTile _buildListTile() {
+  ListTile _buildListTile({
+    required String title,
+    required VoidCallback onTap,
+  }) {
     return ListTile(
-      onTap: () => Get.to(() => SoureDestinationScreen()),
+      onTap: onTap,
       contentPadding: EdgeInsets.zero,
-      minTileHeight: 40,
+      minTileHeight: 45,
       leading: Container(
         height: 45,
         width: 45,
@@ -123,23 +177,16 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        child: Icon(
+        child: const Icon(
           Icons.location_on,
           color: Colors.white,
         ),
       ),
-      title: const Text(
-        "Ikeja City Mall",
-        style: TextStyle(
+      title: Text(
+        title,
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 16,
-        ),
-      ),
-      subtitle: Text(
-        "Obafemi Awolowo Way, Ikeja Nigeria",
-        style: TextStyle(
-          color: AppColors.primaryColor.withOpacity(0.4),
-          fontSize: 12,
         ),
       ),
     );

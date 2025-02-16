@@ -19,6 +19,7 @@ class SignUpScreen extends StatelessWidget {
   final _formloginKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _loginEmailController = TextEditingController();
+  final _loginPhoneNumberController = TextEditingController();
   final _loginPasswordController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -198,7 +199,7 @@ class SignUpScreen extends StatelessWidget {
                         ),
                         Expanded(
                           child: TextFormField(
-                            controller: _phoneNumberController,
+                            controller: _loginPhoneNumberController,
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value?.isEmpty == true) {
@@ -251,7 +252,7 @@ class SignUpScreen extends StatelessWidget {
                     }
                     await _authController.loginUser(
                       identifier: _isLoginWithNumber.value
-                          ? _phoneNumberController.text
+                          ? _loginPhoneNumberController.text
                           : _loginEmailController.text,
                       password: _loginPasswordController.text,
                     );
