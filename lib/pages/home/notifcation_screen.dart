@@ -58,7 +58,7 @@ class NotificationScreen extends StatelessWidget {
                       ),
                       title: Text(
                         _notifactionList[index][0],
-                        style:  TextStyle(
+                        style: TextStyle(
                           color: AppColors.primaryColor,
                           fontWeight: FontWeight.bold,
                         ),
@@ -100,11 +100,11 @@ class NotificationScreen extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      actions:  [
+      actions: [
         CircleAvatar(
           radius: 18,
           backgroundColor: AppColors.primaryColor,
-          child: const Text(
+          child: Text(
             "12",
             style: TextStyle(
               fontSize: 13,
@@ -112,7 +112,7 @@ class NotificationScreen extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 10),
+        SizedBox(width: 10),
       ],
     );
   }

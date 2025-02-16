@@ -1,5 +1,5 @@
+import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/color_resources.dart';
-import 'package:rider/pages/bottom_navigation_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -114,7 +114,7 @@ class SetUpFingerScreen extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Get.to(() => BottomNavigationScreen());
+                    Get.to(() => HomeScreen());
                   },
                   child: Container(
                     height: 45,

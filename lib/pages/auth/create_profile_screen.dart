@@ -86,82 +86,85 @@ class CreateProfileScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Form(
-          autovalidateMode: AutovalidateMode.onUnfocus,
-          key: _fomrKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              _buildimagePicker(),
-              SizedBox(height: Get.height * 0.05),
-              CustomTextField(
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-                hintText: "First Name",
-                textController: _firstNameController,
-              ),
-              const SizedBox(height: 15),
-              CustomTextField(
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-                hintText: "Last Name",
-                textController: _lastNameController,
-              ),
-              const SizedBox(height: 15),
-              Obx(
-                () => CustomTextField(
-                  validator: null,
-                  hintStyle: const TextStyle(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Form(
+            key: _fomrKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 10),
+                _buildimagePicker(),
+                SizedBox(height: Get.height * 0.05),
+                CustomTextField(
+                  textStyle: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,
                   ),
-                  readOnly: true,
-                  hintText: _selectedDate.value != null
-                      ? DateFormat("MMM dd yyyy").format(_selectedDate.value!)
-                      : "Date of birth",
-                  suffixIcon: Icons.calendar_month,
-                  textController: _dobController,
-                  onSuffixClick: () {
-                    selectDateOfBirth(context);
-                  },
+                  hintText: "First Name",
+                  textController: _firstNameController,
                 ),
-              ),
-              const SizedBox(height: 15),
-              CustomTextField(
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
+                const SizedBox(height: 15),
+                CustomTextField(
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                  hintText: "Last Name",
+                  textController: _lastNameController,
                 ),
-                hintText: "Home Address",
-                suffixIcon: Icons.location_on,
-                textController: _homeAddressController,
-              ),
-              SizedBox(height: Get.height * 0.2),
-              Obx(
-                () => CommonButton(
-                  child: _authController.isLoading.value
-                      ? const CarLoader()
-                      : const Text(
-                          "Continue",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                const SizedBox(height: 15),
+                Obx(
+                  () => CustomTextField(
+                    validator: (value){
+                      return null;
+                    },
+                    hintStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                    readOnly: true,
+                    hintText: _selectedDate.value != null
+                        ? DateFormat("MMM dd yyyy").format(_selectedDate.value!)
+                        : "Date of birth",
+                    suffixIcon: Icons.calendar_month,
+                    textController: _dobController,
+                    onSuffixClick: () {
+                      selectDateOfBirth(context);
+                    },
+                  ),
+                ),
+                const SizedBox(height: 15),
+                CustomTextField(
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                  hintText: "Home Address",
+                  suffixIcon: Icons.location_on,
+                  textController: _homeAddressController,
+                ),
+                SizedBox(height: Get.height * 0.15),
+                Obx(
+                  () => CommonButton(
+                    child: _authController.isLoading.value
+                        ? const CarLoader()
+                        : const Text(
+                            "Continue",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                  ontap: () async {
-                    await completeUserProfile();
-                  },
+                    ontap: () async {
+                      await completeUserProfile();
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

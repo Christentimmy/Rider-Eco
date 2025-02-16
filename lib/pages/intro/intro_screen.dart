@@ -117,7 +117,7 @@ class IntroScreen extends StatelessWidget {
         const SizedBox(height: 45),
         Text(
           text1,
-          style: TextStyle(
+          style:  TextStyle(
             color: AppColors.primaryColor,
             fontWeight: FontWeight.bold,
             fontSize: 40,
@@ -134,7 +134,7 @@ class IntroScreen extends StatelessWidget {
               ),
             ),
             SizedBox(width: Get.width * 0.15),
-            CircleAvatar(
+             CircleAvatar(
               radius: 5,
               backgroundColor: AppColors.primaryColor,
             ),

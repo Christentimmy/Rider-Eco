@@ -110,9 +110,9 @@ class SupportScreen extends StatelessWidget {
                     itemCount: _contactUsList.length,
                     itemBuilder: (context, index) {
                       return InkWell(
-                        onTap: () {
+                        onTap: (){
                           if (index == 0) {
-                            Get.to(() => ChatCustomerServiceScreen());
+                            Get.to(()=> ChatCustomerServiceScreen());
                           }
                         },
                         child: Container(
@@ -360,7 +360,7 @@ class FaqCard extends StatelessWidget {
           const Spacer(),
           IconButton(
             onPressed: () {},
-            icon: Icon(
+            icon:  Icon(
               Icons.keyboard_arrow_down_rounded,
               color: AppColors.primaryColor,
             ),

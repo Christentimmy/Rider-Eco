@@ -55,7 +55,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
                       _inputFields.add(null);
                       _inputFields.refresh();
                     },
-                    child: Text(
+                    child:  Text(
                       'Clear All',
                       style: TextStyle(
                         fontSize: 13,
@@ -181,7 +181,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
             hintText: "Soft bank",
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
-                borderSide: BorderSide(
+                borderSide:  BorderSide(
                   width: 2,
                   color: AppColors.primaryColor,
                 )),

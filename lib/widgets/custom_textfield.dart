@@ -4,6 +4,7 @@ import 'package:rider/resources/color_resources.dart';
 // ignore: must_be_immutable
 class CustomTextField extends StatelessWidget {
   final String hintText;
+  final bool? obscureText;
   IconData? suffixIcon;
   IconData? prefixIcon;
   VoidCallback? onSuffixClick;
@@ -19,6 +20,7 @@ class CustomTextField extends StatelessWidget {
   String? Function(String?)? validator;
   bool? readOnly;
   CustomTextField({
+    this.obscureText,
     this.readOnly,
     super.key,
     required this.hintText,
@@ -46,6 +48,7 @@ class CustomTextField extends StatelessWidget {
         color: bgColor,
       ),
       child: TextFormField(
+        obscureText: obscureText ?? false,
         keyboardType: textInputType,
         readOnly: readOnly ?? false,
         style: textStyle,

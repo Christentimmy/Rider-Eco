@@ -40,7 +40,7 @@ class RequestRideScreen extends StatelessWidget {
       alignment: Alignment.bottomCenter,
       child: Container(
         height: 180,
-        margin: EdgeInsets.only(bottom: Get.height * 0.42),
+        margin: EdgeInsets.only(bottom: Get.height * 0.38),
         child: ListView.builder(
           itemCount: _cars.length,
           scrollDirection: Axis.horizontal,
@@ -184,7 +184,7 @@ class RequestRideScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: Get.height * 0.4,
+        height: Get.height * 0.36,
         width: Get.width,
         padding: const EdgeInsets.symmetric(
           horizontal: 15,
@@ -254,7 +254,7 @@ class RequestRideScreen extends StatelessWidget {
             CommonButton(
               text: "Request",
               ontap: () {
-                Get.to(() => AvailableVehiclesScreen());
+                Get.to(()=> AvailableVehiclesScreen());
               },
             ),
           ],
@@ -276,7 +276,7 @@ class RequestRideScreen extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: TextStyle(
+        style:  TextStyle(
           color: AppColors.primaryColor,
           fontSize: 16,
           fontWeight: FontWeight.bold,

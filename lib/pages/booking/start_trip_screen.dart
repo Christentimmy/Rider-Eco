@@ -1,4 +1,4 @@
-import 'package:rider/pages/bottom_navigation_screen.dart';
+import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/notification_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/pages/booking/arriving_pick_up_screen.dart';
@@ -197,7 +197,7 @@ class StartTripScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {
-                      Get.offAll(()=> BottomNavigationScreen());
+                      Get.offAll(()=> HomeScreen());
                     },
                     child: Container(
                       height: 50,

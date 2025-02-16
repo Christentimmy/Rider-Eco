@@ -128,13 +128,13 @@ class SchedulePaymentScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          Row(
+           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on,
                 color: Colors.white,
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -155,7 +155,7 @@ class SchedulePaymentScreen extends StatelessWidget {
               )
             ],
           ),
-          Divider(color: AppColors.primaryColor),
+           Divider(color: AppColors.primaryColor),
           Row(
             children: [
               const Icon(
@@ -285,7 +285,7 @@ class SchedulePaymentScreen extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  Get.offAll(() => HomeScreen());
+                  Get.offAll(()=> HomeScreen());
                 },
                 icon: const Icon(
                   Icons.arrow_back,
@@ -318,7 +318,7 @@ class SchedulePaymentScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 horizontalTitleGap: 10,
                 minTileHeight: 35,
-                leading: Icon(
+                leading:  Icon(
                   Icons.location_pin,
                   color: AppColors.primaryColor,
                 ),
@@ -334,7 +334,7 @@ class SchedulePaymentScreen extends StatelessWidget {
                 contentPadding: EdgeInsets.zero,
                 horizontalTitleGap: 10,
                 minTileHeight: 35,
-                leading: Icon(
+                leading:  Icon(
                   Icons.notifications_active_outlined,
                   color: AppColors.primaryColor,
                 ),

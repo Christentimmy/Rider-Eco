@@ -57,8 +57,8 @@ class ScheduleDetailsScreen extends StatelessWidget {
                   Icons.location_on,
                   color: AppColors.primaryColor,
                 ),
-                const SizedBox(width: 10),
-                const Column(
+                SizedBox(width: 10),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -88,8 +88,8 @@ class ScheduleDetailsScreen extends StatelessWidget {
                   Icons.location_on,
                   color: AppColors.primaryColor,
                 ),
-                const SizedBox(width: 10),
-                const Column(
+                SizedBox(width: 10),
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(

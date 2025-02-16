@@ -1,4 +1,4 @@
-import 'package:rider/pages/auth/sign_up_screen.dart';
+import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/chat/chat_screen.dart';
 import 'package:rider/pages/home/request_history_screen.dart';
 import 'package:rider/pages/settings/faq_screen.dart';

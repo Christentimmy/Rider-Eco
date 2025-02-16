@@ -6,8 +6,9 @@ import 'package:rider/controller/timer_controller.dart';
 import 'package:rider/resources/color_resources.dart';
 
 class VerifyPhoneNumberScreen extends StatelessWidget {
-  VerifyPhoneNumberScreen({super.key, this.email});
+  VerifyPhoneNumberScreen({super.key, this.email, required this.nextScreenMethod});
   final String? email;
+  final VoidCallback nextScreenMethod;
   final _timeController = Get.put(TimerController());
   final _authController = Get.put(AuthController());
 
@@ -74,9 +75,11 @@ class VerifyPhoneNumberScreen extends StatelessWidget {
                         onCompleted: (value) async {
                           print("completed $value");
                           await _authController.verifyOtp(
-                            otpCode: value,
-                            email: "timmychris09@gmail.com",
-                          );
+                              otpCode: value,
+                              email: email ?? "",
+                              whatNext: () {
+                                nextScreenMethod();
+                              });
                         },
                         focusedPinTheme: PinTheme(
                           height: 60,

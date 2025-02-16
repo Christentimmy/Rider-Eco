@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rider/pages/home/add_card_screen.dart';
@@ -58,8 +57,8 @@ class PaymentMethodScreen extends StatelessWidget {
               ),
             ),
             ListTile(
-              onTap: () => Get.to(() => AddCardScreen()),
-              leading: FaIcon(
+              onTap: ()=> Get.to(()=> AddCardScreen()),
+              leading:  FaIcon(
                 FontAwesomeIcons.creditCard,
                 color: AppColors.primaryColor,
               ),
@@ -86,8 +85,8 @@ class PaymentMethodScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-          onTap: () {
-            Get.to(() => PayScreen());
+          onTap: (){
+            Get.to(()=> PayScreen());
           },
           leading: FaIcon(
             icon,

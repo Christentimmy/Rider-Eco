@@ -34,18 +34,18 @@ class AuthService {
   }
 
   Future<http.Response?> loginUser({
-    required String email,
+    required String identifier,
     required String password,
   }) async {
     try {
       http.Response response = await client.post(
         Uri.parse("$baseUrl/auth/login"),
-        headers: {"Content-Type": "application/json"},
         body: {
-          "email": email,
+          "identifier": identifier,
           "password": password,
         },
       ).timeout(const Duration(seconds: 15));
+
       return response;
     } on SocketException catch (e) {
       CustomSnackbar.showErrorSnackBar("Check internet connection, $e");
@@ -53,12 +53,12 @@ class AuthService {
       return null;
     } on TimeoutException {
       CustomSnackbar.showErrorSnackBar(
-        "Request timeout, probably Bad network, try again",
+        "Request timeout, probably bad network, try again",
       );
-      debugPrint("Request Time out");
+      debugPrint("Request timeout");
       return null;
     } catch (e) {
-      throw Exception("unexpected error $e");
+      throw Exception("Unexpected error $e");
     }
   }
 
@@ -69,11 +69,25 @@ class AuthService {
     String? phoneNumber,
   }) async {
     try {
-      final response = await client.post(
-        Uri.parse("$baseUrl/auth/verify-otp"),
-        headers: {"Authorization": "Bearer $token"},
-        body: {"otp": otpCode},
-      ).timeout(const Duration(seconds: 15));
+      final Map<String, String> body = {
+        "otp": otpCode,
+      };
+
+      if (email?.isNotEmpty == true) {
+        body["email"] = email!;
+      }
+
+      if (phoneNumber?.isNotEmpty == true) {
+        body["phone_number"] = phoneNumber!;
+      }
+
+      final response = await client
+          .post(
+            Uri.parse("$baseUrl/auth/verify-otp"),
+            headers: {"Authorization": "Bearer $token"},
+            body: body,
+          )
+          .timeout(const Duration(seconds: 15));
       return response;
     } catch (e) {
       debugPrint(e.toString());

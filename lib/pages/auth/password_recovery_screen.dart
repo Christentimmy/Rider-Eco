@@ -95,7 +95,7 @@ class PasswordRecoveryScreen extends StatelessWidget {
                     gradient:  LinearGradient(
                       colors: [
                         AppColors.primaryColor,
-                        const Color.fromARGB(212, 37, 37, 37)
+                        Color.fromARGB(212, 37, 37, 37)
                       ],
                     ),
                   ),

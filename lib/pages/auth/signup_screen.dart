@@ -4,7 +4,6 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:rider/controller/auth_controller.dart';
 import 'package:rider/models/user_model.dart';
 import 'package:rider/pages/auth/password_recovery_screen.dart';
-import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
@@ -178,7 +177,55 @@ class SignUpScreen extends StatelessWidget {
               ),
               Obx(() {
                 if (_isLoginWithNumber.value) {
-                  return const PhoneNumberTextField();
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        width: 1,
+                        color: _isNumberValidated.value
+                            ? Colors.red
+                            : Colors.grey.withOpacity(0.5),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        CountryCodePicker(
+                          onChanged: (value) {},
+                          initialSelection: '+234',
+                          showCountryOnly: false,
+                          showOnlyCountryWhenClosed: false,
+                          alignLeft: false,
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _phoneNumberController,
+                            keyboardType: TextInputType.number,
+                            validator: (value) {
+                              if (value?.isEmpty == true) {
+                                _isNumberValidated.value = true;
+                                return null;
+                              }
+                              _isNumberValidated.value = false;
+                              return null;
+                            },
+                            decoration: const InputDecoration(
+                              hintText: "mobile number",
+                              hintStyle: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 } else {
                   return CustomTextField(
                     hintText: "john@email.com",
@@ -190,13 +237,36 @@ class SignUpScreen extends StatelessWidget {
               CustomTextField(
                 hintText: "password",
                 textController: _loginPasswordController,
+                obscureText: true,
               ),
               const SizedBox(height: 25),
-              CommonButton(
-                ontap: () {
-                  Get.to(() => HomeScreen());
-                },
-                text: "Login",
+              Obx(
+                () => CommonButton(
+                  ontap: () async {
+                    if (_authController.isLoading.value) {
+                      return;
+                    }
+                    if (!_formloginKey.currentState!.validate()) {
+                      return;
+                    }
+                    await _authController.loginUser(
+                      identifier: _isLoginWithNumber.value
+                          ? _phoneNumberController.text
+                          : _loginEmailController.text,
+                      password: _loginPasswordController.text,
+                    );
+                  },
+                  child: _authController.isLoading.value
+                      ? const CarLoader()
+                      : const Text(
+                          "Login",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -240,7 +310,6 @@ class SignUpScreen extends StatelessWidget {
         height: Get.height * 0.55,
         child: Form(
           key: _formSignUpKey,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -315,12 +384,14 @@ class SignUpScreen extends StatelessWidget {
               CustomTextField(
                 hintText: "password",
                 textController: _passwordController,
+                obscureText: true,
               ),
               const SizedBox(height: 10),
               // const ConfirmPassswordTextField(),
               CustomTextField(
                 hintText: "confirm password",
                 textController: _confirmPasswordController,
+                obscureText: true,
                 validator: (value) {
                   if (value?.isEmpty == true) {
                     return " ";
@@ -346,7 +417,7 @@ class SignUpScreen extends StatelessWidget {
                     await _authController.signUpUSer(userModel: userModel);
                   },
                   child: _authController.isLoading.value
-                      ? CarLoader()
+                      ? const CarLoader()
                       : const Text(
                           "Sign Up",
                           style: TextStyle(

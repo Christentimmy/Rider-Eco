@@ -105,7 +105,7 @@ class ResetPasswordScreen extends StatelessWidget {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(
+                      borderSide:  BorderSide(
                         width: 2,
                         color: AppColors.primaryColor,
                       ),
@@ -235,10 +235,10 @@ class ResetPasswordScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    gradient: LinearGradient(
+                    gradient:  LinearGradient(
                       colors: [
                         AppColors.primaryColor,
-                        const Color.fromARGB(212, 37, 37, 37)
+                        Color.fromARGB(212, 37, 37, 37)
                       ],
                     ),
                   ),

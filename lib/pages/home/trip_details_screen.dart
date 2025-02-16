@@ -35,7 +35,7 @@ class TripDetailsScreen extends StatelessWidget {
 
   Container _buildWidgetBelowMap() {
     return Container(
-      height: Get.height * 0.45,
+      height: Get.height * 0.4,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: const BoxDecoration(
@@ -125,13 +125,13 @@ class TripDetailsScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          Row(
+           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on,
                 color: Colors.white,
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -152,14 +152,14 @@ class TripDetailsScreen extends StatelessWidget {
               )
             ],
           ),
-          Divider(color: AppColors.primaryColor),
-          Row(
+           Divider(color: AppColors.primaryColor),
+           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on,
                 color: Colors.white,
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -202,7 +202,7 @@ class TripDetailsScreen extends StatelessWidget {
                 child: CommonButton(
                   text: "Payment",
                   ontap: () {
-                    Get.to(() => const PaymentMethodScreen());
+                    Get.to(()=> PaymentMethodScreen());
                   },
                   bgColor: Colors.black,
                   border: Border.all(width: 1, color: Colors.white),

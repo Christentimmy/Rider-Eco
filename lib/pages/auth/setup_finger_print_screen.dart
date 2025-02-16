@@ -121,10 +121,10 @@ class SetUpFingerScreen extends StatelessWidget {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      gradient: LinearGradient(
+                      gradient:  LinearGradient(
                         colors: [
                           AppColors.primaryColor,
-                          const Color.fromARGB(255, 8, 44, 10),
+                          Color.fromARGB(255, 8, 44, 10),
                         ],
                       ),
                     ),

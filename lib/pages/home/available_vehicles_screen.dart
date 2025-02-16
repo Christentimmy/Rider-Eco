@@ -133,13 +133,13 @@ class CarCards extends StatelessWidget {
           const Divider(),
           Row(
             children: [
-              const Text(
+              Text(
                 "4 - Seater",
                 style: TextStyle(
                   color: Colors.grey,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               Text(
                 "7/km",
                 style: TextStyle(
@@ -167,7 +167,7 @@ class _EachCarDetailsState extends State<EachCarDetails> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Get.height * 0.75,
+      height: Get.height * 0.7,
       width: Get.width,
       padding: const EdgeInsets.symmetric(
         horizontal: 20,
@@ -230,10 +230,10 @@ class _EachCarDetailsState extends State<EachCarDetails> {
             ],
           ),
           const SizedBox(height: 3),
-          Row(
+           Row(
             children: [
-              const Text("From"),
-              const SizedBox(width: 30),
+              Text("From"),
+              SizedBox(width: 30),
               Text(
                 "7/KM",
                 style: TextStyle(
@@ -294,7 +294,7 @@ class _EachCarDetailsState extends State<EachCarDetails> {
           CommonButton(
             text: "Select Vehicle",
             ontap: () {
-              Get.to(() => const WaitingRideScreen());
+              Get.to(()=> const WaitingRideScreen());
             },
           )
         ],

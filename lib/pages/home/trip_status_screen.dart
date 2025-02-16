@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:rider/pages/chat/call_screen.dart';
-import 'package:rider/pages/chat/chat_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/notifcation_screen.dart';
 import 'package:rider/pages/home/panic_mode_screen.dart';
@@ -43,7 +41,7 @@ class TripStatusScreen extends StatelessWidget {
     required BuildContext context,
   }) {
     return Container(
-      height: Get.height * 0.52,
+      height: Get.height * 0.5,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: const BoxDecoration(
@@ -69,7 +67,7 @@ class TripStatusScreen extends StatelessWidget {
               ),
               color: Colors.white,
             ),
-            child: Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -82,7 +80,7 @@ class TripStatusScreen extends StatelessWidget {
                 CircleAvatar(
                   radius: 10,
                   backgroundColor: AppColors.primaryColor,
-                  child: const Icon(
+                  child: Icon(
                     Icons.done,
                     color: Colors.white,
                     size: 12,
@@ -131,7 +129,7 @@ class TripStatusScreen extends StatelessWidget {
               const Spacer(),
               InkWell(
                 onTap: () {
-                  Get.to(() => const ChatScreen());
+                  // Get.to(() => ChatScreen());
                 },
                 child: Container(
                   height: 45,
@@ -149,7 +147,7 @@ class TripStatusScreen extends StatelessWidget {
                 ),
               ),
               InkWell(
-                onTap: () => Get.to(() => const CallScreen()),
+                // onTap: () => Get.to(() => CallScreen()),
                 child: Container(
                   height: 45,
                   width: 45,
@@ -168,13 +166,13 @@ class TripStatusScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          Row(
+           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on,
                 color: Colors.white,
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -195,7 +193,7 @@ class TripStatusScreen extends StatelessWidget {
               )
             ],
           ),
-          Divider(color: AppColors.primaryColor),
+           Divider(color: AppColors.primaryColor),
           Row(
             children: [
               const Icon(
@@ -203,7 +201,7 @@ class TripStatusScreen extends StatelessWidget {
                 color: Colors.white,
               ),
               const SizedBox(width: 10),
-              Column(
+               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -224,7 +222,7 @@ class TripStatusScreen extends StatelessWidget {
               const Spacer(),
               InkWell(
                 onTap: () {
-                  Get.to(() => const PanicModeScreen());
+                  Get.to(()=> PanicModeScreen());
                 },
                 child: const Column(
                   children: [

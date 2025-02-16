@@ -39,7 +39,7 @@ class FindARideScreen extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: Get.height * 0.4,
+        height: Get.height * 0.36,
         width: Get.width,
         padding: const EdgeInsets.symmetric(
           horizontal: 15,
@@ -108,7 +108,7 @@ class FindARideScreen extends StatelessWidget {
             const SizedBox(height: 20),
             CommonButton(
               text: "Find a ride",
-              ontap: () => Get.to(() => RequestRideScreen()),
+              ontap: ()=> Get.to(()=> RequestRideScreen()),
             ),
           ],
         ),

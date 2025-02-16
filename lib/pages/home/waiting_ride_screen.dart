@@ -17,7 +17,7 @@ class WaitingRideScreen extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              height: Get.height * 0.72,
+              height: Get.height * 0.7,
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
                 vertical: 5,
@@ -54,7 +54,7 @@ class WaitingRideScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                           Text(
                             "Cancel",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -135,7 +135,7 @@ class WaitingRideScreen extends StatelessWidget {
                         child: CommonButton(
                           text: "Cancel Trip",
                           ontap: () {
-                            Get.offAll(() => HomeScreen());
+                            Get.offAll(()=> HomeScreen());
                           },
                           textColor: AppColors.primaryColor,
                           bgColor: Colors.white,
@@ -150,7 +150,7 @@ class WaitingRideScreen extends StatelessWidget {
                         child: CommonButton(
                           text: "Find Trip",
                           ontap: () {
-                            Get.to(() => TripDetailsScreen());
+                            Get.to(()=> TripDetailsScreen());
                           },
                         ),
                       ),

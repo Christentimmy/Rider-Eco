@@ -164,7 +164,7 @@ class EditProfileScreen extends StatelessWidget {
                 onPressed: () {
                   pickImage();
                 },
-                icon: Icon(
+                icon:  Icon(
                   Icons.camera,
                   size: 17,
                   color: AppColors.primaryColor,
