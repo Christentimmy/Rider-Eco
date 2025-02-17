@@ -1,41 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rider/pages/home/home_screen.dart';
-import 'package:rider/pages/home/trip_details_screen.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rider/controller/socket_controller.dart';
+import 'package:rider/controller/user_controller.dart';
 import 'package:rider/resources/color_resources.dart';
-import 'package:rider/service/socket_service.dart';
 import 'package:rider/widgets/custom_button.dart';
 
 class WaitingRideScreen extends StatefulWidget {
-  const WaitingRideScreen({super.key});
+  final String fromLoactionName;
+  final String toLoactionName;
+  const WaitingRideScreen({
+    super.key,
+    required this.fromLoactionName,
+    required this.toLoactionName,
+  });
 
   @override
   State<WaitingRideScreen> createState() => _WaitingRideScreenState();
 }
 
 class _WaitingRideScreenState extends State<WaitingRideScreen> {
-  final socketService = Get.find<SocketService>();
+  final socketService = Get.find<SocketController>();
+  final _userController = Get.find<UserController>();
+
   @override
   void initState() {
-    print("build");
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!socketService.socket.connected) {
-        socketService.connect();
+      if (!socketService.socket!.connected == false) {
+        socketService.initializeSocket();
       }
-      print("Socket Connected ${socketService.socket.connected}");
-      print("Socket DisConnected ${socketService.socket.disconnected}");
-      socketService.connect();
+      print("Socket Connected ${socketService.socket?.connected}");
     });
 
     super.initState();
   }
+
+  final CameraPosition _initialPosition = const CameraPosition(
+    target: LatLng(59.9139, 10.7522),
+    zoom: 15,
+  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // Image.asset("assets/images/map3.png"),
+          SizedBox(
+            height: Get.height * 0.6,
+            width: Get.width,
+            child: GoogleMap(
+              initialCameraPosition: _initialPosition,
+              mapType: MapType.hybrid,
+              onTap: (argument) async {},
+            ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -61,7 +79,7 @@ class _WaitingRideScreenState extends State<WaitingRideScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "3 min to pickup",
+                            "Ride Request",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -69,7 +87,7 @@ class _WaitingRideScreenState extends State<WaitingRideScreen> {
                             ),
                           ),
                           Text(
-                            "Your car will be at the\npickup spot at 12:03pm",
+                            "Your ride request will\n be pending for maximum\n10mins",
                             style: TextStyle(
                               color: Colors.black.withOpacity(0.5),
                               fontSize: 12,
@@ -151,33 +169,26 @@ class _WaitingRideScreenState extends State<WaitingRideScreen> {
                   ),
                   const Divider(),
                   const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CommonButton(
-                          text: "Cancel Trip",
-                          ontap: () {
-                            Get.offAll(() => HomeScreen());
-                          },
-                          textColor: AppColors.primaryColor,
-                          bgColor: Colors.white,
-                          border: Border.all(
-                            width: 1,
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: CommonButton(
-                          text: "Find Trip",
-                          ontap: () {
-                            Get.to(() => TripDetailsScreen());
-                          },
-                        ),
-                      ),
-                    ],
-                  )
+                  Obx(
+                    () => CommonButton(
+                      ontap: () async {
+                        await _userController.cancelRideRequest(
+                          rideId: _userController.currentRideModel.value?.id ?? '',
+                        );
+                      },
+                      child: _userController.isloading.value
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Text(
+                              "Cancel Ride Request",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -200,27 +211,20 @@ class _WaitingRideScreenState extends State<WaitingRideScreen> {
               ],
             ),
             const SizedBox(width: 8),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Tolstoy house....",
-                    style: TextStyle(
+                    widget.fromLoactionName,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 6),
-                  Divider(color: Colors.grey, thickness: 1),
+                  const SizedBox(height: 6),
+                  const Divider(color: Colors.grey, thickness: 1),
                 ],
-              ),
-            ),
-            const Text(
-              "4:30 pm",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
               ),
             ),
           ],
@@ -234,25 +238,18 @@ class _WaitingRideScreenState extends State<WaitingRideScreen> {
               ],
             ),
             const SizedBox(width: 8),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Mandi house....",
-                    style: TextStyle(
+                    widget.toLoactionName,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
-              ),
-            ),
-            const Text(
-              "6:30 pm",
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
               ),
             ),
           ],

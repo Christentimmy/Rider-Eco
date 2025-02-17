@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/controller/socket_controller.dart';
 import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/intro/intro_screen.dart';
-import 'package:rider/service/socket_service.dart';
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -32,10 +33,9 @@ class _SplashScreenState extends State<SplashScreen> {
         Get.off(() => SignUpScreen());
         return;
       }
-      final socketService = Get.find<SocketService>();
+      final socketService = Get.find<SocketController>();
       await _userController.getUserStatus();
-      await _userController.getUserStatus();
-      socketService.connect();
+      socketService.initializeSocket();
     });
   }
 

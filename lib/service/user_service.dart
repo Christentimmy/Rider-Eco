@@ -14,18 +14,16 @@ class UserService {
     required String token,
   }) async {
     try {
-      final response =
-          await client.get(Uri.parse('$baseUrl/user/user-status'), headers: {
-        'Authorization': 'Bearer $token',
-      }).timeout(const Duration(seconds: 15));
+      final response = await client.get(
+        Uri.parse('$baseUrl/user/user-status'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
-      CustomSnackbar.showErrorSnackBar("Check internet connection, $e");
-      debugPrint("No internet connection");
+      debugPrint("No internet connection $e");
     } on TimeoutException {
-      CustomSnackbar.showErrorSnackBar(
-        "Request timeout, probably bad network, try again",
-      );
       debugPrint("Request timeout");
     } catch (e) {
       debugPrint(e.toString());
@@ -155,16 +153,87 @@ class UserService {
       ).timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
-      CustomSnackbar.showErrorSnackBar("Check internet connection, $e");
-      debugPrint("No internet connection");
+      debugPrint("No internet connection $e");
     } on TimeoutException {
-      CustomSnackbar.showErrorSnackBar(
-        "Request timeout, probably bad network, try again",
-      );
       debugPrint("Request timeout");
     } catch (e) {
       debugPrint(e.toString());
     }
     return null;
   }
+
+  Future<http.Response?> saveUserOneSignalId({
+    required String token,
+    required String id,
+  }) async {
+    try {
+      final response = await client.post(
+        Uri.parse("$baseUrl/user/save-signal-id/$id"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      ).timeout(const Duration(seconds: 15));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> cancelRideRequest({
+    required String token,
+    required String rideId,
+  }) async {
+    try {
+      final response = await client
+          .post(Uri.parse('$baseUrl/user/ride/cancel-ride-request'),
+              headers: {
+                'Authorization': 'Bearer $token',
+                'Content-Type': 'application/json',
+              },
+              body: json.encode({'rideId': rideId}))
+          .timeout(const Duration(seconds: 15));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> cancelTrip({
+    required String token,
+    required String rideId,
+  }) async {
+    try {
+      final response = await client
+          .post(
+            Uri.parse('$baseUrl/user/ride/cancel-trip'),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({'rideId': rideId}),
+          )
+          .timeout(const Duration(seconds: 15));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection: $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+
 }

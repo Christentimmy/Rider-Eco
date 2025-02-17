@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:rider/controller/socket_controller.dart';
 import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
@@ -13,16 +15,33 @@ import 'package:rider/pages/home/soure_destination_screen.dart';
 import 'package:rider/pages/home/support_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/service/location_service.dart';
-import 'package:rider/service/socket_service.dart';
 import 'package:rider/widgets/build_icon_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   final RxList<Map<String, dynamic>> _places = <Map<String, dynamic>>[].obs;
   final _userController = Get.find<UserController>();
+
+  @override
+  void initState() {
+    super.initState();
+    saveUserOneSignalId();
+  }
+
+  void saveUserOneSignalId() async {
+    String? playerId = await OneSignal.User.getOnesignalId();
+    if (playerId != null) {
+      await _userController.saveUserOneSignalId(oneSignalId: playerId);
+    }
+  }
 
   void searchPlaces(String query) async {
     List<Map<String, dynamic>> results =
@@ -41,12 +60,6 @@ class HomeScreen extends StatelessWidget {
       drawer: buildSideBar(),
       body: Stack(
         children: [
-          // Image.asset(
-          //   "assets/images/map.png",
-          //   width: Get.width,
-          //   height: Get.height,
-          //   fit: BoxFit.cover,
-          // ),
           SizedBox(
             height: Get.height * 0.65,
             width: Get.width,
@@ -357,8 +370,8 @@ Drawer buildSideBar() {
           onTap: () async {
             final storageController = Get.find<StorageController>();
             await storageController.deleteToken();
-            final socketService = Get.find<SocketService>();
-            socketService.disconnect();
+            final socketService = Get.find<SocketController>();
+            socketService.disconnectSocket();
             Get.offAll(() => SignUpScreen());
           },
         ),

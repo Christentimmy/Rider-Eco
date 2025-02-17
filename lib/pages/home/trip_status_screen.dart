@@ -80,7 +80,7 @@ class TripStatusScreen extends StatelessWidget {
                 CircleAvatar(
                   radius: 10,
                   backgroundColor: AppColors.primaryColor,
-                  child: Icon(
+                  child: const Icon(
                     Icons.done,
                     color: Colors.white,
                     size: 12,
@@ -168,11 +168,11 @@ class TripStatusScreen extends StatelessWidget {
           const SizedBox(height: 20),
            Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on,
                 color: Colors.white,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -222,7 +222,7 @@ class TripStatusScreen extends StatelessWidget {
               const Spacer(),
               InkWell(
                 onTap: () {
-                  Get.to(()=> PanicModeScreen());
+                  Get.to(()=> const PanicModeScreen());
                 },
                 child: const Column(
                   children: [
@@ -278,7 +278,7 @@ class TripStatusScreen extends StatelessWidget {
                 child: CommonButton(
                   text: "Cancel Trip",
                   ontap: () {
-                    Get.offAll(() => HomeScreen());
+                    Get.offAll(() => const HomeScreen());
                   },
                 ),
               ),
