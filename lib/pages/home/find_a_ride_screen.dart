@@ -53,11 +53,14 @@ class _FindARideScreenState extends State<FindARideScreen> {
   }
 
   Future<void> _getPolyline() async {
+    print("From Location: ${widget.fromLocaion}");
+    print("To Location: ${widget.toLocation}");
     final String url =
         "https://us1.locationiq.com/v1/directions/driving/${widget.fromLocaion.longitude},${widget.fromLocaion.latitude};${widget.toLocation.longitude},${widget.toLocation.latitude}?key=pk.d074964679caaa4f8b75ed81cd6b038a&overview=full&geometries=geojson";
 
     final response = await http.get(Uri.parse(url));
     final data = json.decode(response.body);
+    
 
     if (data.containsKey("routes") && data["routes"].isNotEmpty) {
       List<LatLng> polylineCoordinates = [];
@@ -127,7 +130,6 @@ class _FindARideScreenState extends State<FindARideScreen> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: Get.height * 0.43,
         width: Get.width,
         padding: const EdgeInsets.symmetric(
           horizontal: 15,
@@ -141,6 +143,7 @@ class _FindARideScreenState extends State<FindARideScreen> {
           ),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildListTile(
@@ -201,8 +204,6 @@ class _FindARideScreenState extends State<FindARideScreen> {
             CommonButton(
               text: "Find a ride",
               ontap: () {
-                // Get.to(() => RequestRideScreen());
-
                 Get.to(
                   () => AvailableVehiclesScreen(
                     fromLocaton: widget.fromLocaion,

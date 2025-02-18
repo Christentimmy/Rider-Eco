@@ -13,25 +13,22 @@ class TripStatusScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: InkWell(
-        onTap: () {},
-        child: Container(
-          padding: const EdgeInsets.only(top: 25),
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/map.png"),
-              fit: BoxFit.cover,
-            ),
+      body: Container(
+        padding: const EdgeInsets.only(top: 25),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/map.png"),
+            fit: BoxFit.cover,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: Get.height / 22.5),
-              _buildNavBarOnMap(),
-              const Spacer(),
-              _buildWidgetBelowMap(context: context),
-            ],
-          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: Get.height / 22.5),
+            _buildNavBarOnMap(),
+            const Spacer(),
+            _buildWidgetBelowMap(context: context),
+          ],
         ),
       ),
     );

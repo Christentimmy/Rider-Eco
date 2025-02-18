@@ -29,17 +29,23 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   final RxList<Map<String, dynamic>> _places = <Map<String, dynamic>>[].obs;
   final _userController = Get.find<UserController>();
+  final _socketController = Get.find<SocketController>();
 
   @override
   void initState() {
     super.initState();
+    _socketController.disconnectSocket();
+    if (_socketController.socket == null ||
+        _socketController.socket?.disconnected == true) {
+      _socketController.initializeSocket();
+    }
     saveUserOneSignalId();
   }
 
   void saveUserOneSignalId() async {
-    String? playerId = await OneSignal.User.getOnesignalId();
-    if (playerId != null) {
-      await _userController.saveUserOneSignalId(oneSignalId: playerId);
+    String? subId = OneSignal.User.pushSubscription.id;
+    if (subId != null) {
+      await _userController.saveUserOneSignalId(oneSignalId: subId);
     }
   }
 

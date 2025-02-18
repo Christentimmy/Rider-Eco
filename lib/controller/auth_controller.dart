@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rider/controller/socket_controller.dart';
 import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/models/user_model.dart';
@@ -17,7 +16,6 @@ import 'package:rider/widgets/snack_bar.dart';
 class AuthController extends GetxController {
   final RxBool isLoading = false.obs;
   final AuthService _authService = AuthService();
-  final _socketService = Get.find<SocketController>();
   final _storageController = Get.find<StorageController>();
   final _userController = Get.find<UserController>();
 
@@ -44,12 +42,13 @@ class AuthController extends GetxController {
       Get.to(
         () => VerifyPhoneNumberScreen(
           email: userModel.email,
-          nextScreenMethod: () => Get.offAll(() => CreateProfileScreen()),
+          nextScreenMethod: () => Get.offAll(
+            () => CreateProfileScreen(),
+          ),
         ),
       );
-      
+
       await _userController.getUserDetails();
-      _socketService.initializeSocket();
     } catch (e) {
       debugPrint("Error From Auth Controller: ${e.toString()}");
     } finally {
@@ -156,6 +155,7 @@ class AuthController extends GetxController {
       if (response == null) return;
       final decoded = json.decode(response.body);
       String message = decoded["message"] ?? "";
+      Get.find<StorageController>().storeToken(decoded["token"]);
       if (response.statusCode == 404) {
         CustomSnackbar.showErrorSnackBar(message);
         return;
@@ -167,10 +167,12 @@ class AuthController extends GetxController {
       }
       if (response.statusCode == 401) {
         CustomSnackbar.showErrorSnackBar(message);
-        Get.offAll(() => VerifyPhoneNumberScreen(
-              email: identifier,
-              nextScreenMethod: () => Get.offAll(() => HomeScreen()),
-            ));
+        Get.offAll(
+          () => VerifyPhoneNumberScreen(
+            email: identifier,
+            nextScreenMethod: () => Get.offAll(() => const HomeScreen()),
+          ),
+        );
         return;
       }
       if (response.statusCode == 400) {
@@ -178,8 +180,7 @@ class AuthController extends GetxController {
         Get.offAll(() => CreateProfileScreen());
         return;
       }
-      _socketService.initializeSocket();
-      Get.offAll(() => HomeScreen());
+      Get.offAll(() => const HomeScreen());
     } catch (e) {
       debugPrint(e.toString());
     } finally {

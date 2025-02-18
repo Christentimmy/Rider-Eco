@@ -17,12 +17,8 @@ class SocketController extends GetxController {
   RxList chatsList = [].obs;
   RxBool isloading = false.obs;
   final _userController = Get.find<UserController>();
-
-  @override
-  void onInit() {
-    initializeSocket();
-    super.onInit();
-  }
+  int _reconnectAttempts = 0;
+  final int _maxReconnectAttempts = 5;
 
   void initializeSocket() async {
     String? token = await StorageController().getToken();
@@ -46,16 +42,15 @@ class SocketController extends GetxController {
 
     socket?.onDisconnect((_) {
       print("Socket disconnected");
-      Future.delayed(const Duration(seconds: 2), () {
-        initializeSocket();
-      });
+      scheduleReconnect();
+      if (_reconnectAttempts >= _maxReconnectAttempts) {
+        disConnectListeners();
+      }
     });
 
     socket?.on('connect_error', (_) {
       print("Connection error");
-      Future.delayed(const Duration(seconds: 2), () {
-        initializeSocket();
-      });
+      scheduleReconnect();
     });
   }
 
@@ -65,11 +60,13 @@ class SocketController extends GetxController {
     });
 
     socket?.on("rideAccepted", (data) {
+      print(data);
       String roomId = data["data"]["ride"]["_id"];
+      print(roomId);
       DriverModel driver = DriverModel.fromJson(data["data"]["driver"]);
-      Get.to(() => TripDetailsScreen(driver: driver));
       socket?.emit("joinRoom", {"roomId": roomId});
       debugPrint(data.toString());
+      Get.to(() => TripDetailsScreen(driver: driver));
     });
 
     socket?.on('driverLocationUpdated', (data) {
@@ -83,12 +80,13 @@ class SocketController extends GetxController {
 
     socket?.on("tripStatus", (data) {
       String message = data["message"];
-      CustomSnackbar.showSuccessSnackBar(message);
+      debugPrint(message);
+      // CustomSnackbar.showSuccessSnackBar(message);
       if (message.contains("started")) {
-        Get.to(() => TripStatusScreen());
+        Get.to(() => const TripDetailsScreen());
       }
       if (message.contains("completed")) {
-        Get.to(() => const TripDetailsScreen());
+        Get.to(() => TripStatusScreen());
       }
     });
 
@@ -98,13 +96,22 @@ class SocketController extends GetxController {
     });
   }
 
-  void disconnectSocket() {
+  void disConnectListeners() async {
     if (socket != null) {
-      socket?.disconnect();
-      socket = null;
-      socket?.close();
-      print('Socket disconnected and deleted');
+      socket?.off("userDetails");
+      socket?.off("rideAccepted");
+      socket?.off("driverLocationUpdated");
+      socket?.off("tripStatus");
+      socket?.off("rideCancelled");
     }
+  }
+
+  void disconnectSocket() {
+    disConnectListeners();
+    socket?.disconnect();
+    socket = null;
+    socket?.close();
+    print('Socket disconnected and deleted');
   }
 
   void sendMessage(String message, String channedId) {
@@ -123,6 +130,21 @@ class SocketController extends GetxController {
     socket?.emit("MARK_MESSAGE_READ", {
       "channel_id": channedId,
       "message_ids": [messageId],
+    });
+  }
+
+  void scheduleReconnect() {
+    if (_reconnectAttempts >= _maxReconnectAttempts) {
+      debugPrint("🚨 Max reconnection attempts reached. Stopping retry.");
+      return;
+    }
+
+    int delay = 2 * _reconnectAttempts + 2;
+    debugPrint("🔄 Reconnecting in $delay seconds...");
+
+    Future.delayed(Duration(seconds: delay), () {
+      _reconnectAttempts++;
+      socket?.connect();
     });
   }
 

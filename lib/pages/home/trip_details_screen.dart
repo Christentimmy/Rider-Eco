@@ -6,11 +6,10 @@ import 'package:rider/models/driver_model.dart';
 import 'package:rider/models/user_model.dart';
 import 'package:rider/pages/chat/call_screen.dart';
 import 'package:rider/pages/chat/chat_screen.dart';
-import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/notifcation_screen.dart';
-import 'package:rider/pages/home/payment_method_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
+import 'package:rider/widgets/loader.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   final DriverModel? driver;
@@ -22,9 +21,11 @@ class TripDetailsScreen extends StatefulWidget {
 
 class _TripDetailsScreenState extends State<TripDetailsScreen> {
   final _userController = Get.find<UserController>();
+
   @override
   void initState() {
     super.initState();
+    getDriverUser();
   }
 
   void getDriverUser() async {
@@ -51,22 +52,25 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               );
             }
 
-            return GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: _userController.driverLocation.value,
-                zoom: 15,
-              ),
-              mapType: MapType.hybrid,
-              markers: {
-                Marker(
-                  markerId: const MarkerId('driver'),
-                  position: _userController.driverLocation.value,
-                  infoWindow: const InfoWindow(title: 'Driver'),
+            return SizedBox(
+              height: Get.height * 0.65,
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: _userController.driverLocation.value,
+                  zoom: 8,
                 ),
-              },
-              onMapCreated: (GoogleMapController controller) {
-                _mapController = controller;
-              },
+                mapType: MapType.hybrid,
+                markers: {
+                  Marker(
+                    markerId: const MarkerId('driver'),
+                    position: _userController.driverLocation.value,
+                    infoWindow: const InfoWindow(title: 'Driver'),
+                  ),
+                },
+                onMapCreated: (GoogleMapController controller) {
+                  _mapController = controller;
+                },
+              ),
             );
           }),
           Padding(
@@ -80,31 +84,11 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         ],
       ),
     );
-    // return Scaffold(
-    //   body: Container(
-    //     padding: const EdgeInsets.only(top: 25),
-    //     decoration: const BoxDecoration(
-    //       image: DecorationImage(
-    //         image: AssetImage("assets/images/map.png"),
-    //         fit: BoxFit.cover,
-    //       ),
-    //     ),
-    //     child: Column(
-    //       crossAxisAlignment: CrossAxisAlignment.start,
-    //       children: [
-    //         SizedBox(height: Get.height / 22.5),
-    //         _buildNavBarOnMap(),
-    //         const Spacer(),
-    //         _buildWidgetBelowMap(),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 
   Container _buildWidgetBelowMap() {
     return Container(
-      height: Get.height * 0.4,
+      height: Get.height * 0.5,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: const BoxDecoration(
@@ -118,6 +102,42 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Container(
+            height: 30,
+            width: 150,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            margin: const EdgeInsets.symmetric(vertical: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                width: 1,
+                color: AppColors.primaryColor,
+              ),
+              color: Colors.white,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "RIDE ACCEPTED",
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                CircleAvatar(
+                  radius: 10,
+                  backgroundColor: AppColors.primaryColor,
+                  child: const Icon(
+                    Icons.done,
+                    color: Colors.white,
+                    size: 12,
+                  ),
+                )
+              ],
+            ),
+          ),
+          // const SizedBox(width: 20),
           Row(
             children: [
               Obx(() {
@@ -125,9 +145,12 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   return const SizedBox.shrink();
                 }
                 final image = _driverUserModel.value.profilePicture;
+                if(image == null  || image.isEmpty){
+                  return const SizedBox.shrink();
+                }
                 return CircleAvatar(
                   radius: 25,
-                  backgroundImage: NetworkImage(image ?? ""),
+                  backgroundImage: NetworkImage(image),
                 );
               }),
               const SizedBox(width: 5),
@@ -209,23 +232,29 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                 color: Colors.white,
               ),
               const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Pickup Location",
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.bold,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Pickup Location",
+                      style: TextStyle(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "SJC, Terminal B",
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
+                    Obx(
+                      () => Text(
+                        _userController.currentRideModel.value?.pickupLocation
+                                ?.address ??
+                            "",
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               )
             ],
           ),
@@ -237,65 +266,52 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                 color: Colors.white,
               ),
               const SizedBox(width: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Drop Off Location",
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontWeight: FontWeight.bold,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Drop Off Location",
+                      style: TextStyle(
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "SJC, Terminal B",
-                    style: TextStyle(
-                      color: AppColors.primaryColor,
+                    Obx(
+                      () => Text(
+                        _userController.currentRideModel.value?.dropoffLocation
+                                ?.address ??
+                            "",
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               )
             ],
           ),
-          const SizedBox(height: 10),
-          const Text(
-            "Price: \$5,000.00",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-            ),
-          ),
-          const Text(
-            "Trip duration: 32 minutes",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-            ),
-          ),
           const SizedBox(height: 20),
-          Row(
-            children: [
-              Expanded(
-                child: CommonButton(
-                  text: "Payment",
-                  ontap: () {
-                    Get.to(() => const PaymentMethodScreen());
-                  },
-                  bgColor: Colors.black,
-                  border: Border.all(width: 1, color: Colors.white),
-                ),
-              ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: CommonButton(
-                  text: "Cancel Trip",
-                  ontap: () {
-                    Get.offAll(() => const HomeScreen());
-                  },
-                ),
-              ),
-            ],
-          )
+          Obx(
+            () => CommonButton(
+              child: _userController.isloading.value
+                  ? const CarLoader()
+                  : const Text(
+                      "Cancel Trip",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
+                    ),
+              ontap: () async {
+                await _userController.cancelTrip(
+                  rideId: _userController.currentRideModel.value?.id ?? "",
+                );
+                // Get.offAll(() => const HomeScreen());
+              },
+            ),
+          ),
         ],
       ),
     );

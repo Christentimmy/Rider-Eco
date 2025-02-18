@@ -140,13 +140,17 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
                             String lng = _places[index]["lon"];
                             return ListTile(
                               onTap: () {
+                                print(fromLocaion);
+                                print(_places);
                                 _searchController.clear();
                                 _searchController.text += title;
                                 _places.clear();
+
                                 fromLocaion = LatLng(
-                                  double.parse(lng),
                                   double.parse(lat),
+                                  double.parse(lng),
                                 );
+
                                 _fromLocationName.value = title;
                               },
                               contentPadding: EdgeInsets.zero,
@@ -172,7 +176,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  ontap: () {
+                  ontap: () async {
                     FocusManager.instance.primaryFocus?.unfocus();
                     if (_searchController.text.isEmpty) {
                       CustomSnackbar.showErrorSnackBar(

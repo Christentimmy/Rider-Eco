@@ -1,43 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rider/controller/socket_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 
-class WaitingRideScreen extends StatefulWidget {
+class WaitingRideScreen extends StatelessWidget {
   final String fromLoactionName;
   final String toLoactionName;
-  const WaitingRideScreen({
+  WaitingRideScreen({
     super.key,
     required this.fromLoactionName,
     required this.toLoactionName,
   });
 
-  @override
-  State<WaitingRideScreen> createState() => _WaitingRideScreenState();
-}
-
-class _WaitingRideScreenState extends State<WaitingRideScreen> {
-  final socketService = Get.find<SocketController>();
   final _userController = Get.find<UserController>();
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!socketService.socket!.connected == false) {
-        socketService.initializeSocket();
-      }
-      print("Socket Connected ${socketService.socket?.connected}");
-    });
-
-    super.initState();
-  }
 
   final CameraPosition _initialPosition = const CameraPosition(
     target: LatLng(59.9139, 10.7522),
-    zoom: 15,
+    zoom: 10,
   );
 
   @override
@@ -173,7 +154,8 @@ class _WaitingRideScreenState extends State<WaitingRideScreen> {
                     () => CommonButton(
                       ontap: () async {
                         await _userController.cancelRideRequest(
-                          rideId: _userController.currentRideModel.value?.id ?? '',
+                          rideId:
+                              _userController.currentRideModel.value?.id ?? '',
                         );
                       },
                       child: _userController.isloading.value
@@ -216,7 +198,7 @@ class _WaitingRideScreenState extends State<WaitingRideScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.fromLoactionName,
+                    fromLoactionName,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -243,7 +225,7 @@ class _WaitingRideScreenState extends State<WaitingRideScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.toLoactionName,
+                    toLoactionName,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,

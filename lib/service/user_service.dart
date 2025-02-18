@@ -19,7 +19,7 @@ class UserService {
         headers: {
           'Authorization': 'Bearer $token',
         },
-      ).timeout(const Duration(seconds: 15));
+      ).timeout(const Duration(seconds: 9));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
@@ -191,7 +191,7 @@ class UserService {
   }) async {
     try {
       final response = await client
-          .post(Uri.parse('$baseUrl/user/ride/cancel-ride-request'),
+          .put(Uri.parse('$baseUrl/user/ride/cancel-ride-request'),
               headers: {
                 'Authorization': 'Bearer $token',
                 'Content-Type': 'application/json',
@@ -224,6 +224,33 @@ class UserService {
             body: jsonEncode({'rideId': rideId}),
           )
           .timeout(const Duration(seconds: 15));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection: $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> initiateStripePayment({
+    required String token,
+    required String rideId,
+  }) async {
+    try {
+      final response = await client
+          .post(
+            Uri.parse('$baseUrl/user/ride/payment'),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode({'rideId': rideId}),
+          )
+          .timeout(const Duration(seconds: 15));
+
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection: $e");
