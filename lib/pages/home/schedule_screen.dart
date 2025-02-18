@@ -15,7 +15,7 @@ class ScheduleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: buildSideBar(),
+      drawer: BuildSideBar(),
       appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -113,7 +113,7 @@ class ScheduleScreen extends StatelessWidget {
   InkWell _buildFilterCards() {
     return InkWell(
       onTap: () {
-        Get.to(()=> ScheduleDetailsScreen());
+        Get.to(()=> const ScheduleDetailsScreen());
       },
       child: Container(
         // height: 200,
@@ -138,8 +138,8 @@ class ScheduleScreen extends StatelessWidget {
                   Icons.location_on,
                   color: AppColors.primaryColor,
                 ),
-                SizedBox(width: 10),
-                Column(
+                const SizedBox(width: 10),
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -159,8 +159,8 @@ class ScheduleScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                Spacer(),
-                Column(
+                const Spacer(),
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -189,8 +189,8 @@ class ScheduleScreen extends StatelessWidget {
                   Icons.location_on,
                   color: AppColors.primaryColor,
                 ),
-                SizedBox(width: 10),
-                Column(
+                const SizedBox(width: 10),
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
@@ -210,8 +210,8 @@ class ScheduleScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                Spacer(),
-                Text(
+                const Spacer(),
+                const Text(
                   "Express",
                   style: TextStyle(
                     color: Colors.grey,

@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: buildSideBar(),
+      drawer: BuildSideBar(),
       body: Stack(
         children: [
           SizedBox(
@@ -217,171 +217,184 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-Drawer buildSideBar() {
-  return Drawer(
-    child: ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        DrawerHeader(
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 19, 19, 19),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                "assets/images/avater2.png",
-                width: 60,
-              ),
-              const SizedBox(width: 10),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Jonathon Smith",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                      ),
-                      Text(
-                        "4.8 (5000)",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Builder(
-                builder: (context) {
-                  return IconButton(
-                    onPressed: () {
-                      Scaffold.of(context).closeDrawer();
-                    },
-                    icon: const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                    ),
+class BuildSideBar extends StatelessWidget {
+  BuildSideBar({super.key});
+  final _userController = Get.find<UserController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 19, 19, 19),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Obx(() {
+                  if (_userController.isloading.value) {
+                    return const CircularProgressIndicator();
+                  }
+                  String image =
+                      _userController.userModel.value?.profilePicture ?? "";
+                  return CircleAvatar(
+                    radius: 25,
+                    backgroundImage: NetworkImage(image),
                   );
-                },
-              )
-            ],
-          ),
-        ),
-        ListTile(
-          leading: const Icon(Icons.home),
-          title: const Text(
-            'Home Screen',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+                }),
+                const SizedBox(width: 10),
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Jonathon Smith",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                        ),
+                        Text(
+                          "4.8 (5000)",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                Builder(
+                  builder: (context) {
+                    return IconButton(
+                      onPressed: () {
+                        Scaffold.of(context).closeDrawer();
+                      },
+                      icon: const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                      ),
+                    );
+                  },
+                )
+              ],
             ),
           ),
-          onTap: () {
-            Get.to(() => HomeScreen());
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.account_circle),
-          title: const Text(
-            'Profile',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+          ListTile(
+            leading: const Icon(Icons.home),
+            title: const Text(
+              'Home Screen',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            onTap: () {
+              Get.to(() => const HomeScreen());
+            },
           ),
-          onTap: () {
-            Get.to(() => const ProfileScreen());
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.history),
-          title: const Text(
-            'Balance & History',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+          ListTile(
+            leading: const Icon(Icons.account_circle),
+            title: const Text(
+              'Profile',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            onTap: () {
+              Get.to(() => const ProfileScreen());
+            },
           ),
-          onTap: () {
-            Get.to(() => BalanceAndHistoryScreen());
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.calendar_month),
-          title: const Text(
-            'Schedule',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+          ListTile(
+            leading: const Icon(Icons.history),
+            title: const Text(
+              'Balance & History',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            onTap: () {
+              Get.to(() => BalanceAndHistoryScreen());
+            },
           ),
-          onTap: () {
-            Get.to(() => ScheduleScreen());
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.credit_card),
-          title: const Text(
-            'Payments',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+          ListTile(
+            leading: const Icon(Icons.calendar_month),
+            title: const Text(
+              'Schedule',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            onTap: () {
+              Get.to(() => ScheduleScreen());
+            },
           ),
-          onTap: () {
-            Get.to(() => PaymentMethodScreen());
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.settings),
-          title: const Text(
-            'Settings',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+          ListTile(
+            leading: const Icon(Icons.credit_card),
+            title: const Text(
+              'Payments',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            onTap: () {
+              Get.to(() => PaymentMethodScreen());
+            },
           ),
-          onTap: () {
-            Get.to(() => SettingScreen());
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.support_agent),
-          title: const Text(
-            'Support',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text(
+              'Settings',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            onTap: () {
+              Get.to(() => SettingScreen());
+            },
           ),
-          onTap: () {
-            Get.to(() => SupportScreen());
-          },
-        ),
-        ListTile(
-          leading: const Icon(Icons.contact_support_rounded),
-          title: const Text(
-            'Logout',
-            style: TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.bold,
+          ListTile(
+            leading: const Icon(Icons.support_agent),
+            title: const Text(
+              'Support',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            onTap: () {
+              Get.to(() => SupportScreen());
+            },
           ),
-          onTap: () async {
-            final storageController = Get.find<StorageController>();
-            await storageController.deleteToken();
-            final socketService = Get.find<SocketController>();
-            socketService.disconnectSocket();
-            Get.offAll(() => SignUpScreen());
-          },
-        ),
-      ],
-    ),
-  );
+          ListTile(
+            leading: const Icon(Icons.contact_support_rounded),
+            title: const Text(
+              'Logout',
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () async {
+              final storageController = Get.find<StorageController>();
+              await storageController.deleteToken();
+              final socketService = Get.find<SocketController>();
+              socketService.disconnectSocket();
+              Get.offAll(() => SignUpScreen());
+            },
+          ),
+        ],
+      ),
+    );
+  }
 }

@@ -9,12 +9,13 @@ import 'package:rider/widgets/custom_textfield.dart';
 class BalanceAndHistoryScreen extends StatelessWidget {
   BalanceAndHistoryScreen({super.key});
 
+  // final _userController = Get.find<UserController>();
   final _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: buildSideBar(),
+      drawer: BuildSideBar(),
       appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(

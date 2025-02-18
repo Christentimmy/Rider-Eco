@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/models/driver_model.dart';
+import 'package:rider/models/fare_breakdown_model.dart';
 import 'package:rider/models/ride_model.dart';
 import 'package:rider/models/user_model.dart';
 import 'package:rider/pages/auth/create_profile_screen.dart';
@@ -17,10 +18,13 @@ import 'package:rider/widgets/snack_bar.dart';
 
 class UserController extends GetxController {
   RxBool isloading = false.obs;
+  RxBool isRideBreakDownLoading = false.obs;
   RxBool isRequestRideLoading = false.obs;
+  RxBool isPaymentProcessing = false.obs;
   var driverLocation = const LatLng(0.0, 0.0).obs;
   Rxn<UserModel> userModel = Rxn<UserModel>();
   Rxn<Ride> currentRideModel = Rxn<Ride>();
+  Rxn<FareBreakdownModel> rideFareBreakdownModel = Rxn<FareBreakdownModel>();
   RxBool isGetUserIdLoading = false.obs;
   final UserService _userService = UserService();
   RxList<DriverModel> availableDriverList = <DriverModel>[].obs;
@@ -70,7 +74,6 @@ class UserController extends GetxController {
         return;
       }
       Get.to(() => const HomeScreen());
-      return;
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -295,7 +298,7 @@ class UserController extends GetxController {
   }
 
   Future<void> makePayment({required String rideId}) async {
-    isloading.value = true;
+    isPaymentProcessing.value = true;
     try {
       final storageController = Get.find<StorageController>();
       String? token = await storageController.getToken();
@@ -311,18 +314,19 @@ class UserController extends GetxController {
 
       if (response == null) return;
       final decoded = json.decode(response.body);
-
+      print(decoded);
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorSnackBar(decoded["message"]);
         return;
       }
 
       String clientSecret = decoded["paymentResult"]["clientSecret"];
+      print(clientSecret);  
       await _presentStripePaymentSheet(clientSecret);
     } catch (e) {
       debugPrint(e.toString());
     } finally {
-      isloading.value = false;
+      isPaymentProcessing.value = false;
     }
   }
 
@@ -336,10 +340,45 @@ class UserController extends GetxController {
         ),
       );
       await Stripe.instance.presentPaymentSheet();
-      CustomSnackbar.showSuccessSnackBar("Payment successful!");
+      CustomSnackbar.showSuccessSnackBar("Payment processing!");
+      Get.offAll(()=> const HomeScreen());
     } catch (e) {
+      print(e);
       debugPrint("Stripe Payment Error: $e");
       CustomSnackbar.showErrorSnackBar("Payment failed");
+    }
+  }
+
+  Future<void> getRideFareBreakDown({
+    required String rideId,
+  }) async {
+    isRideBreakDownLoading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+
+      final response = await _userService.getRideFareBreakDown(
+        token: token,
+        rideId: rideId,
+      );
+
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return;
+      }
+      final rideFareBreakdown = decoded["breakdown"];
+      if (rideFareBreakdown == null) return;
+      rideFareBreakdownModel.value = FareBreakdownModel.fromMap(
+        rideFareBreakdown,
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isRideBreakDownLoading.value = false;
     }
   }
 }

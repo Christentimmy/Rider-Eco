@@ -11,7 +11,6 @@ class SupportScreen extends StatelessWidget {
 
   final RxInt _currentPage = 0.obs;
   final _pageController = PageController(initialPage: 0);
-
   final List _contactUsList = [
     ["Customer Service", FontAwesomeIcons.userShield],
     ["Whatsapp", FontAwesomeIcons.whatsapp],
@@ -24,7 +23,7 @@ class SupportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: buildSideBar(),
+      drawer: BuildSideBar(),
       appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(

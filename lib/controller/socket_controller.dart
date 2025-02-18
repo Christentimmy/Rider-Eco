@@ -80,13 +80,11 @@ class SocketController extends GetxController {
 
     socket?.on("tripStatus", (data) {
       String message = data["message"];
-      debugPrint(message);
-      // CustomSnackbar.showSuccessSnackBar(message);
       if (message.contains("started")) {
         Get.to(() => const TripDetailsScreen());
       }
       if (message.contains("completed")) {
-        Get.to(() => TripStatusScreen());
+        Get.to(() => const TripPaymentScreen());
       }
     });
 

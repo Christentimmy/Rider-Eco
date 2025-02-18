@@ -60,7 +60,6 @@ class _FindARideScreenState extends State<FindARideScreen> {
 
     final response = await http.get(Uri.parse(url));
     final data = json.decode(response.body);
-    
 
     if (data.containsKey("routes") && data["routes"].isNotEmpty) {
       List<LatLng> polylineCoordinates = [];
@@ -78,8 +77,8 @@ class _FindARideScreenState extends State<FindARideScreen> {
       double distanceInKm = distanceInMeters / 1000;
       double durationInMinutes = durationInSeconds / 60;
 
-      estimatedTime.value = "${durationInMinutes.toStringAsFixed(2)} min";
-      basePrice.value = (distanceInKm * 5000).toStringAsFixed(2);
+      estimatedTime.value =
+          "${durationInMinutes.toStringAsFixed(2)} min / ${distanceInKm}Km";
 
       setState(() {
         _polylines.add(Polyline(
@@ -162,7 +161,7 @@ class _FindARideScreenState extends State<FindARideScreen> {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 17,
+                    fontSize: 13,
                   ),
                 ),
                 Obx(
@@ -171,7 +170,7 @@ class _FindARideScreenState extends State<FindARideScreen> {
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 17,
+                      fontSize: 13,
                     ),
                   ),
                 ),
@@ -185,7 +184,7 @@ class _FindARideScreenState extends State<FindARideScreen> {
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: 17,
+                    fontSize: 13,
                   ),
                 ),
                 Obx(
@@ -194,7 +193,7 @@ class _FindARideScreenState extends State<FindARideScreen> {
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 17,
+                      fontSize: 13,
                     ),
                   ),
                 ),
@@ -227,15 +226,17 @@ class _FindARideScreenState extends State<FindARideScreen> {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       minTileHeight: 40,
+      horizontalTitleGap: 1.0,
       leading: Icon(
         icon,
         color: Colors.white,
+        size: 18,
       ),
       title: Text(
         title,
         style: TextStyle(
           color: AppColors.primaryColor,
-          fontSize: 16,
+          fontSize: 13,
           fontWeight: FontWeight.bold,
         ),
       ),

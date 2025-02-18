@@ -61,7 +61,7 @@ class SettingScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
-      drawer: buildSideBar(),
+      drawer: BuildSideBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 15,
