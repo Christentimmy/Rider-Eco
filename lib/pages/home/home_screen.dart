@@ -7,8 +7,8 @@ import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/home/balance_history_screen.dart';
+import 'package:rider/pages/home/edit_profile_screen.dart';
 import 'package:rider/pages/home/payment_method_screen.dart';
-import 'package:rider/pages/home/profile_screen.dart';
 import 'package:rider/pages/home/schedule_screen.dart';
 import 'package:rider/pages/home/settings_screen.dart';
 import 'package:rider/pages/home/soure_destination_screen.dart';
@@ -246,35 +246,19 @@ class BuildSideBar extends StatelessWidget {
                   );
                 }),
                 const SizedBox(width: 10),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Jonathon Smith",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                Obx(() {
+                  String firstName = _userController.userModel.value?.firstName ?? "";
+                  String lastName = _userController.userModel.value?.lastName ?? "";
+                  return Text(
+                    "$firstName $lastName",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellow,
-                        ),
-                        Text(
-                          "4.8 (5000)",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                  );
+                }),
+                const SizedBox(width: 10),
                 const Spacer(),
                 Builder(
                   builder: (context) {
@@ -301,7 +285,7 @@ class BuildSideBar extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Get.to(() => const HomeScreen());
+              Navigator.pop(context);
             },
           ),
           ListTile(
@@ -313,7 +297,7 @@ class BuildSideBar extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Get.to(() => const ProfileScreen());
+              Get.to(() => EditProfileScreen());
             },
           ),
           ListTile(

@@ -285,4 +285,54 @@ class UserService {
     return null;
   }
 
+  Future<http.Response?> updateUserDetails({
+    required String token,
+    String? firstName,
+    String? lastName,
+    String? email,
+    String? phoneNumber,
+    File? profilePicture,
+  }) async {
+    try {
+      var request = http.MultipartRequest(
+        'PATCH',
+        Uri.parse('$baseUrl/user/update-user'),
+      );
+
+      // Set headers
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'multipart/form-data',
+      });
+
+      if (firstName != null) request.fields['first_name'] = firstName;
+      if (lastName != null) request.fields['last_name'] = lastName;
+      if (email != null) request.fields['email'] = email;
+      if (phoneNumber != null) request.fields['phone_number'] = phoneNumber;
+
+      // Attach profile picture if provided
+      if (profilePicture != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'profilePicture',
+            profilePicture.path,
+          ),
+        );
+      }
+
+      // Send request
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection: $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
 }

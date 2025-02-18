@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
@@ -21,6 +22,7 @@ class UserController extends GetxController {
   RxBool isRideBreakDownLoading = false.obs;
   RxBool isRequestRideLoading = false.obs;
   RxBool isPaymentProcessing = false.obs;
+  RxBool isEditLoading = false.obs;
   var driverLocation = const LatLng(0.0, 0.0).obs;
   Rxn<UserModel> userModel = Rxn<UserModel>();
   Rxn<Ride> currentRideModel = Rxn<Ride>();
@@ -321,7 +323,7 @@ class UserController extends GetxController {
       }
 
       String clientSecret = decoded["paymentResult"]["clientSecret"];
-      print(clientSecret);  
+      print(clientSecret);
       await _presentStripePaymentSheet(clientSecret);
     } catch (e) {
       debugPrint(e.toString());
@@ -341,7 +343,7 @@ class UserController extends GetxController {
       );
       await Stripe.instance.presentPaymentSheet();
       CustomSnackbar.showSuccessSnackBar("Payment processing!");
-      Get.offAll(()=> const HomeScreen());
+      Get.offAll(() => const HomeScreen());
     } catch (e) {
       print(e);
       debugPrint("Stripe Payment Error: $e");
@@ -379,6 +381,48 @@ class UserController extends GetxController {
       debugPrint(e.toString());
     } finally {
       isRideBreakDownLoading.value = false;
+    }
+  }
+
+  Future<void> updateUserDetails({
+    String? firstName,
+    String? lastName,
+    String? email,
+    String? phoneNumber,
+    File? profilePicture,
+  }) async {
+    isEditLoading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+
+      final response = await _userService.updateUserDetails(
+        token: token,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phoneNumber: phoneNumber,
+        profilePicture: profilePicture,
+      );
+
+      if (response == null) return;
+
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return;
+      }
+
+      CustomSnackbar.showSuccessSnackBar("Profile updated successfully");
+      getUserDetails();
+      Get.offAll(() => const HomeScreen());
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isEditLoading.value = false;
     }
   }
 }

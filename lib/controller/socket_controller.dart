@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/models/driver_model.dart';
-import 'package:rider/pages/booking/trip_status_screen.dart';
+import 'package:rider/pages/booking/trip_payment_screen.dart';
 import 'package:rider/pages/home/trip_details_screen.dart';
 import 'package:rider/utils/base_url.dart';
 import 'package:rider/widgets/snack_bar.dart';

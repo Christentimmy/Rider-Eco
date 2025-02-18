@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rider/pages/home/home_screen.dart';
+import 'package:rider/controller/user_controller.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/utils/image_picker.dart';
 import 'package:rider/widgets/custom_button.dart';
@@ -10,6 +10,12 @@ class EditProfileScreen extends StatelessWidget {
   EditProfileScreen({super.key});
 
   final Rxn<File> _image = Rxn<File>();
+  final _userController = Get.find<UserController>();
+
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
 
   void selectImageForUser() async {
     File? im = await pickImage();
@@ -20,6 +26,12 @@ class EditProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    firstNameController.text = _userController.userModel.value?.firstName ?? "";
+    lastNameController.text = _userController.userModel.value?.lastName ?? "";
+    phoneNumberController.text =
+        _userController.userModel.value?.phoneNumber ?? "";
+    emailController.text = _userController.userModel.value?.email ?? "";
+
     return Scaffold(
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
@@ -31,101 +43,71 @@ class EditProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: Get.height * 0.02),
+              SizedBox(height: Get.height * 0.01),
               _buildImageWidget(),
-              SizedBox(height: Get.height * 0.04),
-              Text(
-                "First Name",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: const Color(0xff001F3F8C).withOpacity(0.6),
+              SizedBox(height: Get.height * 0.02),
+              _buildTextField("First Name", firstNameController),
+              _buildTextField("Last Name", lastNameController),
+              _buildTextField("Phone Number", phoneNumberController),
+              _buildTextField("Email Address", emailController),
+              SizedBox(height: Get.height * 0.05),
+              Obx(
+                () => CommonButton(
+                  child: _userController.isEditLoading.value
+                      ? const CircularProgressIndicator(
+                          color: Colors.white,
+                        )
+                      : const Text(
+                          "Save",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                  ontap: () async {
+                    await _userController.updateUserDetails(
+                      firstName: firstNameController.text.trim(),
+                      lastName: lastNameController.text.trim(),
+                      phoneNumber: phoneNumberController.text.trim(),
+                      email: emailController.text.trim(),
+                      profilePicture: _image.value,
+                    );
+                  },
                 ),
               ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  hintText: "John",
-                  hintStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  enabledBorder: UnderlineInputBorder(),
-                  focusedBorder: UnderlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "Last Name",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: const Color(0xff001F3F8C).withOpacity(0.6),
-                ),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  hintText: "Alfred",
-                  hintStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  enabledBorder: UnderlineInputBorder(),
-                  focusedBorder: UnderlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "Phone Number",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: const Color(0xff001F3F8C).withOpacity(0.6),
-                ),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  hintText: "+1 8619 228 992",
-                  suffixIcon: Icon(Icons.cancel, color: Colors.red),
-                  hintStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  enabledBorder: UnderlineInputBorder(),
-                  focusedBorder: UnderlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                "Email Address",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: const Color(0xff001F3F8C).withOpacity(0.6),
-                ),
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  hintText: "john@email.com",
-                  suffixIcon: Icon(Icons.cancel, color: Colors.red),
-                  hintStyle: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  enabledBorder: UnderlineInputBorder(),
-                  focusedBorder: UnderlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 20),
-              CommonButton(
-                text: "Save",
-                ontap: () {
-                  Get.offAll(() => HomeScreen());
-                },
-              )
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 13,
+            color: const Color(0xff001F3F8C).withOpacity(0.6),
+          ),
+        ),
+        TextFormField(
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: label,
+            hintStyle: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+            enabledBorder: const UnderlineInputBorder(),
+            focusedBorder: const UnderlineInputBorder(),
+          ),
+        ),
+        const SizedBox(height: 20),
+      ],
     );
   }
 
@@ -143,16 +125,22 @@ class EditProfileScreen extends StatelessWidget {
                 color: AppColors.primaryColor,
               ),
             ),
-            child: Obx(
-              () => ClipRRect(
-                  borderRadius: BorderRadius.circular(80),
-                  child: _image.value != null
-                      ? Image.file(
-                          _image.value!,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.asset("assets/images/avater2.png")),
-            ),
+            child: Obx(() {
+              if (_userController.isloading.value) {
+                return const CircularProgressIndicator();
+              }
+              String image =
+                  _userController.userModel.value?.profilePicture ?? "";
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(80),
+                child: _image.value != null
+                    ? Image.file(
+                        _image.value!,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.network(image),
+              );
+            }),
           ),
           Positioned(
             right: 5,
@@ -161,10 +149,8 @@ class EditProfileScreen extends StatelessWidget {
               radius: 17,
               backgroundColor: Colors.grey,
               child: IconButton(
-                onPressed: () {
-                  pickImage();
-                },
-                icon:  Icon(
+                onPressed: selectImageForUser,
+                icon: Icon(
                   Icons.camera,
                   size: 17,
                   color: AppColors.primaryColor,

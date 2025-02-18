@@ -38,7 +38,7 @@ class ProfileScreen extends StatelessWidget {
             CommonButton(
               text: "Edit Profile",
               ontap: () {
-                Get.to(()=> EditProfileScreen());
+                Get.to(() => EditProfileScreen());
               },
               width: Get.width * 0.4,
               textColor: const Color.fromARGB(255, 90, 182, 15),
@@ -109,5 +109,4 @@ class ProfileScreen extends StatelessWidget {
       ),
     );
   }
-
 }
