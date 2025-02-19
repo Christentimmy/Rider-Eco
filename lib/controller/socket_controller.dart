@@ -63,8 +63,9 @@ class SocketController extends GetxController {
     });
 
     socket?.on('driverLocationUpdated', (data) {
-      final lat = data['lat'];
-      final lng = data['lng'];
+      double lat = double.tryParse(data['lat']) ?? 0.0;
+      double lng = double.tryParse(data['lng']) ?? 0.0;
+      print(data['lat'].runtimeType);
       LatLng driverLocation = LatLng(lat, lng);
       print('Driver location updated: $lat, $lng');
       _userController.driverLocation.value = driverLocation;

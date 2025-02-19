@@ -64,7 +64,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               child: GoogleMap(
                 initialCameraPosition: CameraPosition(
                   target: _userController.driverLocation.value,
-                  zoom: 8,
+                  zoom: 15,
                 ),
                 mapType: MapType.hybrid,
                 markers: {

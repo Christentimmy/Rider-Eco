@@ -279,6 +279,8 @@ class UserController extends GetxController {
         CustomSnackbar.showErrorSnackBar(message);
         return;
       }
+      await fetchRideHistory();
+      await getUserScheduledRides();
       Get.offAll(() => const HomeScreen());
     } catch (e) {
       debugPrint(e.toString());
@@ -308,6 +310,8 @@ class UserController extends GetxController {
         return;
       }
 
+      await fetchRideHistory();
+      await getUserScheduledRides();
       Get.to(() => const HomeScreen());
     } catch (e) {
       debugPrint(e.toString());
@@ -337,19 +341,19 @@ class UserController extends GetxController {
 
       if (response == null) return;
       final decoded = json.decode(response.body);
-      print(decoded);
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorSnackBar(decoded["message"]);
         return;
       }
 
       String clientSecret = decoded["paymentResult"]["clientSecret"];
-      print(clientSecret);
       await _presentStripePaymentSheet(
         clientSecret: clientSecret,
         reviews: reviews,
         driverUserId: driverUserId,
       );
+      await fetchRideHistory();
+      await getUserScheduledRides();
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -549,6 +553,8 @@ class UserController extends GetxController {
       }
       CustomSnackbar.showSuccessSnackBar(message);
       getUserScheduledRides();
+      await fetchRideHistory();
+
       Get.offAll(() => const HomeScreen());
     } catch (e, stackrace) {
       debugPrint("${e.toString()} $stackrace");
@@ -690,4 +696,5 @@ class UserController extends GetxController {
       isloading.value = false;
     }
   }
+
 }

@@ -119,7 +119,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   fontSize: 14,
                 ),
                 controller: _textController,
-                maxLines: 3,
+                maxLines: null,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
