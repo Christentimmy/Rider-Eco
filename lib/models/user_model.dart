@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 
 class UserModel {
   final String? id;
@@ -38,7 +37,7 @@ class UserModel {
 
   factory UserModel.fromJson(json) {
     return UserModel(
-      id: json['id'] ?? "", // Added password field to JSON mapping
+      id: json['_id'] ?? "", 
       email: json['email'] ?? "",
       phoneNumber: json['phone_number'] ?? "",
       firstName: json['first_name'] ?? "",

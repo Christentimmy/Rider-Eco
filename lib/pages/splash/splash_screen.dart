@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
         return;
       }
       await _userController.getUserStatus();
-  _socketController.initializeSocket();
+      _socketController.initializeSocket();
       await _userController.getCurrentRide();
     });
   }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
+import 'package:rider/models/chat_model.dart';
 import 'package:rider/models/driver_model.dart';
 import 'package:rider/models/ride_model.dart';
 import 'package:rider/pages/booking/trip_payment_screen.dart';
@@ -15,8 +16,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketController extends GetxController {
   IO.Socket? socket;
-  RxList chatModelList = [].obs;
-  RxList chatsList = [].obs;
+  RxList<ChatModel> chatModelList = <ChatModel>[].obs;
   RxBool isloading = false.obs;
   final _userController = Get.find<UserController>();
   int _reconnectAttempts = 0;
@@ -132,16 +132,20 @@ class SocketController extends GetxController {
 
     socket?.on("receiveMessage", (data) {
       debugPrint("📩 New message received: $data");
-      chatModelList.add(data["message"]);
+      ChatModel newMessage= ChatModel.fromJson(data);
+      chatModelList.add(newMessage);
+      // chatModelList.insert(0, newMessage);
       chatModelList.refresh();
+      // getChatHistory(newMessage.rideId);
     });
 
     socket?.on("chat-history", (data) {
-      print("Chat History: ${data['message']}");
-      chatsList.clear();
+      chatModelList.clear();
       List chats = data["message"];
-      chatsList.addAll(chats);
-      chatsList.refresh();
+      List<ChatModel> needMap =
+          chats.map((e) => ChatModel.fromJson(e)).toList();
+      print(needMap.first.message);
+      chatModelList.value = needMap;
     });
   }
 
