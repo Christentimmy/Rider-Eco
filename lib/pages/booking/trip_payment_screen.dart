@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/controller/user_controller.dart';
+import 'package:rider/models/review_model.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,7 +9,14 @@ import 'package:rider/widgets/loader.dart';
 
 class TripPaymentScreen extends StatefulWidget {
   final String rideId;
-  const TripPaymentScreen({super.key, required this.rideId});
+  final String driverUserId;
+  final Reviews reviews;
+  const TripPaymentScreen({
+    super.key,
+    required this.rideId,
+    required this.driverUserId,
+    required this.reviews,
+  });
 
   @override
   State<TripPaymentScreen> createState() => _TripPaymentScreenState();
@@ -16,7 +24,6 @@ class TripPaymentScreen extends StatefulWidget {
 
 class _TripPaymentScreenState extends State<TripPaymentScreen> {
   final _userController = Get.find<UserController>();
-
   final CameraPosition _initialPosition = const CameraPosition(
     target: LatLng(59.9139, 10.7522),
     zoom: 15,
@@ -61,7 +68,7 @@ class _TripPaymentScreenState extends State<TripPaymentScreen> {
               width: Get.width / 1.3,
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.8), // Slight transparency
+                color: Colors.black.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Obx(() {
@@ -76,7 +83,7 @@ class _TripPaymentScreenState extends State<TripPaymentScreen> {
                     _userController.rideFareBreakdownModel.value;
                 if (rideBreakDown == null) {
                   return const Center(
-                    child: Text("Ride Not Found, Refresh the app"),
+                    child: Text("Ride Not Found, relaunch the app"),
                   );
                 }
                 String baseFare = rideBreakDown.baseFare;
@@ -171,6 +178,8 @@ class _TripPaymentScreenState extends State<TripPaymentScreen> {
                       ontap: () async {
                         await _userController.makePayment(
                           rideId: widget.rideId,
+                          reviews: widget.reviews,
+                          driverUserId: widget.driverUserId,
                         );
                       },
                       child: _userController.isPaymentProcessing.value

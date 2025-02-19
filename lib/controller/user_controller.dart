@@ -8,11 +8,13 @@ import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/models/driver_model.dart';
 import 'package:rider/models/fare_breakdown_model.dart';
 import 'package:rider/models/payment_model.dart';
+import 'package:rider/models/review_model.dart';
 import 'package:rider/models/ride_model.dart';
 import 'package:rider/models/user_model.dart';
 import 'package:rider/pages/auth/create_profile_screen.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/auth/verify_phone_screen.dart';
+import 'package:rider/pages/booking/review_screen.dart';
 import 'package:rider/pages/booking/trip_payment_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/trip_details_screen.dart';
@@ -312,7 +314,11 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> makePayment({required String rideId}) async {
+  Future<void> makePayment({
+    required String rideId,
+    required Reviews reviews,
+    required String driverUserId,
+  }) async {
     isPaymentProcessing.value = true;
     try {
       final storageController = Get.find<StorageController>();
@@ -337,7 +343,11 @@ class UserController extends GetxController {
 
       String clientSecret = decoded["paymentResult"]["clientSecret"];
       print(clientSecret);
-      await _presentStripePaymentSheet(clientSecret);
+      await _presentStripePaymentSheet(
+        clientSecret: clientSecret,
+        reviews: reviews,
+        driverUserId: driverUserId,
+      );
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -345,7 +355,11 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> _presentStripePaymentSheet(String clientSecret) async {
+  Future<void> _presentStripePaymentSheet({
+    required String clientSecret,
+    required Reviews reviews,
+    required String driverUserId,
+  }) async {
     try {
       await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
@@ -355,10 +369,13 @@ class UserController extends GetxController {
         ),
       );
       await Stripe.instance.presentPaymentSheet();
-
       CustomSnackbar.showSuccessSnackBar("Payment processing!");
-      currentRideModel.value = null;
-      Get.offAll(() => const HomeScreen());
+      Get.offAll(
+        () => ReviewScreen(
+          reviews: reviews,
+          driverUserId: driverUserId,
+        ),
+      );
     } catch (e) {
       print(e);
       debugPrint("Stripe Payment Error: $e");
@@ -627,7 +644,11 @@ class UserController extends GetxController {
         return;
       } else if (currentRideModel.value?.status == "completed") {
         Get.to(
-          () => TripPaymentScreen(rideId: currentRideModel.value?.id ?? ""),
+          () => TripPaymentScreen(
+            rideId: currentRideModel.value?.id ?? "",
+            driverUserId: currentRideModel.value?.driverUserId ?? "",
+            reviews: Reviews.fromJson(currentRideModel.value?.reviews),
+          ),
         );
         return;
       }
@@ -635,4 +656,37 @@ class UserController extends GetxController {
       debugPrint(e.toString());
     }
   }
+
+  Future<void> rateDriver({
+    required String rating,
+    required String rideId,
+  }) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+
+      final response = await _userService.rateDriver(
+        rating: rating,
+        rideId: rideId,
+        token: token,
+      );
+
+      if (response == null) return;
+      final data = json.decode(response.body);
+      String message = data["message"];
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return;
+      }
+      Get.offAll(() => const HomeScreen());
+    } catch (error) {
+      debugPrint(error.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+
 }

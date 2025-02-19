@@ -6,6 +6,7 @@ import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/models/chat_model.dart';
 import 'package:rider/models/driver_model.dart';
+import 'package:rider/models/review_model.dart';
 import 'package:rider/models/ride_model.dart';
 import 'package:rider/pages/booking/trip_payment_screen.dart';
 import 'package:rider/pages/home/trip_details_screen.dart';
@@ -78,7 +79,6 @@ class SocketController extends GetxController {
         if (rideData != null && driverData != null) {
           String roomId = rideData["_id"];
           print("Room ID: $roomId");
-
           DriverModel driver = DriverModel.fromJson(driverData);
           socket?.emit("joinRoom", {"roomId": roomId});
           Get.to(() => TripDetailsScreen(driver: driver, rideId: roomId));
@@ -97,19 +97,28 @@ class SocketController extends GetxController {
             ride.dropoffLocation!.lat,
             ride.dropoffLocation!.lng,
           );
-          Get.to(() => TripStartedScreen(
-                fromLocation: fromLocation,
-                toLocation: toLocation,
-                rideId: ride.id ?? "",
-              ));
+          Get.to(
+            () => TripStartedScreen(
+              fromLocation: fromLocation,
+              toLocation: toLocation,
+              rideId: ride.id ?? "",
+            ),
+          );
         } else {
           print("Error: Missing ride data");
         }
       }
       if (message == "Your trip has been completed") {
-        if (rideData != null) {
+        if (rideData != null && driverData != null) {
           String rideId = rideData["_id"];
-          Get.to(() => TripPaymentScreen(rideId: rideId));
+          DriverModel driver = DriverModel.fromJson(driverData);
+          Get.to(
+            () => TripPaymentScreen(
+              rideId: rideId,
+              driverUserId: driver.userId ?? "",
+              reviews: driver.reviews ?? Reviews(),
+            ),
+          );
         }
       }
     });
@@ -132,11 +141,9 @@ class SocketController extends GetxController {
 
     socket?.on("receiveMessage", (data) {
       debugPrint("📩 New message received: $data");
-      ChatModel newMessage= ChatModel.fromJson(data);
+      ChatModel newMessage = ChatModel.fromJson(data);
       chatModelList.add(newMessage);
-      // chatModelList.insert(0, newMessage);
       chatModelList.refresh();
-      // getChatHistory(newMessage.rideId);
     });
 
     socket?.on("chat-history", (data) {
@@ -144,7 +151,6 @@ class SocketController extends GetxController {
       List chats = data["message"];
       List<ChatModel> needMap =
           chats.map((e) => ChatModel.fromJson(e)).toList();
-      print(needMap.first.message);
       chatModelList.value = needMap;
     });
   }

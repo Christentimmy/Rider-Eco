@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
             width: Get.width,
             child: GoogleMap(
               initialCameraPosition: _initialPosition,
-              mapType: MapType.hybrid,
+              mapType: MapType.satellite,
               onTap: (argument) async {},
             ),
           ),

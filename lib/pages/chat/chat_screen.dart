@@ -106,17 +106,20 @@ class _ChatScreenState extends State<ChatScreen> {
                 }
               }),
             ),
-
             Padding(
               padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewPadding.bottom, 
+                bottom: MediaQuery.of(context).viewPadding.bottom,
                 left: 15,
                 right: 15,
                 top: 10,
               ),
               child: TextFormField(
-                style: const TextStyle(color: Colors.white, fontSize: 14),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                ),
                 controller: _textController,
+                maxLines: 3,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),

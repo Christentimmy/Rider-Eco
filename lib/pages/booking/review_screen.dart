@@ -1,187 +1,148 @@
-import 'package:rider/pages/home/home_screen.dart';
-import 'package:rider/pages/home/notification_screen.dart';
+import 'dart:ui';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rider/controller/user_controller.dart';
+import 'package:rider/models/review_model.dart';
+import 'package:rider/models/user_model.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:rider/widgets/loader.dart';
 
-class ReviewScreen extends StatelessWidget {
-  ReviewScreen({super.key});
+class ReviewScreen extends StatefulWidget {
+  final Reviews reviews;
+  final String driverUserId;
+  const ReviewScreen({
+    super.key,
+    required this.reviews,
+    required this.driverUserId,
+  });
 
+  @override
+  State<ReviewScreen> createState() => _ReviewScreenState();
+}
+
+class _ReviewScreenState extends State<ReviewScreen> {
   final RxDouble _value = 3.5.obs;
+  final _userController = Get.find<UserController>();
+  final _driverUserModel = UserModel().obs;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getDriverUser();
+    });
+    super.initState();
+  }
+
+  void getDriverUser() async {
+    UserModel? user = await _userController.getUserById(
+      userId: widget.driverUserId,
+    );
+    if (user != null) {
+      _driverUserModel.value = user;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.only(top: 25),
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/mapImage.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: SafeArea(
+        child: Stack(
           children: [
-            SizedBox(height: Get.height / 22.5),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => Get.back(),
-                    child: const CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.arrow_back,
-                        size: 15,
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  GestureDetector(
-                    onTap: (){
-                      Get.to(()=> NotificationScreen());
-                    },
-                    child: Container(
-                      height: 35,
-                      width: 35,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryColor,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Icon(
-                        Icons.notifications_active,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                ],
+            GoogleMap(
+              indoorViewEnabled: true,
+              mapType: MapType.hybrid,
+              initialCameraPosition: CameraPosition(
+                target: _userController.driverLocation.value,
+                zoom: 15,
               ),
             ),
-            const Spacer(),
-            Container(
-              height: Get.height * 0.50,
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              decoration: const BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  topRight: Radius.circular(25),
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: Container(
+                  color: Colors.black.withOpacity(0.1),
                 ),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: SvgPicture.asset(
-                          "assets/images/placeholder.svg",
-                          width: 40,
-                          height: 40,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 5),
+                    Center(
+                      child: Text(
+                        "Rate The Driver",
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(width: 5),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Joe Dough",
-                            style: TextStyle(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    ),
+                    SizedBox(height: Get.height * 0.04),
+                    Obx(
+                      () => Center(
+                        child: RatingStars(
+                          value: _value.value,
+                          onValueChanged: (v) {
+                            _value.value = v;
+                          },
+                          starBuilder: (index, color) => Icon(
+                            Icons.star,
+                            color: color,
+                            size: 39,
                           ),
-                          const Row(
-                            children: [
-                              Icon(
-                                Icons.star,
-                                color: Colors.yellowAccent,
-                                size: 12,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                "5 (38)",
+                          starCount: 5,
+                          starSize: 44,
+                          maxValue: 5,
+                          starSpacing: 2,
+                          maxValueVisibility: true,
+                          valueLabelVisibility: false,
+                          animationDuration: const Duration(milliseconds: 1000),
+                          starOffColor: const Color(0xffe7e8ea),
+                          starColor: Colors.yellow,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Obx(
+                      () => CommonButton(
+                        child: _userController.isloading.value
+                            ? const CarLoader()
+                            : const Text(
+                                "Submit",
                                 style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
                                 ),
                               ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Obx(
-                    () => Center(
-                      child: RatingStars(
-                        value: _value.value,
-                        onValueChanged: (v) {
-                          _value.value = v;
+                        ontap: () async {
+                          String rideId =
+                              _userController.currentRideModel.value?.id ?? "";
+                          String rating = _value.value.toString().split(".")[0];
+                          await _userController.rateDriver(
+                            rating: rating,
+                            rideId: rideId,
+                          );
                         },
-                        starBuilder: (index, color) => Icon(
-                          Icons.star,
-                          color: color,
-                          size: 35,
-                        ),
-                        starCount: 5,
-                        starSize: 55,
-                        maxValue: 5,
-                        starSpacing: 2,
-                        maxValueVisibility: true,
-                        valueLabelVisibility: false,
-                        animationDuration: const Duration(milliseconds: 1000),
-                        starOffColor: const Color(0xffe7e8ea),
-                        starColor: Colors.yellow,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: const Color.fromARGB(190, 158, 158, 158),
-                    ),
-                    child: TextFormField(
-                      maxLines: 3,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      decoration: const InputDecoration(
-                        hintText: "Comment here",
-                        hintStyle: TextStyle(
-                          fontSize: 13,
-                          color: Colors.white,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  CommonButton(
-                    text: "Submit",
-                    ontap: () {
-                      Get.offAll(() => HomeScreen());
-                    },
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

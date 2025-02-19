@@ -462,4 +462,34 @@ class UserService {
     return null;
   }
 
+  Future<http.Response?> rateDriver({
+    required String rating,
+    required String rideId,
+    required String token,
+  }) async {
+    try {
+      final url = Uri.parse("$baseUrl/user/rate-driver");
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+        body: jsonEncode({
+          "rating": rating,
+          "rideId": rideId,
+        }),
+      );
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+
 }
