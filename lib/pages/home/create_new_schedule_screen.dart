@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/home/schedule_payment_screen.dart';
 import 'package:rider/service/location_service.dart';
+import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
 import 'package:rider/widgets/snack_bar.dart';
 
@@ -19,6 +20,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
   final _toLocationAddress = "".obs;
   final Rx<LatLng> _fromLocation = const LatLng(0.0, 0.0).obs;
   final Rx<LatLng> _toLocation = const LatLng(0.0, 0.0).obs;
+  final RxString _paymentMethod = "".obs;
 
   final Rxn<DateTime> _selectDate = Rxn<DateTime>();
   final Rxn<TimeOfDay> _selectTime = Rxn<TimeOfDay>();
@@ -44,7 +46,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
   final RxList<Map<String, dynamic>> _places = <Map<String, dynamic>>[].obs;
   final RxList<Map<String, dynamic>> _toPlaces = <Map<String, dynamic>>[].obs;
 
-  void submitScheduledRide({
+  Future<void> submitScheduledRide({
     required String paymentMethod,
     required Rx<LatLng> fromLocation,
     required Rx<LatLng> toLocation,
@@ -56,14 +58,19 @@ class CreateNewScheduleScreen extends StatelessWidget {
     try {
       if (fromAddress.isEmpty || toAddress.isEmpty) {
         CustomSnackbar.showErrorSnackBar(
-          "❌ Please select both pick-up and drop-off locations!",
+          "Please select both pick-up and drop-off locations!",
         );
         return;
       }
-      if (selectedDate.value != null && selectedTime.value != null) {
-        CustomSnackbar.showErrorSnackBar("❌ Please select both date and time!");
+      if (selectedDate.value == null || selectedTime.value == null) {
+        CustomSnackbar.showErrorSnackBar("Please select both date and time!");
         return;
       }
+      if (paymentMethod.isEmpty) {
+        CustomSnackbar.showErrorSnackBar("Please select payment method!");
+        return;
+      }
+
       DateTime selectedDateTime = DateTime(
         selectedDate.value!.year,
         selectedDate.value!.month,
@@ -146,7 +153,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
                     _selectDate.value = await showDatePicker(
                       context: context,
                       firstDate: DateTime(2000),
-                      lastDate: DateTime(2025),
+                      lastDate: DateTime(2025, 12, 31),
                       initialDate: DateTime.now(),
                     );
                   },
@@ -220,11 +227,71 @@ class CreateNewScheduleScreen extends StatelessWidget {
                 )
               ],
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 10),
+            Obx(
+              () => RadioListTile<String>(
+                contentPadding: EdgeInsets.zero,
+                visualDensity: const VisualDensity(
+                  horizontal: -4,
+                  vertical: -4,
+                ),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                title: const Text("Cash"),
+                value: "cash",
+                groupValue: _paymentMethod.value,
+                onChanged: (value) {
+                  _paymentMethod.value = value!;
+                },
+              ),
+            ),
+            Obx(
+              () => RadioListTile<String>(
+                contentPadding: EdgeInsets.zero,
+                title: const Text("Stripe"),
+                value: "stripe",
+                visualDensity: const VisualDensity(
+                  horizontal: -4,
+                  vertical: -4,
+                ),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                groupValue: _paymentMethod.value,
+                onChanged: (value) {
+                  _paymentMethod.value = value!;
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            Obx(
+              () => CommonButton(
+                ontap: () async {
+                  await submitScheduledRide(
+                    paymentMethod: _paymentMethod.value,
+                    fromLocation: _fromLocation,
+                    toLocation: _toLocation,
+                    fromAddress: _fromLocationAddress.value,
+                    toAddress: _toLocationAddress.value,
+                    selectedDate: _selectDate,
+                    selectedTime: _selectTime,
+                  );
+                },
+                child: _userController.isScheduleLoading.value
+                    ? const CircularProgressIndicator(
+                        color: Colors.white,
+                      )
+                    : const Text(
+                        "Create",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+              ),
+            ),
+            const SizedBox(height: 20),
             Text(
               "Search Result",
               style: TextStyle(
-                fontSize: 17,
+                fontSize: 15,
                 color: Colors.black.withOpacity(0.5),
               ),
             ),
@@ -264,6 +331,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
                     );
 
                     address.value = title;
+                    list.clear();
                   },
                   contentPadding: EdgeInsets.zero,
                   leading: const Icon(Icons.timelapse_sharp),

@@ -438,38 +438,6 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> fetchRideHistory({String? status}) async {
-    isloading.value = false;
-    isloading.value = true;
-    try {
-      final storageController = Get.find<StorageController>();
-      String? token = await storageController.getToken();
-      if (token == null || token.isEmpty) return;
-
-      final response = await _userService.getRideHistories(
-        token: token,
-        status: status,
-      );
-
-      if (response == null) return;
-      final decoded = json.decode(response.body);
-      if (response.statusCode != 200) {
-        return;
-      }
-
-      List rides = decoded["rides"];
-      print(rides);
-      List<Ride> mappedList = rides.map((e) => Ride.fromJson(e)).toList();
-      rideHistoryList.clear();
-      rideHistoryList.value = mappedList;
-      if (response.statusCode == 200) isRideHistoryFetched.value = true;
-    } catch (e) {
-      debugPrint("Error fetching ride history: $e");
-    } finally {
-      isloading.value = false;
-    }
-  }
-
   Future<void> getUserPaymentHistory({int page = 1, int limit = 10}) async {
     isloading.value = true;
     try {
@@ -552,10 +520,11 @@ class UserController extends GetxController {
       if (response == null) return;
       final decoded = json.decode(response.body);
       String message = decoded["message"];
-      if (response.statusCode != 200) {
+      if (response.statusCode != 201) {
         CustomSnackbar.showErrorSnackBar(message);
         return;
       }
+      CustomSnackbar.showSuccessSnackBar(message);
       Get.offAll(() => const HomeScreen());
     } catch (e, stackrace) {
       debugPrint("${e.toString()} $stackrace");
@@ -563,4 +532,38 @@ class UserController extends GetxController {
       isScheduleLoading.value = false;
     }
   }
+
+  Future<void> fetchRideHistory({
+    String? status,
+  }) async {
+    isloading.value = false;
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+
+      final response = await _userService.getRideHistories(
+        token: token,
+        status: status,
+      );
+
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      if (response.statusCode != 200) {
+        return;
+      }
+
+      List rides = decoded["rides"];
+      List<Ride> mappedList = rides.map((e) => Ride.fromJson(e)).toList();
+      rideHistoryList.clear();
+      rideHistoryList.value = mappedList;
+      if (response.statusCode == 200) isRideHistoryFetched.value = true;
+    } catch (e) {
+      debugPrint("Error fetching ride history: $e");
+    } finally {
+      isloading.value = false;
+    }
+  }
+
 }

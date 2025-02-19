@@ -4,18 +4,22 @@ import 'package:rider/pages/home/create_new_schedule_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/schedule_details_screen.dart';
 import 'package:rider/resources/color_resources.dart';
-import 'package:rider/widgets/custom_button.dart';
-import 'package:rider/widgets/custom_textfield.dart';
+
 
 class ScheduleScreen extends StatelessWidget {
   ScheduleScreen({super.key});
 
-  final _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: BuildSideBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.to(() => CreateNewScheduleScreen());
+        },
+        child: const Icon(Icons.add),
+      ),
       appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -25,60 +29,6 @@ class ScheduleScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Create Schedule",
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              "Create and book your schedule ahead to\navoid unnecessary hassles",
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.black.withOpacity(0.5),
-              ),
-            ),
-            const SizedBox(height: 30),
-            Center(
-              child: SizedBox(
-                width: Get.width / 1.7,
-                child: CommonButton(
-                  text: "New Schedule",
-                  ontap: () {
-                    Get.to(() => CreateNewScheduleScreen());
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            CustomTextField(
-              hintText: "Search",
-              textController: _searchController,
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: CustomTextField(
-                    hintText: "Search",
-                    textController: _searchController,
-                  ),
-                ),
-                const SizedBox(width: 15),
-                Expanded(
-                  child: CommonButton(
-                    text: "Reset Filter",
-                    ontap: () {},
-                    bgColor: const Color.fromARGB(255, 41, 117, 43),
-                  ),
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
-            const SizedBox(height: 10),
             _buildFilterCards(),
           ],
         ),

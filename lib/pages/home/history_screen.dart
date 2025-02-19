@@ -7,15 +7,15 @@ import 'package:rider/resources/color_resources.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rider/utils/date_converter.dart';
 
-class BalanceAndHistoryScreen extends StatefulWidget {
-  const BalanceAndHistoryScreen({super.key});
+class HistoryScreen extends StatefulWidget {
+  const HistoryScreen({super.key});
 
   @override
-  State<BalanceAndHistoryScreen> createState() =>
-      _BalanceAndHistoryScreenState();
+  State<HistoryScreen> createState() =>
+      _HistoryScreenState();
 }
 
-class _BalanceAndHistoryScreenState extends State<BalanceAndHistoryScreen> {
+class _HistoryScreenState extends State<HistoryScreen> {
   final _userController = Get.find<UserController>();
 
   @override

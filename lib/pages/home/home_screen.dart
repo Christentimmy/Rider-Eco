@@ -6,7 +6,7 @@ import 'package:rider/controller/socket_controller.dart';
 import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
-import 'package:rider/pages/home/balance_history_screen.dart';
+import 'package:rider/pages/home/history_screen.dart';
 import 'package:rider/pages/home/edit_profile_screen.dart';
 import 'package:rider/pages/home/payment_method_screen.dart';
 import 'package:rider/pages/home/schedule_screen.dart';
@@ -311,7 +311,7 @@ class BuildSideBar extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Get.to(() => BalanceAndHistoryScreen());
+              Get.to(() => const HistoryScreen());
             },
           ),
           ListTile(
