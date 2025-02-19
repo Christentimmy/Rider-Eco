@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:rider/models/review_model.dart';
 
 class Ride {
@@ -17,6 +18,7 @@ class Ride {
   String? scheduleStatus;
   String? driverFirstName;
   String? driverLastName;
+  String? driverUserId;
   Reviews? reviews;
 
   Ride({
@@ -36,18 +38,22 @@ class Ride {
     this.scheduleStatus,
     this.driverFirstName,
     this.driverLastName,
+    this.driverUserId,
     this.reviews,
   });
 
   factory Ride.fromJson(json) {
+    if (json == null) {
+      debugPrint(json.toString());
+      return Ride();
+    }
     bool isDriverPopulated = json["driver"] is Map<String, dynamic>;
-
     return Ride(
       id: json["_id"] ?? "",
       userId: json["user"] ?? "",
       driverId: isDriverPopulated
           ? json["driver"]["_id"]
-          : json["driver"], 
+          : json["driver"], // Handle both cases
       status: json["status"] ?? "",
       pickupLocation: json["pickup_location"] != null
           ? PickupLocation.fromJson(json["pickup_location"])
@@ -71,10 +77,13 @@ class Ride {
           isDriverPopulated ? json["driver"]["user"]["first_name"] ?? "" : "",
       driverLastName:
           isDriverPopulated ? json["driver"]["user"]["last_name"] ?? "" : "",
+      driverUserId:
+          isDriverPopulated ? json["driver"]["user"]["_id"] ?? "" : "",
       reviews: isDriverPopulated
           ? Reviews.fromJson(json["driver"]["reviews"])
           : Reviews(),
     );
+  
   }
 
   Map<String, dynamic> toJson() {

@@ -441,4 +441,25 @@ class UserService {
     }
     return null;
   }
+
+  Future<http.Response?> getCurrentRide({required String token}) async {
+    try {
+      final response = await http.get(
+        Uri.parse("$baseUrl/user/ride/get-current-ride"),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      ).timeout(const Duration(seconds: 15));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint("❌ Error scheduling ride: $e");
+    }
+    return null;
+  }
+
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/controller/socket_controller.dart';
 import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
@@ -15,6 +16,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final _storageController = Get.find<StorageController>();
   final _userController = Get.find<UserController>();
+  final _socketController = Get.find<SocketController>();
 
   @override
   void initState() {
@@ -32,6 +34,8 @@ class _SplashScreenState extends State<SplashScreen> {
         return;
       }
       await _userController.getUserStatus();
+  _socketController.initializeSocket();
+      await _userController.getCurrentRide();
     });
   }
 

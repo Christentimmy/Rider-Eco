@@ -1,5 +1,4 @@
 import 'package:rider/pages/auth/signup_screen.dart';
-import 'package:rider/pages/chat/chat_screen.dart';
 import 'package:rider/pages/home/request_history_screen.dart';
 import 'package:rider/pages/settings/faq_screen.dart';
 import 'package:rider/pages/settings/setting_screen.dart';
@@ -255,7 +254,7 @@ class MyRideListScreen extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Get.to(() => ChatScreen());
+              // Get.to(() => ChatScreen());
             },
           ),
           ListTile(

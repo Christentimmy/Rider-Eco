@@ -13,7 +13,10 @@ import 'package:rider/models/user_model.dart';
 import 'package:rider/pages/auth/create_profile_screen.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/auth/verify_phone_screen.dart';
+import 'package:rider/pages/booking/trip_payment_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
+import 'package:rider/pages/home/trip_details_screen.dart';
+import 'package:rider/pages/home/trip_started_screen.dart';
 import 'package:rider/pages/home/waiting_ride_screen.dart';
 import 'package:rider/service/user_service.dart';
 import 'package:rider/widgets/snack_bar.dart';
@@ -26,7 +29,7 @@ class UserController extends GetxController {
   RxBool isRequestRideLoading = false.obs;
   RxBool isPaymentProcessing = false.obs;
   RxBool isEditLoading = false.obs;
-  var driverLocation = const LatLng(0.0, 0.0).obs;
+  var driverLocation = const LatLng(59.9139, 10.7522).obs;
   Rxn<UserModel> userModel = Rxn<UserModel>();
   Rxn<Ride> currentRideModel = Rxn<Ride>();
   RxList<Ride> userScheduleList = <Ride>[].obs;
@@ -85,7 +88,7 @@ class UserController extends GetxController {
         Get.offAll(() => CreateProfileScreen());
         return;
       }
-      Get.to(() => const HomeScreen());
+      // Get.to(() => const HomeScreen());
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -564,6 +567,72 @@ class UserController extends GetxController {
       debugPrint("Error fetching ride history: $e");
     } finally {
       isloading.value = false;
+    }
+  }
+
+  Future<void> getCurrentRide() async {
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+
+      final response = await _userService.getCurrentRide(token: token);
+      if (response == null) {
+        Get.to(() => const HomeScreen());
+        return;
+      }
+      final decoded = json.decode(response.body);
+      if (response.statusCode != 200) {
+        Get.to(() => const HomeScreen());
+        debugPrint(decoded["message"].toString());
+        return;
+      }
+      currentRideModel.value = Ride.fromJson(decoded["data"]);
+      if (currentRideModel.value?.status == "pending") {
+        String fromLoactionName =
+            currentRideModel.value!.pickupLocation?.address ?? "";
+        String toLoactionName =
+            currentRideModel.value!.dropoffLocation?.address ?? "";
+        Get.to(
+          () => WaitingRideScreen(
+            fromLoactionName: fromLoactionName,
+            toLoactionName: toLoactionName,
+          ),
+        );
+        return;
+      } else if (currentRideModel.value?.status == "accepted") {
+        Get.to(
+          () => TripDetailsScreen(
+            rideId: currentRideModel.value?.id ?? "",
+            driverId: currentRideModel.value?.driverUserId ?? "",
+          ),
+        );
+        return;
+      } else if (currentRideModel.value?.status == "progress") {
+        final fromLocation = LatLng(
+          currentRideModel.value?.pickupLocation?.lat ?? 0.0,
+          currentRideModel.value?.pickupLocation?.lng ?? 0.0,
+        );
+        final toLocation = LatLng(
+          currentRideModel.value?.dropoffLocation?.lat ?? 0.0,
+          currentRideModel.value?.dropoffLocation?.lng ?? 0.0,
+        );
+        Get.to(
+          () => TripStartedScreen(
+            fromLocation: fromLocation,
+            toLocation: toLocation,
+            rideId: currentRideModel.value?.id ?? "",
+          ),
+        );
+        return;
+      } else if (currentRideModel.value?.status == "completed") {
+        Get.to(
+          () => TripPaymentScreen(rideId: currentRideModel.value?.id ?? ""),
+        );
+        return;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

@@ -13,7 +13,14 @@ import 'package:rider/widgets/loader.dart';
 
 class TripDetailsScreen extends StatefulWidget {
   final DriverModel? driver;
-  const TripDetailsScreen({super.key, this.driver});
+  final String rideId;
+  final String? driverId;
+  const TripDetailsScreen({
+    super.key,
+    this.driver,
+    required this.rideId,
+    this.driverId,
+  });
 
   @override
   State<TripDetailsScreen> createState() => _TripDetailsScreenState();
@@ -30,7 +37,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
   void getDriverUser() async {
     UserModel? user = await _userController.getUserById(
-      userId: widget.driver?.userId ?? "",
+      userId: widget.driverId ?? widget.driver?.userId ?? "",
     );
     if (user != null) {
       _driverUserModel.value = user;
@@ -145,7 +152,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                   return const SizedBox.shrink();
                 }
                 final image = _driverUserModel.value.profilePicture;
-                if(image == null  || image.isEmpty){
+                if (image == null || image.isEmpty) {
                   return const SizedBox.shrink();
                 }
                 return CircleAvatar(
@@ -165,30 +172,32 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.star,
-                          color: Colors.yellowAccent,
-                          size: 12,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          "${widget.driver?.reviews?.averageRating} ${widget.driver?.reviews?.totalRatings}",
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    )
+                    widget.driver?.reviews == null
+                        ? const SizedBox.shrink()
+                        : Row(
+                            children: [
+                              const Icon(
+                                Icons.star,
+                                color: Colors.yellowAccent,
+                                size: 12,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                "${widget.driver?.reviews?.averageRating} ${widget.driver?.reviews?.totalRatings}",
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          )
                   ],
                 );
               }),
               const Spacer(),
               InkWell(
                 onTap: () {
-                  Get.to(() => const ChatScreen());
+                  Get.to(() => ChatScreen(rideId: widget.rideId));
                 },
                 child: Container(
                   height: 45,

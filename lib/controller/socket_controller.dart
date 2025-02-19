@@ -61,8 +61,6 @@ class SocketController extends GetxController {
       debugPrint(data.toString());
     });
 
-    // socket?.on("rideAccepted", (data) {});
-
     socket?.on('driverLocationUpdated', (data) {
       final lat = data['lat'];
       final lng = data['lng'];
@@ -76,7 +74,6 @@ class SocketController extends GetxController {
       String? message = data?["message"];
       final rideData = data?["data"]?["ride"];
       final driverData = data?["data"]?["driver"];
-      // print("TripStatus Event: $data");
       if (message == "Driver has accepted your ride") {
         if (rideData != null && driverData != null) {
           String roomId = rideData["_id"];
@@ -84,7 +81,7 @@ class SocketController extends GetxController {
 
           DriverModel driver = DriverModel.fromJson(driverData);
           socket?.emit("joinRoom", {"roomId": roomId});
-          Get.to(() => TripDetailsScreen(driver: driver));
+          Get.to(() => TripDetailsScreen(driver: driver, rideId: roomId));
         } else {
           print("Error: Missing ride or driver data");
         }
@@ -128,8 +125,23 @@ class SocketController extends GetxController {
         data["driver"],
       );
       if (message.contains("assigned")) {
-        Get.to(() => TripDetailsScreen(driver: driver));
+        String rideId = data["rideId"];
+        Get.to(() => TripDetailsScreen(driver: driver, rideId: rideId));
       }
+    });
+
+    socket?.on("receiveMessage", (data) {
+      debugPrint("📩 New message received: $data");
+      chatModelList.add(data["message"]);
+      chatModelList.refresh();
+    });
+
+    socket?.on("chat-history", (data) {
+      print("Chat History: ${data['message']}");
+      chatsList.clear();
+      List chats = data["message"];
+      chatsList.addAll(chats);
+      chatsList.refresh();
     });
   }
 
@@ -151,13 +163,23 @@ class SocketController extends GetxController {
     print('Socket disconnected and deleted');
   }
 
-  void sendMessage(String message, String channedId) {
+  void sendMessage({
+    required String message,
+    required String rideId,
+  }) {
     final payload = {
-      "channel_id": channedId,
+      "rideId": rideId,
       "message": message,
-      "files": <String>[],
     };
-    socket?.emit('SEND_MESSAGE', payload);
+    socket?.emit('sendMessage', payload);
+  }
+
+  void joinRoom({required String roomId}) {
+    socket?.emit("joinRoom", {"roomId": roomId});
+  }
+
+  void getChatHistory(String rideId) {
+    socket?.emit("history", {"rideId": rideId});
   }
 
   void markRead({

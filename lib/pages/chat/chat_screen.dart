@@ -1,11 +1,30 @@
+import 'package:rider/controller/socket_controller.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/pages/chat/chat_menu_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
+class ChatScreen extends StatefulWidget {
+  final String rideId;
+  const ChatScreen({
+    super.key,
+    required this.rideId,
+  });
+
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  final _textController = TextEditingController();
+  final _socketController = Get.find<SocketController>();
+  @override
+  void initState() {
+    _socketController.joinRoom(roomId: widget.rideId);
+    _socketController.getChatHistory(widget.rideId);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +146,29 @@ class ChatScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
+            Obx(
+              () => _socketController.chatModelList.isEmpty ? const SizedBox.shrink():   Expanded(
+                child: ListView.builder(
+                  itemCount: _socketController.chatModelList.length,
+                  itemBuilder: (context, index) {
+                    return Text(
+                      _socketController.chatModelList[index],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
             TextFormField(
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+              ),
+              controller: _textController,
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
@@ -148,10 +189,19 @@ class ChatScreen extends StatelessWidget {
                     color: AppColors.primaryColor,
                   ),
                 ),
-                suffixIcon: Icon(
-                  FontAwesomeIcons.paperPlane,
-                  size: 18,
-                  color: AppColors.primaryColor,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _socketController.sendMessage(
+                      message: _textController.text,
+                      rideId: widget.rideId,
+                    );
+                    _textController.clear();
+                  },
+                  icon: Icon(
+                    FontAwesomeIcons.paperPlane,
+                    size: 18,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
               ),
             ),
