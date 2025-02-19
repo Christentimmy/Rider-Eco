@@ -303,7 +303,7 @@ class BuildSideBar extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.history),
             title: const Text(
-              'Balance & History',
+              'Rides',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

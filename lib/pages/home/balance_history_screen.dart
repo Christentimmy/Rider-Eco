@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rider/pages/home/history_rode_details.dart';
+import 'package:rider/controller/user_controller.dart';
+import 'package:rider/models/ride_model.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/color_resources.dart';
-import 'package:rider/widgets/custom_button.dart';
-import 'package:rider/widgets/custom_textfield.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:rider/utils/date_converter.dart';
 
-class BalanceAndHistoryScreen extends StatelessWidget {
-  BalanceAndHistoryScreen({super.key});
+class BalanceAndHistoryScreen extends StatefulWidget {
+  const BalanceAndHistoryScreen({super.key});
 
-  // final _userController = Get.find<UserController>();
-  final _searchController = TextEditingController();
+  @override
+  State<BalanceAndHistoryScreen> createState() =>
+      _BalanceAndHistoryScreenState();
+}
+
+class _BalanceAndHistoryScreenState extends State<BalanceAndHistoryScreen> {
+  final _userController = Get.find<UserController>();
+
+  @override
+  void initState() {
+    if (!_userController.isRideHistoryFetched.value) {
+      _userController.fetchRideHistory();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,69 +39,57 @@ class BalanceAndHistoryScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: CustomTextField(
-                    borderRadius: BorderRadius.circular(8),
-                    height: 40,
-                    hintText: "Search",
-                    textController: _searchController,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: CommonButton(
-                    height: 40,
-                    text: "Status",
-                    bgColor: Colors.white,
-                    textColor: AppColors.primaryColor,
-                    border: Border.all(
-                      width: 1,
+            const SizedBox(height: 20),
+            Expanded(
+              child: Obx(() {
+                if (_userController.isloading.value) {
+                  return Center(
+                    child: CircularProgressIndicator(
                       color: AppColors.primaryColor,
                     ),
-                    ontap: () {},
-                  ),
-                ),
-              ],
+                  );
+                } else if (_userController.rideHistoryList.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      "History is empty",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: _userController.rideHistoryList.length,
+                    itemBuilder: (context, index) {
+                      Ride ride = _userController.rideHistoryList[index];
+                      return RideHistoryCard(
+                        ride: ride,
+                        rideId: "UBER12345",
+                        pickup: "Oslo Central Station",
+                        dropoff: "Gardermoen Airport",
+                        driverName: "John Doe",
+                        rating: 4.8,
+                        status: "Completed",
+                        price: 150.00,
+                        duration: "45 min",
+                        date: "Feb 18, 2025",
+                      );
+                    },
+                  );
+                }
+              }),
             ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: CustomTextField(
-                    height: 40,
-                    hintText: "Search",
-                    textController: _searchController,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                const SizedBox(width: 15),
-                Expanded(
-                  child: CommonButton(
-                    height: 40,
-                    text: "Reset Filter",
-                    ontap: () {},
-                    bgColor: const Color.fromARGB(255, 41, 117, 43),
-                  ),
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
-            const SizedBox(height: 20),
-            _filterCardsBudget(),
           ],
         ),
       ),
     );
   }
 
-  Widget _filterCardsBudget() {
+  Widget _filterCardsBudget({required Ride ride}) {
     return InkWell(
-      onTap: (){
-        Get.to(()=> HistoryRodeDetails());
+      onTap: () {
+        // Get.to(() => const HistoryRodeDetails());
       },
       child: Container(
         width: Get.width,
@@ -326,7 +328,7 @@ class BalanceAndHistoryScreen extends StatelessWidget {
   AppBar _buildAppBar() {
     return AppBar(
       title: const Text(
-        "Balance & History",
+        "History",
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -343,6 +345,197 @@ class BalanceAndHistoryScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.filter_alt_outlined),
+        ),
+      ],
+    );
+  }
+}
+
+class RideHistoryCard extends StatelessWidget {
+  final Ride ride;
+  final String rideId;
+  final String pickup;
+  final String dropoff;
+  final String driverName;
+  final double rating;
+  final String status;
+  final double price;
+  final String duration;
+  final String date;
+
+  const RideHistoryCard({
+    super.key,
+    required this.rideId,
+    required this.ride,
+    required this.pickup,
+    required this.dropoff,
+    required this.driverName,
+    required this.rating,
+    required this.status,
+    required this.price,
+    required this.duration,
+    required this.date,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 3,
+      margin: const EdgeInsets.symmetric(
+        vertical: 8,
+        horizontal: 10,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Trip ID: ${ride.id}",
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+                Chip(
+                  label: Text(
+                    ride.status?.toUpperCase() ?? "",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                  backgroundColor: _statusColor(status),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 2,
+                    horizontal: 8,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 8),
+
+            // 📍 Locations
+            _locationRow(
+              Icons.circle,
+              Colors.green,
+              ride.pickupLocation?.address.substring(0, 7) ?? "",
+            ),
+            _locationRow(
+              Icons.location_on,
+              Colors.red,
+              ride.dropoffLocation?.address.substring(0, 7) ?? "",
+            ),
+
+            const SizedBox(height: 10),
+            const Divider(),
+
+            // 🚖 Driver & Rating
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.person,
+                      size: 18,
+                      color: Colors.black54,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      driverName,
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.star, size: 18, color: Colors.orange),
+                    const SizedBox(width: 4),
+                    Text(
+                      ride.reviews?.averageRating.toString() ?? "",
+                      style: GoogleFonts.poppins(
+                          fontSize: 14, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "\$${ride.fare?.toStringAsFixed(2)}",
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  convertDateToNormal(ride.requestedAt.toString()),
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 🎨 Dynamic Color for Status
+  Color _statusColor(String status) {
+    switch (status.toLowerCase()) {
+      case "completed":
+        return Colors.green;
+      case "cancelled":
+        return Colors.red;
+      case "ongoing":
+        return Colors.blue;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  // 📍 Location Row
+  Widget _locationRow(
+    IconData icon,
+    Color iconColor,
+    String location,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Icon(icon, color: iconColor, size: 18),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              location,
+              style: GoogleFonts.poppins(
+                  fontSize: 14, fontWeight: FontWeight.w500),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

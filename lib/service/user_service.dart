@@ -335,4 +335,112 @@ class UserService {
     return null;
   }
 
+  Future<http.Response?> getRideHistories({
+    required String token,
+    String? status,
+  }) async {
+    try {
+      Uri uri = Uri.parse("$baseUrl/user/ride-history").replace(
+        queryParameters: {
+          if (status != null && status.isNotEmpty) "status": status,
+        },
+      );
+
+      final response = await client.get(
+        uri,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      ).timeout(const Duration(seconds: 15));
+
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> getUserPaymentHistory({
+    required String token,
+    required int page,
+    required int limit,
+  }) async {
+    try {
+      final response = await client.get(
+        Uri.parse('$baseUrl/user/payment-history?page=$page&limit=$limit'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      ).timeout(const Duration(seconds: 15));
+
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> getUserScheduledRides({
+    required String token,
+    String? status,
+  }) async {
+    try {
+      Uri uri = Uri.parse("$baseUrl/user/scheduled-rides").replace(
+        queryParameters: {
+          if (status != null && status.isNotEmpty) "status": status,
+        },
+      );
+      final response = await client.get(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      ).timeout(const Duration(seconds: 15));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> scheduleRide({
+    required String token,
+    required Map<String, dynamic> rideData,
+  }) async {
+    try {
+      final response = await http
+          .post(
+            Uri.parse("$baseUrl/user/schedule"),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(rideData),
+          )
+          .timeout(const Duration(seconds: 15));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint("❌ Error scheduling ride: $e");
+    }
+    return null;
+  }
 }

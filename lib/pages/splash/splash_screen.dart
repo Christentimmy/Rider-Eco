@@ -32,7 +32,6 @@ class _SplashScreenState extends State<SplashScreen> {
         return;
       }
       await _userController.getUserStatus();
-      _userController.getUserDetails();
     });
   }
 

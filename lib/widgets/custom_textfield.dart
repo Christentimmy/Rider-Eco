@@ -90,7 +90,7 @@ class CustomTextField extends StatelessWidget {
                 borderRadius: borderRadius ?? BorderRadius.circular(15),
                 borderSide: BorderSide(
                   width: 1,
-                  color: Colors.grey.withOpacity(0.5),
+                  color: Colors.grey.withOpacity(0.8),
                 ),
               ),
           focusedBorder: focusedBorder ??

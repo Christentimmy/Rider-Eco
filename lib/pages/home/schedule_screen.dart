@@ -25,7 +25,7 @@ class ScheduleScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-             Text(
+            Text(
               "Create Schedule",
               style: TextStyle(
                 fontSize: 18,
@@ -47,7 +47,7 @@ class ScheduleScreen extends StatelessWidget {
                 child: CommonButton(
                   text: "New Schedule",
                   ontap: () {
-                    Get.to(()=> CreateNewScheduleScreen());
+                    Get.to(() => CreateNewScheduleScreen());
                   },
                 ),
               ),
@@ -107,13 +107,19 @@ class ScheduleScreen extends StatelessWidget {
           );
         },
       ),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.filter_alt_outlined),
+        ),
+      ],
     );
   }
 
   InkWell _buildFilterCards() {
     return InkWell(
       onTap: () {
-        Get.to(()=> const ScheduleDetailsScreen());
+        Get.to(() => const ScheduleDetailsScreen());
       },
       child: Container(
         // height: 200,
@@ -132,7 +138,7 @@ class ScheduleScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-             Row(
+            Row(
               children: [
                 Icon(
                   Icons.location_on,

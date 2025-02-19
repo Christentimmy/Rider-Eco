@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/models/driver_model.dart';
 import 'package:rider/models/fare_breakdown_model.dart';
+import 'package:rider/models/payment_model.dart';
 import 'package:rider/models/ride_model.dart';
 import 'package:rider/models/user_model.dart';
 import 'package:rider/pages/auth/create_profile_screen.dart';
@@ -19,6 +20,8 @@ import 'package:rider/widgets/snack_bar.dart';
 
 class UserController extends GetxController {
   RxBool isloading = false.obs;
+  RxBool isScheduleLoading = false.obs;
+  RxBool isRideHistoryFetched = false.obs;
   RxBool isRideBreakDownLoading = false.obs;
   RxBool isRequestRideLoading = false.obs;
   RxBool isPaymentProcessing = false.obs;
@@ -26,6 +29,9 @@ class UserController extends GetxController {
   var driverLocation = const LatLng(0.0, 0.0).obs;
   Rxn<UserModel> userModel = Rxn<UserModel>();
   Rxn<Ride> currentRideModel = Rxn<Ride>();
+  RxList<Ride> userScheduleList = <Ride>[].obs;
+  RxList<Ride> rideHistoryList = <Ride>[].obs;
+  RxList<PaymentModel> userPaymentList = <PaymentModel>[].obs;
   Rxn<FareBreakdownModel> rideFareBreakdownModel = Rxn<FareBreakdownModel>();
   RxBool isGetUserIdLoading = false.obs;
   final UserService _userService = UserService();
@@ -34,6 +40,7 @@ class UserController extends GetxController {
   @override
   onInit() {
     getUserDetails();
+    fetchRideHistory();
     super.onInit();
   }
 
@@ -342,7 +349,9 @@ class UserController extends GetxController {
         ),
       );
       await Stripe.instance.presentPaymentSheet();
+
       CustomSnackbar.showSuccessSnackBar("Payment processing!");
+      currentRideModel.value = null;
       Get.offAll(() => const HomeScreen());
     } catch (e) {
       print(e);
@@ -425,4 +434,132 @@ class UserController extends GetxController {
       isEditLoading.value = false;
     }
   }
+
+  Future<void> fetchRideHistory({String? status}) async {
+    isloading.value = false;
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+
+      final response = await _userService.getRideHistories(
+        token: token,
+        status: status,
+      );
+
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      if (response.statusCode != 200) {
+        return;
+      }
+
+      List rides = decoded["rides"];
+      List<Ride> mappedList = rides.map((e) => Ride.fromJson(e)).toList();
+      rideHistoryList.clear();
+      rideHistoryList.value = mappedList;
+      if (response.statusCode == 200) isRideHistoryFetched.value = true;
+    } catch (e) {
+      debugPrint("Error fetching ride history: $e");
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  Future<void> getUserPaymentHistory({int page = 1, int limit = 10}) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+
+      final response = await _userService.getUserPaymentHistory(
+        token: token,
+        page: page,
+        limit: limit,
+      );
+
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return;
+      }
+
+      final payments = decoded["payments"] as List;
+      userPaymentList.clear();
+      userPaymentList.value =
+          payments.map((payment) => PaymentModel.fromJson(payment)).toList();
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  Future<void> getUserScheduledRides({String? status}) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+
+      final response = await _userService.getUserScheduledRides(
+        token: token,
+        status: status,
+      );
+
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return;
+      }
+
+      final rides = decoded["data"]["rides"] as List;
+
+      userScheduleList.clear();
+      userScheduleList.value = rides.map((e) => Ride.fromJson(e)).toList();
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  Future<void> scheduleRide({
+    required Map<String, dynamic> rideData,
+  }) async {
+    isScheduleLoading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+
+      final response = await _userService.scheduleRide(
+        token: token,
+        rideData: rideData,
+      );
+
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return;
+      }
+      Get.offAll(() => const HomeScreen());
+    } catch (e, stackrace) {
+      debugPrint("${e.toString()} $stackrace");
+    } finally {
+      isScheduleLoading.value = false;
+    }
+  }
+
+
+
 }

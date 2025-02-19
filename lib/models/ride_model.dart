@@ -1,5 +1,4 @@
-
-
+import 'package:rider/models/review_model.dart';
 
 class Ride {
   String? id;
@@ -16,6 +15,9 @@ class Ride {
   bool? isScheduled;
   DateTime? scheduledTime;
   String? scheduleStatus;
+  String? driverFirstName;
+  String? driverLastName;
+  Reviews? reviews;
 
   Ride({
     this.id,
@@ -32,10 +34,19 @@ class Ride {
     this.isScheduled,
     this.scheduledTime,
     this.scheduleStatus,
+    this.driverFirstName,
+    this.driverLastName,
+    this.reviews,
   });
 
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
+      driverFirstName:
+          json["driver"] != null ? json["driver"]["user"]["first_name"] : "",
+      driverLastName:
+          json["driver"] != null ? json["driver"]["user"]["last_name"] : "",
+      reviews:
+          json["driver"] != null ? json["driver"]["reviews"] : Reviews(),
       id: json["_id"] ?? "",
       userId: json["user"] ?? "",
       driverId: json["driver"] ?? "",

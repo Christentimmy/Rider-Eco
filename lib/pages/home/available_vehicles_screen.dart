@@ -43,6 +43,12 @@ class _AvailableVehiclesScreenState extends State<AvailableVehiclesScreen> {
   }
 
   @override
+  void dispose() {
+    _userController.availableDriverList.clear();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
