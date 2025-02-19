@@ -33,7 +33,7 @@ class DriverModel {
     this.reviews,
   });
 
-  factory DriverModel.fromJson(Map<String, dynamic> json) {
+  factory DriverModel.fromJson(json) {
     return DriverModel(
       id: json['_id'] ?? "",
       userId: json['user'] ?? "",

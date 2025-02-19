@@ -20,9 +20,9 @@ class _BalanceAndHistoryScreenState extends State<BalanceAndHistoryScreen> {
 
   @override
   void initState() {
-    if (!_userController.isRideHistoryFetched.value) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _userController.fetchRideHistory();
-    }
+    });
     super.initState();
   }
 
@@ -39,7 +39,6 @@ class _BalanceAndHistoryScreenState extends State<BalanceAndHistoryScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
             Expanded(
               child: Obx(() {
                 if (_userController.isloading.value) {
@@ -60,21 +59,11 @@ class _BalanceAndHistoryScreenState extends State<BalanceAndHistoryScreen> {
                   );
                 } else {
                   return ListView.builder(
+                    padding: EdgeInsets.zero,
                     itemCount: _userController.rideHistoryList.length,
                     itemBuilder: (context, index) {
                       Ride ride = _userController.rideHistoryList[index];
-                      return RideHistoryCard(
-                        ride: ride,
-                        rideId: "UBER12345",
-                        pickup: "Oslo Central Station",
-                        dropoff: "Gardermoen Airport",
-                        driverName: "John Doe",
-                        rating: 4.8,
-                        status: "Completed",
-                        price: 150.00,
-                        duration: "45 min",
-                        date: "Feb 18, 2025",
-                      );
+                      return RideHistoryCard(ride: ride);
                     },
                   );
                 }
@@ -358,29 +347,8 @@ class _BalanceAndHistoryScreenState extends State<BalanceAndHistoryScreen> {
 
 class RideHistoryCard extends StatelessWidget {
   final Ride ride;
-  final String rideId;
-  final String pickup;
-  final String dropoff;
-  final String driverName;
-  final double rating;
-  final String status;
-  final double price;
-  final String duration;
-  final String date;
 
-  const RideHistoryCard({
-    super.key,
-    required this.rideId,
-    required this.ride,
-    required this.pickup,
-    required this.dropoff,
-    required this.driverName,
-    required this.rating,
-    required this.status,
-    required this.price,
-    required this.duration,
-    required this.date,
-  });
+  const RideHistoryCard({super.key, required this.ride});
 
   @override
   Widget build(BuildContext context) {
@@ -400,7 +368,7 @@ class RideHistoryCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Trip ID: ${ride.id}",
+                  "Trip ID: ${ride.id?.substring(0, 7)}...",
                   style: GoogleFonts.poppins(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -416,7 +384,7 @@ class RideHistoryCard extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
-                  backgroundColor: _statusColor(status),
+                  backgroundColor: _statusColor(ride.status ?? ""),
                   padding: const EdgeInsets.symmetric(
                     vertical: 2,
                     horizontal: 8,
@@ -455,7 +423,7 @@ class RideHistoryCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      driverName,
+                      "${ride.driverFirstName} ${ride.driverLastName}",
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,

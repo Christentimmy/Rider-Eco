@@ -14,7 +14,7 @@ class PersonalDocuments {
     this.electionCard,
   });
 
-  factory PersonalDocuments.fromJson(Map<String, dynamic> json) {
+  factory PersonalDocuments.fromJson(json) {
     return PersonalDocuments(
       birthCertificate: json['birth_certificate'] ?? "",
       drivingLicense: json['driving_license'] ?? "",

@@ -41,26 +41,35 @@ class Ride {
 
   factory Ride.fromJson(Map<String, dynamic> json) {
     return Ride(
-      driverFirstName:
-          json["driver"] != null ? json["driver"]["user"]["first_name"] : "",
-      driverLastName:
-          json["driver"] != null ? json["driver"]["user"]["last_name"] : "",
-      reviews:
-          json["driver"] != null ? json["driver"]["reviews"] : Reviews(),
+      driverFirstName: json["driver"] != null && json["driver"]["user"] != null
+          ? json["driver"]["user"]["first_name"] ?? ""
+          : "",
+      driverLastName: json["driver"] != null && json["driver"]["user"] != null
+          ? json["driver"]["user"]["last_name"] ?? ""
+          : "",
+      reviews: json["driver"] != null && json["driver"]["reviews"] != null
+          ? Reviews.fromJson(json["driver"]["reviews"])
+          : Reviews(),
       id: json["_id"] ?? "",
       userId: json["user"] ?? "",
-      driverId: json["driver"] ?? "",
+      driverId: json["driver"] != null ? json["driver"]["_id"] : "",
       status: json["status"] ?? "",
-      pickupLocation: PickupLocation.fromJson(json["pickup_location"]),
-      dropoffLocation: DropoffLocation.fromJson(json["dropoff_location"]),
-      fare: json["fare"].toDouble(),
-      requestedAt: DateTime.parse(json["requested_at"]),
-      paymentMethod: json["payment_method"],
-      paymentStatus: json["payment_status"],
-      transactionId: json["transaction_id"],
-      isScheduled: json["is_scheduled"],
+      pickupLocation: json["pickup_location"] != null
+          ? PickupLocation.fromJson(json["pickup_location"])
+          : null,
+      dropoffLocation: json["dropoff_location"] != null
+          ? DropoffLocation.fromJson(json["dropoff_location"])
+          : null,
+      fare: json["fare"] != null ? (json["fare"] as num).toDouble() : 0.0,
+      requestedAt: json["requested_at"] != null
+          ? DateTime.tryParse(json["requested_at"])
+          : null,
+      paymentMethod: json["payment_method"] ?? "",
+      paymentStatus: json["payment_status"] ?? "",
+      transactionId: json["transaction_id"] ?? "",
+      isScheduled: json["is_scheduled"] ?? false,
       scheduledTime: json["scheduled_time"] != null
-          ? DateTime.parse(json["scheduled_time"])
+          ? DateTime.tryParse(json["scheduled_time"])
           : null,
       scheduleStatus: json["schedule_status"] ?? "",
     );

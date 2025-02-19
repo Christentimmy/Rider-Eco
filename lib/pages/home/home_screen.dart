@@ -247,8 +247,10 @@ class BuildSideBar extends StatelessWidget {
                 }),
                 const SizedBox(width: 10),
                 Obx(() {
-                  String firstName = _userController.userModel.value?.firstName ?? "";
-                  String lastName = _userController.userModel.value?.lastName ?? "";
+                  String firstName =
+                      _userController.userModel.value?.firstName ?? "";
+                  String lastName =
+                      _userController.userModel.value?.lastName ?? "";
                   return Text(
                     "$firstName $lastName",
                     style: const TextStyle(
@@ -285,7 +287,7 @@ class BuildSideBar extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Navigator.pop(context);
+              Get.offAll(() => const HomeScreen());
             },
           ),
           ListTile(

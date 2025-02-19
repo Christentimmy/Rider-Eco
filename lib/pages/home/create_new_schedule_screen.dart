@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/home/schedule_payment_screen.dart';
+import 'package:rider/service/location_service.dart';
 import 'package:rider/widgets/custom_textfield.dart';
+import 'package:rider/widgets/snack_bar.dart';
 
 class CreateNewScheduleScreen extends StatelessWidget {
   CreateNewScheduleScreen({super.key});
 
-  final _yourPickUpLocation = TextEditingController();
+  final _userController = Get.find<UserController>();
+
+  final _fromLocationController = TextEditingController();
+  final _fromLocationAddress = "".obs;
+  final _toLocationController = TextEditingController();
+  final _toLocationAddress = "".obs;
+  final Rx<LatLng> _fromLocation = const LatLng(0.0, 0.0).obs;
+  final Rx<LatLng> _toLocation = const LatLng(0.0, 0.0).obs;
 
   final Rxn<DateTime> _selectDate = Rxn<DateTime>();
   final Rxn<TimeOfDay> _selectTime = Rxn<TimeOfDay>();
@@ -24,6 +35,68 @@ class CreateNewScheduleScreen extends StatelessWidget {
     return DateFormat('hh:mm a').format(dateTime);
   }
 
+  void searchPlaces(String query, var list) async {
+    List<Map<String, dynamic>> results =
+        await LocationService.searchPlaces(query);
+    list.value = results;
+  }
+
+  final RxList<Map<String, dynamic>> _places = <Map<String, dynamic>>[].obs;
+  final RxList<Map<String, dynamic>> _toPlaces = <Map<String, dynamic>>[].obs;
+
+  void submitScheduledRide({
+    required String paymentMethod,
+    required Rx<LatLng> fromLocation,
+    required Rx<LatLng> toLocation,
+    required String fromAddress,
+    required String toAddress,
+    required Rxn<DateTime> selectedDate,
+    required Rxn<TimeOfDay> selectedTime,
+  }) async {
+    try {
+      if (fromAddress.isEmpty || toAddress.isEmpty) {
+        CustomSnackbar.showErrorSnackBar(
+          "❌ Please select both pick-up and drop-off locations!",
+        );
+        return;
+      }
+      if (selectedDate.value != null && selectedTime.value != null) {
+        CustomSnackbar.showErrorSnackBar("❌ Please select both date and time!");
+        return;
+      }
+      DateTime selectedDateTime = DateTime(
+        selectedDate.value!.year,
+        selectedDate.value!.month,
+        selectedDate.value!.day,
+        selectedTime.value!.hour,
+        selectedTime.value!.minute,
+      );
+
+      String scheduledTimeUtc = selectedDateTime.toUtc().toIso8601String();
+      print("🚀 Scheduled Time: $scheduledTimeUtc");
+
+      Map<String, dynamic> rideData = {
+        "pickup_location": {
+          "lat": fromLocation.value.latitude,
+          "lng": fromLocation.value.latitude,
+          "address": fromAddress,
+        },
+        "dropoff_location": {
+          "lat": toLocation.value.latitude,
+          "lng": toLocation.value.latitude,
+          "address": toAddress,
+        },
+        "is_scheduled": true,
+        "scheduled_time": scheduledTimeUtc,
+        "payment_method": paymentMethod,
+      };
+
+      await _userController.scheduleRide(rideData: rideData);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,14 +111,32 @@ class CreateNewScheduleScreen extends StatelessWidget {
             const SizedBox(height: 20),
             CustomTextField(
               hintText: "Your Pick-Up Location",
-              textController: _yourPickUpLocation,
+              textController: _fromLocationController,
+              onChanged: (value) {
+                searchPlaces(value, _places);
+              },
               prefixIcon: Icons.location_searching_rounded,
+            ),
+            _buildAutoComplete(
+              controller: _fromLocationController,
+              location: _fromLocation,
+              list: _places,
+              address: _fromLocationAddress,
             ),
             const SizedBox(height: 15),
             CustomTextField(
               hintText: "Your Destination",
-              textController: _yourPickUpLocation,
+              textController: _toLocationController,
               prefixIcon: Icons.location_on_outlined,
+              onChanged: (value) {
+                searchPlaces(value, _toPlaces);
+              },
+            ),
+            _buildAutoComplete(
+              controller: _toLocationController,
+              location: _toLocation,
+              list: _toPlaces,
+              address: _toLocationAddress,
             ),
             const SizedBox(height: 15),
             Row(
@@ -120,9 +211,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
                             _selectTime.value != null
                                 ? formatTimeOfDay(_selectTime.value!)
                                 : "HH:MM",
-                            style: TextStyle(
-                              fontSize: 13,
-                            ),
+                            style: const TextStyle(fontSize: 13),
                           ),
                         ),
                       ],
@@ -143,6 +232,51 @@ class CreateNewScheduleScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Obx _buildAutoComplete({
+    required TextEditingController controller,
+    required Rx<LatLng> location,
+    required list,
+    required RxString address,
+  }) {
+    return Obx(
+      () => list.isEmpty
+          ? const SizedBox.shrink()
+          : ListView.builder(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                String title = list[index]["name"];
+                String lat = list[index]["lat"];
+                String lng = list[index]["lon"];
+                return ListTile(
+                  onTap: () {
+                    controller.clear();
+                    controller.text += title;
+                    _places.clear();
+
+                    location.value = LatLng(
+                      double.parse(lat),
+                      double.parse(lng),
+                    );
+
+                    address.value = title;
+                  },
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.timelapse_sharp),
+                  title: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
+              },
+            ),
     );
   }
 

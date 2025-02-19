@@ -19,7 +19,7 @@ class PaymentModel {
     this.processedAt,
   });
 
-  factory PaymentModel.fromJson(Map<String, dynamic> json) {
+  factory PaymentModel.fromJson(json) {
     return PaymentModel(
       id: json["_id"] ?? "",
       userId: json["user"] ?? "",

@@ -50,7 +50,10 @@ class UserController extends GetxController {
       String? token = await storageController.getToken();
       if (token == null || token.isEmpty) return;
       final response = await _userService.getUserStatus(token: token);
-      if (response == null) return;
+      if (response == null) {
+        Get.to(() => SignUpScreen());
+        return;
+      }
       final decoded = json.decode(response.body);
       String message = decoded["message"] ?? "";
       if (response.statusCode != 200) {
@@ -455,6 +458,7 @@ class UserController extends GetxController {
       }
 
       List rides = decoded["rides"];
+      print(rides);
       List<Ride> mappedList = rides.map((e) => Ride.fromJson(e)).toList();
       rideHistoryList.clear();
       rideHistoryList.value = mappedList;
@@ -559,7 +563,4 @@ class UserController extends GetxController {
       isScheduleLoading.value = false;
     }
   }
-
-
-
 }

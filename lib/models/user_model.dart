@@ -35,8 +35,8 @@ class UserModel {
     this.password,
   });
 
-  // Factory constructor to create an instance from JSON
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+
+  factory UserModel.fromJson(json) {
     return UserModel(
       id: json['id'] ?? "", // Added password field to JSON mapping
       email: json['email'] ?? "",

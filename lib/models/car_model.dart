@@ -17,7 +17,7 @@ class Car {
     this.capacity = 4,
   });
 
-  factory Car.fromJson(Map<String, dynamic> json) {
+  factory Car.fromJson(json) {
     return Car(
       carNumber: json['car_number'] ?? "",
       model: json['model'] ?? "",
