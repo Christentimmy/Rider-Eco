@@ -19,7 +19,9 @@ class Ride {
   String? driverFirstName;
   String? driverLastName;
   String? driverUserId;
+  String? driverProfilePicture;
   Reviews? reviews;
+
 
   Ride({
     this.id,
@@ -39,6 +41,7 @@ class Ride {
     this.driverFirstName,
     this.driverLastName,
     this.driverUserId,
+    this.driverProfilePicture,
     this.reviews,
   });
 
@@ -79,6 +82,8 @@ class Ride {
           isDriverPopulated ? json["driver"]["user"]["last_name"] ?? "" : "",
       driverUserId:
           isDriverPopulated ? json["driver"]["user"]["_id"] ?? "" : "",
+      driverProfilePicture:
+          isDriverPopulated ? json["driver"]["user"]["profile_picture"] ?? "" : "",
       reviews: isDriverPopulated
           ? Reviews.fromJson(json["driver"]["reviews"])
           : Reviews(),

@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/controller/user_controller.dart';
+import 'package:rider/models/ride_model.dart';
 import 'package:rider/pages/home/create_new_schedule_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/schedule_details_screen.dart';
 import 'package:rider/resources/color_resources.dart';
+import 'package:rider/utils/date_converter.dart';
 
+class ScheduleScreen extends StatefulWidget {
+  const ScheduleScreen({super.key});
 
-class ScheduleScreen extends StatelessWidget {
-  ScheduleScreen({super.key});
+  @override
+  State<ScheduleScreen> createState() => _ScheduleScreenState();
+}
 
+class _ScheduleScreenState extends State<ScheduleScreen> {
+  final _userController = Get.find<UserController>();
+
+  @override
+  void initState() {
+    super.initState();
+    if (!_userController.isScheduleFetched.value) {
+      _userController.getUserScheduledRides();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +45,40 @@ class ScheduleScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildFilterCards(),
+            Expanded(
+              child: Obx(() {
+                List<Ride> userSchedules = _userController.userScheduleList;
+                List sorted = userSchedules
+                    .where((e) => (e.isScheduled == true &&
+                        (e.status == "failed" || e.status == "schedule")))
+                    .toList();
+                if (_userController.isloading.value) {
+                  return CircularProgressIndicator(
+                    color: AppColors.primaryColor,
+                  );
+                } else if (sorted.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      "Empty Schedule",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                      ),
+                    ),
+                  );
+                } else {
+                  return ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: sorted.length,
+                    itemBuilder: (context, index) {
+                      Ride schedule = sorted[index];
+                      return _buildFilterCards(ride: schedule);
+                    },
+                  );
+                }
+              }),
+            ),
           ],
         ),
       ),
@@ -57,16 +106,12 @@ class ScheduleScreen extends StatelessWidget {
           );
         },
       ),
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.filter_alt_outlined),
-        ),
-      ],
     );
   }
 
-  InkWell _buildFilterCards() {
+  InkWell _buildFilterCards({
+    required Ride ride,
+  }) {
     return InkWell(
       onTap: () {
         Get.to(() => const ScheduleDetailsScreen());
@@ -87,6 +132,7 @@ class ScheduleScreen extends StatelessWidget {
           ),
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
@@ -95,47 +141,17 @@ class ScheduleScreen extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
                 const SizedBox(width: 10),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Pickup Location",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      "B Street 92025, CA - 3:00 to 3:15 PM",
-                      style: TextStyle(
-                        fontSize: 9,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
+                Text(
+                  ride.pickupLocation?.address != null &&
+                          ride.pickupLocation!.address.length > 20
+                      ? "${ride.pickupLocation!.address.substring(0, 19)}..."
+                      : ride.pickupLocation!.address,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
-                const Spacer(),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "₹350",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "400m",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 9,
-                      ),
-                    )
-                  ],
-                )
               ],
             ),
             const SizedBox(height: 20),
@@ -146,32 +162,15 @@ class ScheduleScreen extends StatelessWidget {
                   color: AppColors.primaryColor,
                 ),
                 const SizedBox(width: 10),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Drop Off Location",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      "SJC, Terminal B",
-                      style: TextStyle(
-                        fontSize: 9,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                const Text(
-                  "Express",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 9,
+                Text(
+                  ride.dropoffLocation?.address != null &&
+                          ride.dropoffLocation!.address.length > 22
+                      ? "${ride.dropoffLocation!.address.substring(0, 21)}..."
+                      : ride.dropoffLocation!.address,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
                   ),
                 ),
               ],
@@ -179,34 +178,22 @@ class ScheduleScreen extends StatelessWidget {
             const SizedBox(height: 5),
             const Divider(),
             const SizedBox(height: 10),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: [
-                  Text(
-                    "June 3, 2021  12:30pm",
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 41, 117, 43),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                  Spacer(),
-                  Text(
-                    "35 minutes",
-                    style: TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
+            Text(
+              convertDateToNormal(ride.scheduledTime.toString()),
+              style: const TextStyle(
+                color: Color.fromARGB(255, 41, 117, 43),
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
               ),
             ),
             const SizedBox(height: 10),
             Row(
               children: [
-                Image.asset(
-                  "assets/images/avater2.png",
-                  width: 50,
+                CircleAvatar(
+                  radius: 25,
+                  backgroundImage: NetworkImage(
+                    ride.driverProfilePicture ?? "",
+                  ),
                 ),
                 const SizedBox(width: 10),
                 const Column(

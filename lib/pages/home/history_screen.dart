@@ -74,245 +74,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
-  Widget _filterCardsBudget({required Ride ride}) {
-    return InkWell(
-      onTap: () {
-        // Get.to(() => const HistoryRodeDetails());
-      },
-      child: Container(
-        width: Get.width,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 10,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            width: 1,
-            color: Colors.grey.withOpacity(0.6),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Text(
-                  "June 3, 2021  12:30pm",
-                  style: TextStyle(
-                    fontSize: 12,
-                  ),
-                ),
-                const Spacer(),
-                Container(
-                  height: 30,
-                  width: 90,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: const Color.fromARGB(255, 59, 126, 4),
-                  ),
-                  child: const Text(
-                    "Trip in 2days",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            const ListTile(
-              contentPadding: EdgeInsets.zero,
-              horizontalTitleGap: 5,
-              minTileHeight: 35,
-              title: Text(
-                "Ikeja City Mall, Alausa Road, Ikeja",
-                style: TextStyle(
-                  fontSize: 13,
-                ),
-              ),
-              leading: Icon(
-                Icons.location_pin,
-                color: Color.fromARGB(255, 68, 145, 5),
-              ),
-            ),
-            const Divider(),
-            const ListTile(
-              contentPadding: EdgeInsets.zero,
-              horizontalTitleGap: 5,
-              minTileHeight: 35,
-              title: Text(
-                "Shoprite Event Centre, Ikeja",
-                style: TextStyle(
-                  fontSize: 13,
-                ),
-              ),
-              leading: Icon(
-                Icons.location_pin,
-                color: Color.fromARGB(255, 68, 145, 5),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        style: const TextStyle(fontSize: 15),
-                        children: [
-                          const TextSpan(
-                            text: "Driver: ",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "Christen Junior",
-                            style: TextStyle(
-                              color: Colors.black.withOpacity(0.6),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        style: const TextStyle(fontSize: 15),
-                        children: [
-                          const TextSpan(
-                            text: "Status: ",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "Completed",
-                            style: TextStyle(
-                              color: Colors.black.withOpacity(0.6),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(), // Add space between the two columns
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    RichText(
-                      text: const TextSpan(
-                        style: TextStyle(fontSize: 15),
-                        children: [
-                          TextSpan(
-                            text: "Rating: ",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "⭐⭐⭐⭐⭐",
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    RichText(
-                      text: TextSpan(
-                        style: const TextStyle(fontSize: 15),
-                        children: [
-                          const TextSpan(
-                            text: "Trip ID: ",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 17,
-                              color: Colors.black,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "TRP24002",
-                            style: TextStyle(
-                              color: Colors.black.withOpacity(0.6),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            const Divider(),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  height: 55,
-                  width: 165,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 7,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      width: 1,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Price: ",
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text("\$5000"),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            "Trip duration: ",
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text("20mins"),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
   AppBar _buildAppBar() {
     return AppBar(
       title: const Text(
@@ -328,15 +89,44 @@ class _HistoryScreenState extends State<HistoryScreen> {
             onPressed: () {
               Scaffold.of(context).openDrawer();
             },
-            icon: const Icon(
-              Icons.menu,
-            ),
+            icon: const Icon(Icons.menu),
           );
         },
       ),
       actions: [
-        IconButton(
-          onPressed: () {},
+        PopupMenuButton<String>(
+          onSelected: (String status) {
+            if(status == "all"){
+              _userController.fetchRideHistory();
+              return;
+            }
+            _userController.fetchRideHistory(status: status);
+          },
+          itemBuilder: (BuildContext context) => [
+            const PopupMenuItem(value: "all", child: Text("📜 All Rides")),
+            const PopupMenuItem(value: "completed", child: Text("✅ Completed")),
+            const PopupMenuItem(value: "cancelled", child: Text("❌ Cancelled")),
+            const PopupMenuItem(
+              value: "progress",
+              child: Text("🚗 In Progress"),
+            ),
+            const PopupMenuItem(
+              value: "paused",
+              child: Text("⏸️ Paused"),
+            ),
+            const PopupMenuItem(
+              value: "schedule_pending",
+              child: Text("⏳ Scheduled (Pending)"),
+            ),
+            const PopupMenuItem(
+              value: "schedule_assigned",
+              child: Text("✔️ Scheduled (Assigned)"),
+            ),
+            const PopupMenuItem(
+              value: "schedule_failed",
+              child: Text("❌ Scheduled (Failed)"),
+            ),
+          ],
           icon: const Icon(Icons.filter_alt_outlined),
         ),
       ],
@@ -346,13 +136,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
 class RideHistoryCard extends StatelessWidget {
   final Ride ride;
-
   const RideHistoryCard({super.key, required this.ride});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
       elevation: 3,
       margin: const EdgeInsets.symmetric(
         vertical: 8,
@@ -376,9 +167,7 @@ class RideHistoryCard extends StatelessWidget {
                 ),
                 Chip(
                   label: Text(
-                    ride.isScheduled == true
-                        ? ride.scheduleStatus!.toUpperCase()
-                        : ride.status?.toUpperCase() ?? "",
+                    ride.status?.toUpperCase() ?? "",
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

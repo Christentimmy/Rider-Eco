@@ -31,6 +31,7 @@ class UserController extends GetxController {
   RxBool isRequestRideLoading = false.obs;
   RxBool isPaymentProcessing = false.obs;
   RxBool isEditLoading = false.obs;
+  RxBool isScheduleFetched = false.obs;
   var driverLocation = const LatLng(59.9139, 10.7522).obs;
   Rxn<UserModel> userModel = Rxn<UserModel>();
   Rxn<Ride> currentRideModel = Rxn<Ride>();
@@ -46,6 +47,7 @@ class UserController extends GetxController {
   onInit() {
     getUserDetails();
     fetchRideHistory();
+    getUserScheduledRides();
     super.onInit();
   }
 
@@ -516,6 +518,7 @@ class UserController extends GetxController {
 
       userScheduleList.clear();
       userScheduleList.value = rides.map((e) => Ride.fromJson(e)).toList();
+      if (response.statusCode == 200) isScheduleFetched.value = true;
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -687,6 +690,4 @@ class UserController extends GetxController {
       isloading.value = false;
     }
   }
-
-
 }
