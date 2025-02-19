@@ -101,7 +101,6 @@ class UserService {
     required String toLocationName,
     required String paymentMethod,
   }) async {
-    print(driverId);
     try {
       final response = await client.post(
         Uri.parse('$baseUrl/user/ride/request-ride'),
@@ -126,7 +125,6 @@ class UserService {
           },
         ),
       );
-      print(response.body);
       return response;
     } on SocketException catch (e) {
       CustomSnackbar.showErrorSnackBar("Check internet connection, $e");
@@ -395,7 +393,7 @@ class UserService {
     String? status,
   }) async {
     try {
-      Uri uri = Uri.parse("$baseUrl/user/scheduled-rides").replace(
+      Uri uri = Uri.parse("$baseUrl/user/get-schedules").replace(
         queryParameters: {
           if (status != null && status.isNotEmpty) "status": status,
         },

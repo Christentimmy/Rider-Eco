@@ -97,7 +97,7 @@ class _FindARideScreenState extends State<FindARideScreen> {
       body: Stack(
         children: [
           SizedBox(
-            height: Get.height * 0.65,
+            height: Get.height * 0.7,
             width: Get.width,
             child: GoogleMap(
               mapType: MapType.hybrid,

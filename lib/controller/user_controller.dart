@@ -181,13 +181,13 @@ class UserController extends GetxController {
 
       if (response == null) return;
       final decoded = json.decode(response.body);
-      print(decoded);
       String message = decoded["message"];
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorSnackBar(message);
         return;
       }
       final rideFromResponse = decoded["data"]["ride"];
+      print(rideFromResponse);
       currentRideModel.value = null;
       currentRideModel.value = Ride.fromJson(rideFromResponse);
       print(currentRideModel.value?.id);
@@ -525,6 +525,7 @@ class UserController extends GetxController {
         return;
       }
       CustomSnackbar.showSuccessSnackBar(message);
+      getUserScheduledRides();
       Get.offAll(() => const HomeScreen());
     } catch (e, stackrace) {
       debugPrint("${e.toString()} $stackrace");
@@ -565,5 +566,4 @@ class UserController extends GetxController {
       isloading.value = false;
     }
   }
-
 }

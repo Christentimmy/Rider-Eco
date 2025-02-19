@@ -56,6 +56,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
     required Rxn<TimeOfDay> selectedTime,
   }) async {
     try {
+      FocusManager.instance.primaryFocus?.unfocus();
       if (fromAddress.isEmpty || toAddress.isEmpty) {
         CustomSnackbar.showErrorSnackBar(
           "Please select both pick-up and drop-off locations!",
@@ -150,6 +151,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () async {
+                    FocusScope.of(context).unfocus();
                     _selectDate.value = await showDatePicker(
                       context: context,
                       firstDate: DateTime(2000),
@@ -191,6 +193,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
                 const Spacer(),
                 InkWell(
                   onTap: () async {
+                    FocusScope.of(context).unfocus();
                     _selectTime.value = await showTimePicker(
                       context: context,
                       initialTime: TimeOfDay.now(),

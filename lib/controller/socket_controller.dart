@@ -5,8 +5,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/models/driver_model.dart';
+import 'package:rider/models/ride_model.dart';
 import 'package:rider/pages/booking/trip_payment_screen.dart';
 import 'package:rider/pages/home/trip_details_screen.dart';
+import 'package:rider/pages/home/trip_started_screen.dart';
 import 'package:rider/utils/base_url.dart';
 import 'package:rider/widgets/snack_bar.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -59,15 +61,7 @@ class SocketController extends GetxController {
       debugPrint(data.toString());
     });
 
-    socket?.on("rideAccepted", (data) {
-      print(data);
-      String roomId = data["data"]["ride"]["_id"];
-      print(roomId);
-      DriverModel driver = DriverModel.fromJson(data["data"]["driver"]);
-      socket?.emit("joinRoom", {"roomId": roomId});
-      debugPrint(data.toString());
-      Get.to(() => TripDetailsScreen(driver: driver));
-    });
+    // socket?.on("rideAccepted", (data) {});
 
     socket?.on('driverLocationUpdated', (data) {
       final lat = data['lat'];
@@ -79,18 +73,63 @@ class SocketController extends GetxController {
     });
 
     socket?.on("tripStatus", (data) {
-      String message = data["message"];
-      if (message.contains("started")) {
-        Get.to(() => const TripDetailsScreen());
+      String? message = data?["message"];
+      final rideData = data?["data"]?["ride"];
+      final driverData = data?["data"]?["driver"];
+      // print("TripStatus Event: $data");
+      if (message == "Driver has accepted your ride") {
+        if (rideData != null && driverData != null) {
+          String roomId = rideData["_id"];
+          print("Room ID: $roomId");
+
+          DriverModel driver = DriverModel.fromJson(driverData);
+          socket?.emit("joinRoom", {"roomId": roomId});
+          Get.to(() => TripDetailsScreen(driver: driver));
+        } else {
+          print("Error: Missing ride or driver data");
+        }
       }
-      if (message.contains("completed")) {
-        Get.to(() => const TripPaymentScreen());
+      if (message == "Your trip has started") {
+        if (rideData != null) {
+          final ride = Ride.fromJson(rideData);
+          final fromLocation = LatLng(
+            ride.pickupLocation!.lat,
+            ride.pickupLocation!.lng,
+          );
+          final toLocation = LatLng(
+            ride.dropoffLocation!.lat,
+            ride.dropoffLocation!.lng,
+          );
+          Get.to(() => TripStartedScreen(
+                fromLocation: fromLocation,
+                toLocation: toLocation,
+                rideId: ride.id ?? "",
+              ));
+        } else {
+          print("Error: Missing ride data");
+        }
+      }
+      if (message == "Your trip has been completed") {
+        if (rideData != null) {
+          String rideId = rideData["_id"];
+          Get.to(() => TripPaymentScreen(rideId: rideId));
+        }
       }
     });
 
     socket?.on("rideCancelled", (data) {
       String message = data["message"];
       CustomSnackbar.showSuccessSnackBar(message);
+    });
+
+    socket?.on('schedule-status', (data) {
+      final message = data["message"];
+      final driver = DriverModel.fromJson(
+        data["driver"],
+      );
+      if (message.contains("assigned")) {
+        Get.to(() => TripDetailsScreen(driver: driver));
+      }
     });
   }
 

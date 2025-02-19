@@ -13,8 +13,8 @@ import 'package:get/get.dart';
 import 'package:rider/widgets/loader.dart';
 
 class TripPaymentScreen extends StatefulWidget {
-  final String? rideId;
-  const TripPaymentScreen({super.key, this.rideId});
+  final String rideId;
+  const TripPaymentScreen({super.key, required this.rideId});
 
   @override
   State<TripPaymentScreen> createState() => _TripPaymentScreenState();
@@ -36,7 +36,7 @@ class _TripPaymentScreenState extends State<TripPaymentScreen> {
 
   void getPriceBrakeDown() async {
     print(widget.rideId);
-    String rideId =  widget.rideId ??  _userController.currentRideModel.value?.id ?? "";
+    String rideId = widget.rideId;
     await _userController.getRideFareBreakDown(
       rideId: rideId,
     );
@@ -175,11 +175,8 @@ class _TripPaymentScreenState extends State<TripPaymentScreen> {
                     const SizedBox(height: 10),
                     CommonButton(
                       ontap: () async {
-                        String rideId =
-                            _userController.currentRideModel.value?.id ?? "";
-                        print(rideId);
                         await _userController.makePayment(
-                          rideId: rideId,
+                          rideId: widget.rideId,
                         );
                       },
                       child: _userController.isPaymentProcessing.value

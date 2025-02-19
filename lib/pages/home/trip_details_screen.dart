@@ -88,7 +88,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
   Container _buildWidgetBelowMap() {
     return Container(
-      height: Get.height * 0.5,
+      // height: Get.height * 0.5,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: const BoxDecoration(
@@ -100,7 +100,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             height: 30,

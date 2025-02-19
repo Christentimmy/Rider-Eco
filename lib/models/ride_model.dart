@@ -39,20 +39,15 @@ class Ride {
     this.reviews,
   });
 
-  factory Ride.fromJson(Map<String, dynamic> json) {
+  factory Ride.fromJson(json) {
+    bool isDriverPopulated = json["driver"] is Map<String, dynamic>;
+
     return Ride(
-      driverFirstName: json["driver"] != null && json["driver"]["user"] != null
-          ? json["driver"]["user"]["first_name"] ?? ""
-          : "",
-      driverLastName: json["driver"] != null && json["driver"]["user"] != null
-          ? json["driver"]["user"]["last_name"] ?? ""
-          : "",
-      reviews: json["driver"] != null && json["driver"]["reviews"] != null
-          ? Reviews.fromJson(json["driver"]["reviews"])
-          : Reviews(),
       id: json["_id"] ?? "",
       userId: json["user"] ?? "",
-      driverId: json["driver"] != null ? json["driver"]["_id"] : "",
+      driverId: isDriverPopulated
+          ? json["driver"]["_id"]
+          : json["driver"], 
       status: json["status"] ?? "",
       pickupLocation: json["pickup_location"] != null
           ? PickupLocation.fromJson(json["pickup_location"])
@@ -72,6 +67,13 @@ class Ride {
           ? DateTime.tryParse(json["scheduled_time"])
           : null,
       scheduleStatus: json["schedule_status"] ?? "",
+      driverFirstName:
+          isDriverPopulated ? json["driver"]["user"]["first_name"] ?? "" : "",
+      driverLastName:
+          isDriverPopulated ? json["driver"]["user"]["last_name"] ?? "" : "",
+      reviews: isDriverPopulated
+          ? Reviews.fromJson(json["driver"]["reviews"])
+          : Reviews(),
     );
   }
 

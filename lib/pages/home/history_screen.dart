@@ -11,8 +11,7 @@ class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
   @override
-  State<HistoryScreen> createState() =>
-      _HistoryScreenState();
+  State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
@@ -377,7 +376,9 @@ class RideHistoryCard extends StatelessWidget {
                 ),
                 Chip(
                   label: Text(
-                    ride.status?.toUpperCase() ?? "",
+                    ride.isScheduled == true
+                        ? ride.scheduleStatus!.toUpperCase()
+                        : ride.status?.toUpperCase() ?? "",
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
