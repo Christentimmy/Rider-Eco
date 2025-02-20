@@ -8,11 +8,11 @@ import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/home/history_screen.dart';
 import 'package:rider/pages/home/edit_profile_screen.dart';
-import 'package:rider/pages/home/payment_method_screen.dart';
 import 'package:rider/pages/home/schedule_screen.dart';
 import 'package:rider/pages/home/settings_screen.dart';
 import 'package:rider/pages/home/soure_destination_screen.dart';
 import 'package:rider/pages/home/support_screen.dart';
+import 'package:rider/pages/pay/payment_history.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/service/location_service.dart';
 import 'package:rider/widgets/build_icon_button.dart';
@@ -57,10 +57,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final CameraPosition _initialPosition = const CameraPosition(
     target: LatLng(59.9139, 10.7522),
-    zoom: 15,
+    zoom: 18,
   );
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: BuildSideBar(),
@@ -287,7 +287,11 @@ class BuildSideBar extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Get.offAll(() => const HomeScreen());
+              if (Get.currentRoute == "/HomeScreen") {
+                Navigator.pop(context);
+              } else {
+                Get.to(() => const HomeScreen());
+              }
             },
           ),
           ListTile(
@@ -311,7 +315,27 @@ class BuildSideBar extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Get.to(() => const HistoryScreen());
+              if (Get.currentRoute == "/HistoryScreen") {
+                Navigator.pop(context);
+              } else {
+                Get.to(() => const HistoryScreen());
+              }
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.history),
+            title: const Text(
+              'Payment History',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onTap: () {
+              if (Get.currentRoute == "/PaymentHistoryScreen") {
+                Navigator.pop(context);
+              } else {
+                Get.to(() => const PaymentHistoryScreen());
+              }
             },
           ),
           ListTile(
@@ -323,19 +347,11 @@ class BuildSideBar extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Get.to(() => ScheduleScreen());
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.credit_card),
-            title: const Text(
-              'Payments',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onTap: () {
-              Get.to(() => PaymentMethodScreen());
+              if (Get.currentRoute == "/ScheduleScreen") {
+                Navigator.pop(context);
+              } else {
+                Get.to(() => const ScheduleScreen());
+              }
             },
           ),
           ListTile(
@@ -347,7 +363,11 @@ class BuildSideBar extends StatelessWidget {
               ),
             ),
             onTap: () {
-              Get.to(() => SettingScreen());
+              if (Get.currentRoute == "/SettingScreen") {
+                Navigator.pop(context);
+              } else {
+                Get.to(() => SettingScreen());
+              }
             },
           ),
           ListTile(

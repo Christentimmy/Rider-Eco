@@ -10,7 +10,7 @@ class CustomTextField extends StatelessWidget {
   VoidCallback? onSuffixClick;
   TextInputType? textInputType;
   TextStyle? textStyle;
-  final TextEditingController textController;
+  TextEditingController? textController;
   Color? bgColor;
   TextStyle? hintStyle;
   InputBorder? enabledBorder;
@@ -20,8 +20,10 @@ class CustomTextField extends StatelessWidget {
   String? Function(String?)? validator;
   bool? readOnly;
   Function(String)? onChanged;
+  Function()? onTap;
   CustomTextField({
     this.onChanged,
+    this.onTap,
     this.obscureText,
     this.readOnly,
     super.key,
@@ -37,7 +39,7 @@ class CustomTextField extends StatelessWidget {
     this.focusedBorder,
     this.height,
     this.borderRadius,
-    required this.textController,
+    this.textController,
     this.validator,
   });
 
@@ -50,6 +52,7 @@ class CustomTextField extends StatelessWidget {
         color: bgColor,
       ),
       child: TextFormField(
+        onTap: onTap,
         onChanged: onChanged,
         obscureText: obscureText ?? false,
         keyboardType: textInputType,

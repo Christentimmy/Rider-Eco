@@ -4,7 +4,6 @@ import 'package:rider/controller/user_controller.dart';
 import 'package:rider/models/ride_model.dart';
 import 'package:rider/pages/home/create_new_schedule_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
-import 'package:rider/pages/home/schedule_details_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/utils/date_converter.dart';
 
@@ -114,10 +113,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }) {
     return InkWell(
       onTap: () {
-        Get.to(() => const ScheduleDetailsScreen());
+        // Get.to(() => const ScheduleDetailsScreen());
       },
       child: Container(
-        // height: 200,
         width: double.infinity,
         margin: const EdgeInsets.symmetric(vertical: 10),
         padding: const EdgeInsets.symmetric(
@@ -178,52 +176,15 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             const SizedBox(height: 5),
             const Divider(),
             const SizedBox(height: 10),
-            Text(
-              convertDateToNormal(ride.scheduledTime.toString()),
-              style: const TextStyle(
-                color: Color.fromARGB(255, 41, 117, 43),
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-            const SizedBox(height: 10),
             Row(
               children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundImage: NetworkImage(
-                    ride.driverProfilePicture ?? "",
+                Text(
+                  convertDateToNormal(ride.scheduledTime.toString()),
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 41, 117, 43),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
                   ),
-                ),
-                const SizedBox(width: 10),
-                const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Joe Dough",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.star,
-                          color: Colors.yellowAccent,
-                          size: 12,
-                        ),
-                        SizedBox(width: 5),
-                        Text(
-                          "5 (38)",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
                 ),
                 const Spacer(),
                 Container(
@@ -237,9 +198,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       color: const Color(0xffEAB213),
                     ),
                   ),
-                  child: const Text(
-                    "Just now",
-                    style: TextStyle(
+                  child: Text(
+                    ride.scheduleStatus.toString(),
+                    style: const TextStyle(
                       color: Color(0xffEAB213),
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
@@ -253,4 +214,5 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       ),
     );
   }
+
 }

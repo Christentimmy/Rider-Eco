@@ -25,7 +25,6 @@ class AuthController extends GetxController {
     try {
       final response = await _authService.signUpUser(userModel: userModel);
       if (response == null) return;
-      print(response.body);
       final decoded = json.decode(response.body);
       var message = decoded["message"] ?? "";
       if (response.statusCode != 201) {
@@ -180,11 +179,64 @@ class AuthController extends GetxController {
         Get.offAll(() => CreateProfileScreen());
         return;
       }
+      await _userController.getUserDetails();
       Get.offAll(() => const HomeScreen());
     } catch (e) {
       debugPrint(e.toString());
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+      final response = await _authService.changePassword(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        token: token,
+      );
+      if (response == null) return;
+      final data = json.decode(response.body);
+      String message = data["message"];
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return;
+      }
+      CustomSnackbar.showSuccessSnackBar(message);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      String? token = await StorageController().getToken();
+      if (token == null) {
+        CustomSnackbar.showErrorSnackBar("No user session found.");
+        return;
+      }
+
+      final response = await _authService.logout(token: token);
+      if (response == null) return;
+      final data = jsonDecode(response.body);
+      print(data);
+      if (response.statusCode != 200) {
+        debugPrint(data["message"].toString());
+        return;
+      }
+      final userController = Get.find<UserController>();
+      final storage = Get.find<StorageController>();
+      await storage.deleteToken();
+      userController.clearUserData();
+      Get.offAll(() => SignUpScreen());
+    } catch (error) {
+      debugPrint(error.toString());
     }
   }
 }

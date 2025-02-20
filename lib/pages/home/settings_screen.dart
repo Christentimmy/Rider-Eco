@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/home/change_password_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/privacy_policy_screen.dart';
-import 'package:rider/pages/home/profile_screen.dart';
 import 'package:rider/pages/home/save_places_screen.dart';
 import 'package:rider/pages/home/terms_and_condition_screen.dart';
 import 'package:rider/resources/color_resources.dart';
@@ -13,24 +13,17 @@ class SettingScreen extends StatelessWidget {
 
   final List _settingList = [
     [
-      "Edit Profile",
-      Icons.account_circle_sharp,
-      () {
-        Get.to(() => const ProfileScreen());
-      }
-    ],
-    [
       "Change Password",
       Icons.lock,
       () {
-        Get.to(()=> ChangePasswordScreen());
+        Get.to(() => ChangePasswordScreen());
       }
     ],
     [
       "Save Address",
       Icons.location_pin,
       () {
-        Get.to(()=> SavePlacesScreen());
+        Get.to(() => SavePlacesScreen());
       }
     ],
     // [
@@ -44,17 +37,19 @@ class SettingScreen extends StatelessWidget {
       "Terms & Conditon",
       Icons.local_police_rounded,
       () {
-        Get.to(()=> TermsAndConditionScreen());
+        Get.to(() => TermsAndConditionScreen());
       }
     ],
     [
       "Policy",
       Icons.local_police_rounded,
       () {
-        Get.to(()=> PrivacyPolicyScreen());
+        Get.to(() => PrivacyPolicyScreen());
       }
     ],
   ];
+
+  final _userController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
@@ -72,17 +67,35 @@ class SettingScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: Get.height * 0.01),
-              const UserPictureWithButton(),
-              const SizedBox(height: 30),
-              const Center(
-                child: Text(
-                  "234-7382-7398",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black,
-                  ),
-                ),
+              Center(
+                child: Obx(() {
+                  if (_userController.isloading.value) {
+                    return const CircularProgressIndicator();
+                  }
+                  String image =
+                      _userController.userModel.value?.profilePicture ?? "";
+                  return CircleAvatar(
+                    radius: 45,
+                    backgroundColor: AppColors.primaryColor,
+                    backgroundImage: NetworkImage(image),
+                  );
+                }),
               ),
+              const SizedBox(height: 10),
+              Obx(() {
+                if (_userController.isloading.value) {
+                  return const CircularProgressIndicator();
+                }
+                return Center(
+                  child: Text(
+                    _userController.userModel.value?.phoneNumber ?? "",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black,
+                    ),
+                  ),
+                );
+              }),
               const SizedBox(height: 20),
               ListView.builder(
                 shrinkWrap: true,
@@ -143,7 +156,7 @@ class SettingScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               Text(
+              Text(
                 "Do you want to delete\nyour account?",
                 textAlign: TextAlign.center,
                 style: TextStyle(
@@ -241,49 +254,6 @@ class SettingScreen extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-class UserPictureWithButton extends StatelessWidget {
-  const UserPictureWithButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        children: [
-          const CircleAvatar(
-            radius: 50,
-            backgroundImage: AssetImage(
-              "assets/images/avater2.png",
-            ),
-          ),
-          Positioned(
-            bottom: 5,
-            right: 2,
-            child: Container(
-              height: 30,
-              width: 30,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                border: Border.all(
-                  width: 2,
-                  color: Colors.red,
-                ),
-              ),
-              child: const Icon(
-                Icons.edit,
-                color: Colors.black,
-                size: 15,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

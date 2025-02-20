@@ -367,16 +367,29 @@ class UserService {
     required String token,
     required int page,
     required int limit,
+    String? status,
+    String? startDate,
+    String? endDate,
   }) async {
     try {
+      String url = "$baseUrl/user/payment-history?page=$page&limit=$limit";
+      if (status != null && status.isNotEmpty) {
+        url += "&status=$status";
+      }
+      if (startDate != null && startDate.isNotEmpty) {
+        url += "&startDate=$startDate";
+      }
+      if (endDate != null && endDate.isNotEmpty) {
+        url += "&endDate=$endDate";
+      }
+      Uri uri = Uri.parse(url);
       final response = await client.get(
-        Uri.parse('$baseUrl/user/payment-history?page=$page&limit=$limit'),
+        uri,
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
         },
       ).timeout(const Duration(seconds: 15));
-
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
@@ -491,5 +504,27 @@ class UserService {
     return null;
   }
 
-
+  Future<http.Response?> getDriverWithId({
+    required String driverId,
+    required String token,
+  }) async {
+    try {
+      final url = Uri.parse("$baseUrl/user/get-driver-with-id/$driverId");
+      final response = await http.get(
+        url,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      );
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
 }

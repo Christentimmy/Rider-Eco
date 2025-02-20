@@ -102,7 +102,7 @@ class SocketController extends GetxController {
             () => TripStartedScreen(
               fromLocation: fromLocation,
               toLocation: toLocation,
-              rideId: ride.id ?? "",
+              rideId: ride.id!,
             ),
           );
         } else {
@@ -131,11 +131,10 @@ class SocketController extends GetxController {
 
     socket?.on('schedule-status', (data) {
       final message = data["message"];
-      final driver = DriverModel.fromJson(
-        data["driver"],
-      );
-      if (message.contains("assigned")) {
-        String rideId = data["rideId"];
+      _userController.getUserScheduledRides();
+      if (data.containsKey("driver") && data["driver"] != null && message.contains("assigned")) {
+        final driver = DriverModel.fromJson(data["driver"]);
+        String rideId = data["rideId"] ?? "";
         Get.to(() => TripDetailsScreen(driver: driver, rideId: rideId));
       }
     });

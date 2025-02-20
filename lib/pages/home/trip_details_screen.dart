@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rider/controller/call_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/models/driver_model.dart';
 import 'package:rider/models/user_model.dart';
-import 'package:rider/pages/chat/call_screen.dart';
 import 'package:rider/pages/chat/chat_screen.dart';
 import 'package:rider/pages/home/notifcation_screen.dart';
 import 'package:rider/resources/color_resources.dart';
@@ -28,6 +28,7 @@ class TripDetailsScreen extends StatefulWidget {
 
 class _TripDetailsScreenState extends State<TripDetailsScreen> {
   final _userController = Get.find<UserController>();
+  final _callController = Get.find<CallController>();
 
   @override
   void initState() {
@@ -95,7 +96,6 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
 
   Container _buildWidgetBelowMap() {
     return Container(
-      // height: Get.height * 0.5,
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       decoration: const BoxDecoration(
@@ -202,7 +202,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                 child: Container(
                   height: 45,
                   width: 45,
-                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  margin: const EdgeInsets.symmetric(horizontal: 5),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
@@ -215,11 +215,15 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                 ),
               ),
               InkWell(
-                onTap: () => Get.to(() => const CallScreen()),
+                onTap: () async {
+                  await _callController.callDriver(
+                    _driverUserModel.value.phoneNumber ?? "",
+                  );
+                },
                 child: Container(
                   height: 45,
                   width: 45,
-                  margin: const EdgeInsets.symmetric(horizontal: 15),
+                  margin: const EdgeInsets.symmetric(horizontal: 5),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
@@ -314,10 +318,10 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                       ),
                     ),
               ontap: () async {
+                String? rideId = _userController.currentRideModel.value?.id;
                 await _userController.cancelTrip(
-                  rideId: _userController.currentRideModel.value?.id ?? "",
+                  rideId: rideId ?? widget.rideId,
                 );
-                // Get.offAll(() => const HomeScreen());
               },
             ),
           ),

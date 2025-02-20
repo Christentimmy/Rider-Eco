@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -135,6 +136,57 @@ class AuthService {
 
       var response = await request.send().timeout(const Duration(seconds: 15));
       return response;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String token,
+  }) async {
+    try {
+      final response = await client.post(
+        Uri.parse("$baseUrl/auth/change-password"),
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+        body: json.encode({
+          "old_password": oldPassword,
+          "new_password": newPassword,
+        }),
+      );
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> logout({
+    required String token,
+  }) async {
+    try {
+      final url = Uri.parse("$baseUrl/auth/logout");
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
     } catch (e) {
       debugPrint(e.toString());
     }

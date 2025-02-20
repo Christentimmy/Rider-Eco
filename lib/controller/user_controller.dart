@@ -42,6 +42,10 @@ class UserController extends GetxController {
   RxBool isGetUserIdLoading = false.obs;
   final UserService _userService = UserService();
   RxList<DriverModel> availableDriverList = <DriverModel>[].obs;
+  RxInt totalPages = 1.obs;
+  RxInt currentPage = 1.obs;
+  RxBool isFetchingMore = false.obs;
+  ScrollController scrollController = ScrollController();
 
   @override
   onInit() {
@@ -51,6 +55,13 @@ class UserController extends GetxController {
     super.onInit();
   }
 
+  Future<void> loadMorePayments() async {
+    if (isFetchingMore.value || currentPage.value >= totalPages.value) return;
+    isFetchingMore.value = true;
+    await getUserPaymentHistory(page: currentPage.value + 1);
+    isFetchingMore.value = false;
+  }
+
   Future<void> getUserStatus() async {
     try {
       final storageController = Get.find<StorageController>();
@@ -58,13 +69,14 @@ class UserController extends GetxController {
       if (token == null || token.isEmpty) return;
       final response = await _userService.getUserStatus(token: token);
       if (response == null) {
-        Get.to(() => SignUpScreen());
+        Get.offAll(() => SignUpScreen());
         return;
       }
       final decoded = json.decode(response.body);
       String message = decoded["message"] ?? "";
       if (response.statusCode != 200) {
-        CustomSnackbar.showErrorSnackBar(message);
+        Get.offAll(() => SignUpScreen());
+        debugPrint(message);
         return;
       }
       String status = decoded["data"]["status"];
@@ -223,6 +235,11 @@ class UserController extends GetxController {
       if (response == null) return;
       final decoded = json.decode(response.body);
       String message = decoded["message"];
+
+      if (message == "Token has expired.") {
+        Get.offAll(() => SignUpScreen());
+        return;
+      }
 
       if (response.statusCode != 200) {
         debugPrint(message);
@@ -464,8 +481,16 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> getUserPaymentHistory({int page = 1, int limit = 10}) async {
+  Future<void> getUserPaymentHistory({
+    int page = 1,
+    int limit = 10,
+    String? status,
+    String? startDate,
+    String? endDate,
+  }) async {
+    if (isloading.value) return;
     isloading.value = true;
+
     try {
       final storageController = Get.find<StorageController>();
       String? token = await storageController.getToken();
@@ -475,23 +500,36 @@ class UserController extends GetxController {
         token: token,
         page: page,
         limit: limit,
+        status: status,
+        startDate: startDate,
+        endDate: endDate,
       );
 
       if (response == null) return;
+      print(response.body);
       final decoded = json.decode(response.body);
       String message = decoded["message"];
 
       if (response.statusCode != 200) {
-        CustomSnackbar.showErrorSnackBar(message);
+        debugPrint(message);
         return;
       }
 
       final payments = decoded["payments"] as List;
-      userPaymentList.clear();
-      userPaymentList.value =
-          payments.map((payment) => PaymentModel.fromJson(payment)).toList();
+      final totalPages = decoded["totalPages"];
+      final currentPage = decoded["page"];
+
+      if (page == 1) {
+        userPaymentList.clear();
+      }
+
+      userPaymentList.addAll(
+          payments.map((payment) => PaymentModel.fromJson(payment)).toList());
+
+      this.totalPages.value = totalPages;
+      this.currentPage.value = currentPage;
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint("❌ Error fetching payments: $e");
     } finally {
       isloading.value = false;
     }
@@ -512,9 +550,12 @@ class UserController extends GetxController {
       if (response == null) return;
       final decoded = json.decode(response.body);
       String message = decoded["message"];
-
+      if (message == "Token has expired.") {
+        Get.offAll(() => SignUpScreen());
+        return;
+      }
       if (response.statusCode != 200) {
-        CustomSnackbar.showErrorSnackBar(message);
+        debugPrint(message);
         return;
       }
 
@@ -580,7 +621,12 @@ class UserController extends GetxController {
 
       if (response == null) return;
       final decoded = json.decode(response.body);
+      if (decoded["message"].toString() == "Token has expired.") {
+        Get.offAll(() => SignUpScreen());
+        return;
+      }
       if (response.statusCode != 200) {
+        debugPrint(decoded["message"].toString());
         return;
       }
 
@@ -604,15 +650,22 @@ class UserController extends GetxController {
 
       final response = await _userService.getCurrentRide(token: token);
       if (response == null) {
-        Get.to(() => const HomeScreen());
+        Get.offAll(() => const HomeScreen());
         return;
       }
       final decoded = json.decode(response.body);
-      if (response.statusCode != 200) {
-        Get.to(() => const HomeScreen());
-        debugPrint(decoded["message"].toString());
+      String message = decoded["message"];
+      if (message == "Token has expired.") {
+        Get.offAll(() => SignUpScreen());
         return;
       }
+
+      if (response.statusCode != 200) {
+        Get.offAll(() => const HomeScreen());
+        debugPrint(message);
+        return;
+      }
+
       currentRideModel.value = Ride.fromJson(decoded["data"]);
       if (currentRideModel.value?.status == "pending") {
         String fromLoactionName =
@@ -627,7 +680,7 @@ class UserController extends GetxController {
         );
         return;
       } else if (currentRideModel.value?.status == "accepted") {
-        Get.to(
+        Get.offAll(
           () => TripDetailsScreen(
             rideId: currentRideModel.value?.id ?? "",
             driverId: currentRideModel.value?.driverUserId ?? "",
@@ -643,7 +696,7 @@ class UserController extends GetxController {
           currentRideModel.value?.dropoffLocation?.lat ?? 0.0,
           currentRideModel.value?.dropoffLocation?.lng ?? 0.0,
         );
-        Get.to(
+        Get.offAll(
           () => TripStartedScreen(
             fromLocation: fromLocation,
             toLocation: toLocation,
@@ -652,7 +705,7 @@ class UserController extends GetxController {
         );
         return;
       } else if (currentRideModel.value?.status == "completed") {
-        Get.to(
+        Get.offAll(
           () => TripPaymentScreen(
             rideId: currentRideModel.value?.id ?? "",
             driverUserId: currentRideModel.value?.driverUserId ?? "",
@@ -697,4 +750,45 @@ class UserController extends GetxController {
     }
   }
 
+  Future<DriverModel?> getDriverWithId({
+    required String driverId,
+  }) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return null;
+
+      final response = await _userService.getDriverWithId(
+        driverId: driverId,
+        token: token,
+      );
+
+      if (response == null) return null;
+      final data = json.decode(response.body);
+      String message = data["message"];
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return null;
+      }
+
+      return DriverModel.fromJson(data["data"]["driver"]);
+    } catch (error) {
+      debugPrint(error.toString());
+    } finally {
+      isloading.value = false;
+    }
+    return null;
+  }
+
+  void clearUserData() {
+    userModel.value = null;
+    currentRideModel.value = null;
+    userScheduleList.clear();
+    rideHistoryList.clear();
+    userPaymentList.clear();
+    rideFareBreakdownModel.value = null;
+    availableDriverList.clear();
+    driverLocation.value = const LatLng(59.9139, 10.7522);
+  }
 }

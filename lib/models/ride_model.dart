@@ -22,7 +22,6 @@ class Ride {
   String? driverProfilePicture;
   Reviews? reviews;
 
-
   Ride({
     this.id,
     this.userId,
@@ -54,9 +53,7 @@ class Ride {
     return Ride(
       id: json["_id"] ?? "",
       userId: json["user"] ?? "",
-      driverId: isDriverPopulated
-          ? json["driver"]["_id"]
-          : json["driver"], // Handle both cases
+      driverId: isDriverPopulated ? json["driver"]["_id"] : json["driver"],
       status: json["status"] ?? "",
       pickupLocation: json["pickup_location"] != null
           ? PickupLocation.fromJson(json["pickup_location"])
@@ -82,13 +79,13 @@ class Ride {
           isDriverPopulated ? json["driver"]["user"]["last_name"] ?? "" : "",
       driverUserId:
           isDriverPopulated ? json["driver"]["user"]["_id"] ?? "" : "",
-      driverProfilePicture:
-          isDriverPopulated ? json["driver"]["user"]["profile_picture"] ?? "" : "",
+      driverProfilePicture: isDriverPopulated
+          ? json["driver"]["user"]["profile_picture"] ?? ""
+          : "",
       reviews: isDriverPopulated
           ? Reviews.fromJson(json["driver"]["reviews"])
           : Reviews(),
     );
-  
   }
 
   Map<String, dynamic> toJson() {
