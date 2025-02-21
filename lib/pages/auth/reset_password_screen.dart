@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:rider/controller/auth_controller.dart';
 import 'package:rider/resources/color_resources.dart';
+import 'package:rider/widgets/snack_bar.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
   final String email;
@@ -26,7 +27,7 @@ class ResetPasswordScreen extends StatelessWidget {
   Color getBarColor(bool conditionMet) =>
       conditionMet ? AppColors.primaryColor : Colors.grey;
 
-  final _authController = Get.find<AuthController>();
+  final _authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -121,6 +122,20 @@ class ResetPasswordScreen extends StatelessWidget {
                         borderSide: BorderSide(
                           width: 2,
                           color: AppColors.primaryColor,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                          width: 2,
+                          color: Colors.red,
+                        ),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                          width: 2,
+                          color: Colors.red,
                         ),
                       ),
                     ),
@@ -243,14 +258,28 @@ class ResetPasswordScreen extends StatelessWidget {
               SizedBox(height: Get.height / 7.5),
               Obx(
                 () => InkWell(
-                  // onTap: () => Get.to(() => ResetPasswordScreen()),
                   onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      _authController.forgotPassword(
-                        email: email,
-                        password: _passwordController.text,
+                    if (!_formKey.currentState!.validate()) {
+                      return;
+                    }
+                    String password = _passwordController.text;
+                    if (!containsNumber(password)) {
+                      return CustomSnackbar.showErrorSnackBar(
+                          "Password must contain a number");
+                    }
+                    if (!containsSpecialCharacter(password)) {
+                      return CustomSnackbar.showErrorSnackBar(
+                          "Password must contain a special character");
+                    }
+                    if (!isPasswordStrong(password)) {
+                      return CustomSnackbar.showErrorSnackBar(
+                        "Password must strong",
                       );
                     }
+                    _authController.forgotPassword(
+                      email: email,
+                      password: password,
+                    );
                   },
                   child: Container(
                     height: 45,

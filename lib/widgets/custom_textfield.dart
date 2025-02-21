@@ -61,7 +61,7 @@ class CustomTextField extends StatelessWidget {
         validator: validator ??
             (value) {
               if (value?.isEmpty == true) {
-                return " ";
+                return "";
               }
               return null;
             },
