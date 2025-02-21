@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/models/driver_model.dart';
 import 'package:rider/models/ride_model.dart';
+import 'package:rider/widgets/custom_button.dart';
 
 class RideHistoryDetailsScreen extends StatefulWidget {
   final Ride ride;
@@ -360,6 +362,52 @@ class _RideHistoryDetailsScreenState extends State<RideHistoryDetailsScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 10),
+                  widget.ride.transactionId?.isNotEmpty == true &&
+                          widget.ride.transactionId != null
+                      ? Row(
+                          children: [
+                            Text(widget.ride.transactionId.toString()),
+                            InkWell(
+                              onTap: () {
+                                Clipboard.setData(
+                                  ClipboardData(
+                                    text: widget.ride.transactionId ?? "",
+                                  ),
+                                );
+                              },
+                              child: const Icon(Icons.copy),
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                  const SizedBox(height: 10),
+                  widget.ride.scheduleStatus == "pending"
+                      ? Obx(
+                          () => CommonButton(
+                            ontap: () async {
+                              if (_userController.isloading.value) {
+                                return;
+                              }
+                              await _userController.cancelScheduleRide(
+                                rideId: widget.ride.id ?? '',
+                              );
+                            },
+                            child: _userController.isScheduleLoading.value
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : const Text(
+                                    "Cancel Schedule",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),

@@ -607,6 +607,39 @@ class UserController extends GetxController {
     }
   }
 
+  Future<void> cancelScheduleRide({
+    required String rideId,
+  }) async {
+    isScheduleLoading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+
+      final response = await _userService.cancelScheduleRide(
+        token: token,
+        rideId: rideId,
+      );
+
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return;
+      }
+
+      getUserScheduledRides();
+      await fetchRideHistory();
+
+      Get.offAll(() => const HomeScreen());
+    } catch (e, stackrace) {
+      debugPrint("${e.toString()} $stackrace");
+    } finally {
+      isScheduleLoading.value = false;
+    }
+  }
+
   Future<void> fetchRideHistory({
     String? status,
   }) async {

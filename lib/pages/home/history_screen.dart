@@ -342,6 +342,36 @@ class ScheduleCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Text(
+                    convertDateToNormal(ride.scheduledTime.toString()),
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 41, 117, 43),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                  const Spacer(),
+                  Chip(
+                    label: Text(
+                      ride.status?.toUpperCase() ?? "",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                    backgroundColor: _statusColor(ride.status ?? ""),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 2,
+                      horizontal: 8,
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(),
               Row(
                 children: [
                   Icon(
@@ -384,38 +414,6 @@ class ScheduleCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 5),
-              const Divider(),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Text(
-                    convertDateToNormal(ride.scheduledTime.toString()),
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 41, 117, 43),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                  ),
-                  const Spacer(),
-                  Container(
-                    height: 35,
-                    width: 90,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: _statusColor(ride.status ?? ""),
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: Text(
-                      ride.status ?? "",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),

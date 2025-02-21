@@ -226,7 +226,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
                 ),
                 const SizedBox(height: 10),
                 const Divider(),
-                _recentSearched(),
+                // _recentSearched(),
               ],
             ),
           ),

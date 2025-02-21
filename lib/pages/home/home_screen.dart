@@ -163,14 +163,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         String destination = _places[index]["name"];
                         String lat = _places[index]["lat"];
                         String lng = _places[index]["lon"];
-                        print("Selected Place: $lat $lng");
-                        Get.to(
-                          () => SoureDestinationScreen(
-                            destination: destination,
-                            destinationLatLng:
-                                LatLng(double.parse(lat), double.parse(lng)),
-                          ),
+
+                        if (lat.isEmpty || lng.isEmpty) return;
+
+                        LatLng destinationLatLng = LatLng(
+                          double.parse(lat),
+                          double.parse(lng),
                         );
+
+                        Get.to(() => SoureDestinationScreen(
+                              destination: destination,
+                              destinationLatLng: destinationLatLng,
+                            ));
                       },
                     );
                   },

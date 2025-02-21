@@ -298,7 +298,7 @@ class CreateNewScheduleScreen extends StatelessWidget {
                 color: Colors.black.withOpacity(0.5),
               ),
             ),
-            _recentSearched(),
+            // _recentSearched(),
           ],
         ),
       ),
