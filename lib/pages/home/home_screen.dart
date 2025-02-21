@@ -36,11 +36,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _socketController.disconnectSocket();
-    if (_socketController.socket == null ||
-        _socketController.socket?.disconnected == true) {
-      _socketController.initializeSocket();
-    }
-    saveUserOneSignalId();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_socketController.socket == null ||
+          _socketController.socket?.disconnected == true) {
+        _socketController.initializeSocket();
+      }
+      saveUserOneSignalId();
+    });
   }
 
   void saveUserOneSignalId() async {
@@ -236,9 +238,6 @@ class BuildSideBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Obx(() {
-                  if (_userController.isloading.value) {
-                    return const CircularProgressIndicator();
-                  }
                   String image =
                       _userController.userModel.value?.profilePicture ?? "";
                   return CircleAvatar(
@@ -397,10 +396,10 @@ class BuildSideBar extends StatelessWidget {
               final authController = Get.find<AuthController>();
               final socketService = Get.find<SocketController>();
               socketService.disconnectSocket();
-              _userController.clearUserData();
               await authController.logout();
               await storageController.deleteToken();
               Get.offAll(() => SignUpScreen());
+              _userController.clearUserData();
             },
           ),
         ],

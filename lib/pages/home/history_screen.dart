@@ -21,7 +21,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _userController.fetchRideHistory();
+      if (!_userController.isRideHistoryFetched.value) {
+        _userController.fetchRideHistory();
+      }
     });
     super.initState();
   }

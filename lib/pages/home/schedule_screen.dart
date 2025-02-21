@@ -21,9 +21,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   void initState() {
     super.initState();
-    if (!_userController.isScheduleFetched.value) {
-      _userController.getUserScheduledRides();
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_userController.isScheduleFetched.value) {
+        _userController.getUserScheduledRides();
+      }
+    });
   }
 
   @override

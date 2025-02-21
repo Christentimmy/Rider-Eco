@@ -32,6 +32,7 @@ class UserController extends GetxController {
   RxBool isPaymentProcessing = false.obs;
   RxBool isEditLoading = false.obs;
   RxBool isScheduleFetched = false.obs;
+  RxBool isPaymentHistoryFetched = false.obs;
   var driverLocation = const LatLng(59.9139, 10.7522).obs;
   Rxn<UserModel> userModel = Rxn<UserModel>();
   Rxn<Ride> currentRideModel = Rxn<Ride>();
@@ -393,6 +394,7 @@ class UserController extends GetxController {
       );
       await Stripe.instance.presentPaymentSheet();
       CustomSnackbar.showSuccessSnackBar("Payment processing!");
+      getUserPaymentHistory();
       Get.offAll(
         () => ReviewScreen(
           reviews: reviews,
@@ -528,6 +530,7 @@ class UserController extends GetxController {
 
       this.totalPages.value = totalPages;
       this.currentPage.value = currentPage;
+      if (response.statusCode == 200) isPaymentHistoryFetched.value = true;
     } catch (e) {
       debugPrint("❌ Error fetching payments: $e");
     } finally {
@@ -791,5 +794,4 @@ class UserController extends GetxController {
     availableDriverList.clear();
     driverLocation.value = const LatLng(59.9139, 10.7522);
   }
-
 }

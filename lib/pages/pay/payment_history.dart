@@ -23,7 +23,9 @@ class _PaymentHistoryScreenState extends State<PaymentHistoryScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _userController.getUserPaymentHistory();
+      if (!_userController.isPaymentHistoryFetched.value) {
+        _userController.getUserPaymentHistory();
+      }
       _userController.scrollController.addListener(() {
         if (_userController.scrollController.position.pixels >=
             _userController.scrollController.position.maxScrollExtent - 100) {

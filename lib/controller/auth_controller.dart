@@ -130,7 +130,8 @@ class AuthController extends GetxController {
         CustomSnackbar.showErrorSnackBar(message);
         return;
       }
-      Get.offAll(() => HomeScreen());
+      await _userController.getUserDetails();
+      Get.offAll(() => const HomeScreen());
     } catch (e) {
       debugPrint(e.toString());
     } finally {

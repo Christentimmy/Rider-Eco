@@ -16,7 +16,6 @@ class SignUpScreen extends StatelessWidget {
   final RxInt _currentPage = 0.obs;
   final RxBool _isNumberValidated = false.obs;
   final _formSignUpKey = GlobalKey<FormState>();
-  final _formloginKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _loginEmailController = TextEditingController();
   final _loginPhoneNumberController = TextEditingController();
@@ -327,6 +326,15 @@ class SignUpScreen extends StatelessWidget {
               CustomTextField(
                 hintText: "John@email.com",
                 textController: _emailController,
+                validator: (value) {
+                  if (value?.isEmpty == true) {
+                    return "";
+                  }
+                  if (!value!.contains('@')) {
+                    return "";
+                  }
+                  return null;
+                },
               ),
               const SizedBox(height: 10),
               Obx(
