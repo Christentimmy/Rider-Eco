@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:rider/controller/auth_controller.dart';
 import 'package:rider/controller/socket_controller.dart';
 import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
@@ -60,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     zoom: 18,
   );
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: BuildSideBar(),
@@ -393,9 +394,12 @@ class BuildSideBar extends StatelessWidget {
             ),
             onTap: () async {
               final storageController = Get.find<StorageController>();
-              await storageController.deleteToken();
+              final authController = Get.find<AuthController>();
               final socketService = Get.find<SocketController>();
               socketService.disconnectSocket();
+              _userController.clearUserData();
+              await authController.logout();
+              await storageController.deleteToken();
               Get.offAll(() => SignUpScreen());
             },
           ),

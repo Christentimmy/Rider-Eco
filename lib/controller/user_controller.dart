@@ -791,4 +791,5 @@ class UserController extends GetxController {
     availableDriverList.clear();
     driverLocation.value = const LatLng(59.9139, 10.7522);
   }
+
 }

@@ -400,16 +400,13 @@ class ScheduleCard extends StatelessWidget {
                     width: 90,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
+                      color: _statusColor(ride.status ?? ""),
                       borderRadius: BorderRadius.circular(25),
-                      border: Border.all(
-                        width: 1,
-                        color: const Color(0xffEAB213),
-                      ),
                     ),
                     child: Text(
-                      ride.scheduleStatus.toString(),
+                      ride.status ?? "",
                       style: const TextStyle(
-                        color: Color(0xffEAB213),
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       ),

@@ -140,163 +140,163 @@ class SignUpScreen extends StatelessWidget {
       ),
       child: SizedBox(
         height: 400,
-        child: Form(
-          key: _formloginKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              const Text(
-                "Login Into Your Account",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            const Text(
+              "Login Into Your Account",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
               ),
-              const SizedBox(height: 25),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Obx(() {
-                    return InkWell(
-                      onTap: () {
-                        _isLoginWithNumber.value = !_isLoginWithNumber.value;
-                      },
-                      child: Text(
-                        _isLoginWithNumber.value
-                            ? "Use Email Instead"
-                            : "Change to number",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    );
-                  }),
-                ],
-              ),
-              Obx(() {
-                if (_isLoginWithNumber.value) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        width: 1,
-                        color: _isNumberValidated.value
-                            ? Colors.red
-                            : Colors.grey.withOpacity(0.5),
+            ),
+            const SizedBox(height: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Obx(() {
+                  return InkWell(
+                    onTap: () {
+                      _isLoginWithNumber.value = !_isLoginWithNumber.value;
+                    },
+                    child: Text(
+                      _isLoginWithNumber.value
+                          ? "Use Email Instead"
+                          : "Change to number",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    child: Row(
-                      children: [
-                        CountryCodePicker(
-                          onChanged: (value) {},
-                          initialSelection: '+234',
-                          showCountryOnly: false,
-                          showOnlyCountryWhenClosed: false,
-                          alignLeft: false,
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _loginPhoneNumberController,
-                            keyboardType: TextInputType.number,
-                            validator: (value) {
-                              if (value?.isEmpty == true) {
-                                _isNumberValidated.value = true;
-                                return null;
-                              }
-                              _isNumberValidated.value = false;
+                  );
+                }),
+              ],
+            ),
+            Obx(() {
+              if (_isLoginWithNumber.value) {
+                return Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      width: 1,
+                      color: _isNumberValidated.value
+                          ? Colors.red
+                          : Colors.grey.withOpacity(0.5),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      CountryCodePicker(
+                        onChanged: (value) {},
+                        initialSelection: '+234',
+                        showCountryOnly: false,
+                        showOnlyCountryWhenClosed: false,
+                        alignLeft: false,
+                      ),
+                      Expanded(
+                        child: TextFormField(
+                          controller: _loginPhoneNumberController,
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value?.isEmpty == true) {
+                              _isNumberValidated.value = true;
                               return null;
-                            },
-                            decoration: const InputDecoration(
-                              hintText: "mobile number",
-                              hintStyle: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                              ),
+                            }
+                            _isNumberValidated.value = false;
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: "mobile number",
+                            hintStyle: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return CustomTextField(
+                  hintText: "john@email.com",
+                  textController: _loginEmailController,
+                );
+              }
+            }),
+            const SizedBox(height: 10),
+            CustomTextField(
+              hintText: "password",
+              textController: _loginPasswordController,
+              obscureText: true,
+            ),
+            const SizedBox(height: 25),
+            Obx(
+              () => CommonButton(
+                ontap: () async {
+                  if (_authController.isLoading.value) {
+                    return;
+                  }
+                  String identifier = _isLoginWithNumber.value
+                      ? _loginPhoneNumberController.text
+                      : _loginEmailController.text;
+                  if (identifier.isEmpty) {
+                    return;
+                  }
+                  await _authController.loginUser(
+                    identifier: _isLoginWithNumber.value
+                        ? _loginPhoneNumberController.text
+                        : _loginEmailController.text,
+                    password: _loginPasswordController.text,
                   );
-                } else {
-                  return CustomTextField(
-                    hintText: "john@email.com",
-                    textController: _loginEmailController,
-                  );
-                }
-              }),
-              const SizedBox(height: 10),
-              CustomTextField(
-                hintText: "password",
-                textController: _loginPasswordController,
-                obscureText: true,
-              ),
-              const SizedBox(height: 25),
-              Obx(
-                () => CommonButton(
-                  ontap: () async {
-                    if (_authController.isLoading.value) {
-                      return;
-                    }
-                    if (!_formloginKey.currentState!.validate()) {
-                      return;
-                    }
-                    await _authController.loginUser(
-                      identifier: _isLoginWithNumber.value
-                          ? _loginPhoneNumberController.text
-                          : _loginEmailController.text,
-                      password: _loginPasswordController.text,
-                    );
-                  },
-                  child: _authController.isLoading.value
-                      ? const CarLoader()
-                      : const Text(
-                          "Login",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  InkWell(
-                    onTap: () => Get.to(() => const PasswordRecoveryScreen()),
-                    child: const Padding(
-                      padding: EdgeInsets.only(top: 5),
-                      child: Text(
-                        "Forgot Password?",
+                },
+                child: _authController.isLoading.value
+                    ? const CarLoader()
+                    : const Text(
+                        "Login",
                         style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                InkWell(
+                  onTap: () => Get.to(() => PasswordRecoveryScreen()),
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
-                ],
-              ),
-              const Spacer(),
-              const Text(
-                "By clicking start, you agree to our Terms and Conditions",
-                style: TextStyle(
-                  fontSize: 9,
                 ),
+              ],
+            ),
+            const Spacer(),
+            const Text(
+              "By clicking start, you agree to our Terms and Conditions",
+              style: TextStyle(
+                fontSize: 9,
               ),
-              Container(),
-            ],
-          ),
+            ),
+            Container(),
+          ],
         ),
       ),
     );

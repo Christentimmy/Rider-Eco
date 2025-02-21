@@ -190,7 +190,7 @@ class _RideHistoryDetailsScreenState extends State<RideHistoryDetailsScreen> {
                 children: [
                   Obx(() {
                     if (_driverModel.value == null) {
-                      return SizedBox.shrink();
+                      return const SizedBox.shrink();
                     } else {
                       return Container(
                         padding: const EdgeInsets.all(15),
@@ -278,6 +278,7 @@ class _RideHistoryDetailsScreenState extends State<RideHistoryDetailsScreen> {
                             "Total fare",
                             style: TextStyle(
                               fontSize: 14,
+                              fontWeight: FontWeight.w600,
                               color: Colors.black,
                             ),
                           ),
@@ -298,20 +299,67 @@ class _RideHistoryDetailsScreenState extends State<RideHistoryDetailsScreen> {
                             "Payment Method",
                             style: TextStyle(
                               fontSize: 14,
+                              fontWeight: FontWeight.w600,
                               color: Colors.black,
                             ),
                           ),
                           Text(
                             widget.ride.paymentMethod.toString(),
                             style: const TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               color: Colors.black54,
                             ),
                           ),
                         ],
                       ),
                     ],
-                  )
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Status",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            widget.ride.status ?? "",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Text(
+                            "Payment Status",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            widget.ride.paymentStatus ?? "",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

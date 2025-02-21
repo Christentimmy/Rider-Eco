@@ -6,6 +6,7 @@ import 'package:rider/controller/storage_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/models/user_model.dart';
 import 'package:rider/pages/auth/create_profile_screen.dart';
+import 'package:rider/pages/auth/reset_password_screen.dart';
 import 'package:rider/pages/auth/signup_screen.dart';
 import 'package:rider/pages/auth/verify_phone_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
@@ -56,6 +57,7 @@ class AuthController extends GetxController {
   }
 
   Future<void> sendOtp() async {
+    isLoading.value = true;
     try {
       final storageController = Get.find<StorageController>();
       String? token = await storageController.getToken();
@@ -65,11 +67,14 @@ class AuthController extends GetxController {
       final decoded = json.decode(response.body);
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorSnackBar(
-            "Failed to get OTP, ${decoded["message"]}");
+          "Failed to get OTP, ${decoded["message"]}",
+        );
         return;
       }
     } catch (e) {
       debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -80,14 +85,8 @@ class AuthController extends GetxController {
   }) async {
     isLoading.value = true;
     try {
-      Stopwatch stopwatch = Stopwatch()..start();
-      String? token = await _storageController.getToken();
-      if (token == null) return;
-      final response = await _authService.verifyOtp(
-        otpCode: otpCode,
-        token: token,
-        email: email,
-      );
+      final response =
+          await _authService.verifyOtp(otpCode: otpCode, email: email);
       print(response?.body);
       if (response == null) return;
       final decoded = json.decode(response.body);
@@ -96,8 +95,6 @@ class AuthController extends GetxController {
         CustomSnackbar.showErrorSnackBar(message);
         return;
       }
-      stopwatch.stop();
-      debugPrint("Time execution: ${stopwatch.elapsed}");
       if (whatNext != null) {
         whatNext();
         return;
@@ -154,7 +151,9 @@ class AuthController extends GetxController {
       if (response == null) return;
       final decoded = json.decode(response.body);
       String message = decoded["message"] ?? "";
-      Get.find<StorageController>().storeToken(decoded["token"]);
+      String token = decoded["token"] ?? "";
+      final storageController = Get.find<StorageController>();
+
       if (response.statusCode == 404) {
         CustomSnackbar.showErrorSnackBar(message);
         return;
@@ -179,6 +178,7 @@ class AuthController extends GetxController {
         Get.offAll(() => CreateProfileScreen());
         return;
       }
+      await storageController.storeToken(token);
       await _userController.getUserDetails();
       Get.offAll(() => const HomeScreen());
     } catch (e) {
@@ -237,6 +237,92 @@ class AuthController extends GetxController {
       Get.offAll(() => SignUpScreen());
     } catch (error) {
       debugPrint(error.toString());
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    isLoading.value = true;
+    try {
+      String? token = await StorageController().getToken();
+      if (token == null) {
+        CustomSnackbar.showErrorSnackBar("No user session found.");
+        return;
+      }
+
+      final response = await _authService.deleteAccount(token: token);
+      if (response == null) return;
+      final data = jsonDecode(response.body);
+      print(data);
+      if (response.statusCode != 200) {
+        debugPrint(data["message"].toString());
+        return;
+      }
+      final userController = Get.find<UserController>();
+      final storage = Get.find<StorageController>();
+      await storage.deleteToken();
+      userController.clearUserData();
+      Get.offAll(() => SignUpScreen());
+    } catch (error) {
+      debugPrint(error.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> sendOtpForgotPassword({
+    required String email,
+  }) async {
+    isLoading.value = true;
+    try {
+      final response = await _authService.sendOtpForgotPassword(
+        email: email,
+      );
+      if (response == null) return;
+      final data = jsonDecode(response.body);
+      print(data);
+      if (response.statusCode != 200) {
+        debugPrint(data["message"].toString());
+        return;
+      }
+      CustomSnackbar.showSuccessSnackBar("OTP sent to your email.");
+      Get.offAll(
+        () => VerifyPhoneNumberScreen(
+          nextScreenMethod: () {
+            Get.to(() => ResetPasswordScreen(email: email));
+          },
+          email: email,
+        ),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> forgotPassword({
+    required String email,
+    required String password,
+  }) async {
+    isLoading.value = true;
+    try {
+      final response = await _authService.forgotPassword(
+        email: email,
+        password: password,
+      );
+      if (response == null) return;
+      final data = jsonDecode(response.body);
+      print(data);
+      if (response.statusCode != 200) {
+        debugPrint(data["message"].toString());
+        return;
+      }
+      CustomSnackbar.showSuccessSnackBar("Password changed successfully.");
+      Get.offAll(() => SignUpScreen());
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading.value = false;
     }
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rider/controller/auth_controller.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/pages/home/change_password_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/privacy_policy_screen.dart';
-import 'package:rider/pages/home/save_places_screen.dart';
 import 'package:rider/pages/home/terms_and_condition_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 
@@ -19,13 +19,13 @@ class SettingScreen extends StatelessWidget {
         Get.to(() => ChangePasswordScreen());
       }
     ],
-    [
-      "Save Address",
-      Icons.location_pin,
-      () {
-        Get.to(() => SavePlacesScreen());
-      }
-    ],
+    // [
+    //   "Save Address",
+    //   Icons.location_pin,
+    //   () {
+    //     Get.to(() => SavePlacesScreen());
+    //   }
+    // ],
     // [
     //   "Password Reset",
     //   Icons.lock,
@@ -37,18 +37,19 @@ class SettingScreen extends StatelessWidget {
       "Terms & Conditon",
       Icons.local_police_rounded,
       () {
-        Get.to(() => TermsAndConditionScreen());
+        Get.to(() => const TermsAndConditionScreen());
       }
     ],
     [
       "Policy",
       Icons.local_police_rounded,
       () {
-        Get.to(() => PrivacyPolicyScreen());
+        Get.to(() => const PrivacyPolicyScreen());
       }
     ],
   ];
 
+  final _authController = Get.find<AuthController>();
   final _userController = Get.find<UserController>();
 
   @override
@@ -181,48 +182,64 @@ class SettingScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 15),
-              Container(
-                height: 45,
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                ),
-                width: Get.width,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: const Text(
-                  "Delete",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
+              Obx(
+                () => InkWell(
+                  onTap: () async {
+                    await _authController.deleteAccount();
+                  },
+                  child: Container(
+                    height: 45,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                    ),
+                    width: Get.width,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: _authController.isLoading.value
+                        ? const CircularProgressIndicator(
+                            color: Colors.red,
+                          )
+                        : const Text(
+                            "Delete",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
               ),
               const SizedBox(height: 15),
-              Container(
-                height: 45,
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                ),
-                width: Get.width,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  border: Border.all(
-                    width: 2,
-                    color: Colors.white,
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  height: 45,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 20,
                   ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: const Text(
-                  "Cancel",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                  width: Get.width,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    border: Border.all(
+                      width: 2,
+                      color: Colors.white,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

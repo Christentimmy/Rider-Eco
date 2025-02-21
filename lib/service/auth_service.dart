@@ -65,7 +65,6 @@ class AuthService {
 
   Future<http.Response?> verifyOtp({
     required String otpCode,
-    required String token,
     String? email,
     String? phoneNumber,
   }) async {
@@ -85,7 +84,6 @@ class AuthService {
       final response = await client
           .post(
             Uri.parse("$baseUrl/auth/verify-otp"),
-            headers: {"Authorization": "Bearer $token"},
             body: body,
           )
           .timeout(const Duration(seconds: 15));
@@ -182,6 +180,77 @@ class AuthService {
           "Authorization": "Bearer $token",
         },
       );
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> deleteAccount({
+    required String token,
+  }) async {
+    try {
+      final url = Uri.parse("$baseUrl/auth/delete-account");
+      final response = await http.delete(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> sendOtpForgotPassword({
+    required String email,
+  }) async {
+    try {
+      final response = await client
+          .post(
+            Uri.parse("$baseUrl/auth/send-otp-forgot-password"),
+            headers: {"Content-Type": "application/json"},
+            body: json.encode({"email": email}),
+          )
+          .timeout(const Duration(seconds: 15));
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> forgotPassword({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await client
+          .post(
+            Uri.parse("$baseUrl/auth/forgot-password"),
+            headers: {"Content-Type": "application/json"},
+            body: json.encode({
+              "email": email,
+              "password": password,
+            }),
+          )
+          .timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rider/controller/user_controller.dart';
 import 'package:rider/models/ride_model.dart';
+import 'package:rider/pages/booking/ride_history_details_screen.dart';
 import 'package:rider/pages/home/create_new_schedule_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/resources/color_resources.dart';
@@ -52,8 +53,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         (e.status == "failed" || e.status == "schedule")))
                     .toList();
                 if (_userController.isloading.value) {
-                  return CircularProgressIndicator(
-                    color: AppColors.primaryColor,
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryColor,
+                    ),
                   );
                 } else if (sorted.isEmpty) {
                   return const Center(
@@ -113,7 +116,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }) {
     return InkWell(
       onTap: () {
-        // Get.to(() => const ScheduleDetailsScreen());
+        Get.to(() => RideHistoryDetailsScreen(ride: ride));
       },
       child: Container(
         width: double.infinity,
@@ -214,5 +217,4 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       ),
     );
   }
-
 }

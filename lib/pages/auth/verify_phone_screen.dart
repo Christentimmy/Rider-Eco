@@ -46,7 +46,7 @@ class VerifyPhoneNumberScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Center(
                       child: Text(
@@ -60,6 +60,7 @@ class VerifyPhoneNumberScreen extends StatelessWidget {
                     ),
                     Text(
                       "Kindly enter the OTP sent to $email",
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 12,
