@@ -63,22 +63,22 @@ class UserController extends GetxController {
     isFetchingMore.value = false;
   }
 
-  Future<void> getUserStatus() async {
+  Future<bool> getUserStatus() async {
     try {
       final storageController = Get.find<StorageController>();
       String? token = await storageController.getToken();
-      if (token == null || token.isEmpty) return;
+      if (token == null || token.isEmpty) return false;
       final response = await _userService.getUserStatus(token: token);
       if (response == null) {
         Get.offAll(() => SignUpScreen());
-        return;
+        return true;
       }
       final decoded = json.decode(response.body);
       String message = decoded["message"] ?? "";
       if (response.statusCode != 200) {
         Get.offAll(() => SignUpScreen());
         debugPrint(message);
-        return;
+        return true;
       }
       String status = decoded["data"]["status"];
       String email = decoded["data"]["email"];
@@ -89,7 +89,7 @@ class UserController extends GetxController {
       if (status == "banned" || status == "blocked") {
         CustomSnackbar.showErrorSnackBar("Your account has been banned.");
         Get.offAll(() => SignUpScreen());
-        return;
+        return true;
       }
       if (!isEmailVerified && !isPhoneNumberVerified) {
         CustomSnackbar.showErrorSnackBar("Your account email is not verified.");
@@ -98,17 +98,19 @@ class UserController extends GetxController {
             nextScreenMethod: () {
               Get.offAll(() => const HomeScreen());
             }));
-        return;
+        return true;
       }
       if (!isProfileCompleted) {
         CustomSnackbar.showErrorSnackBar("Your profile is not completed.");
         Get.offAll(() => CreateProfileScreen());
-        return;
+        return true;
       }
+      return false;
       // Get.to(() => const HomeScreen());
     } catch (e) {
       debugPrint(e.toString());
     }
+    return false;
   }
 
   Future<void> getNearByDrivers({
@@ -703,7 +705,17 @@ class UserController extends GetxController {
       }
 
       currentRideModel.value = Ride.fromJson(decoded["data"]);
-      if (currentRideModel.value?.status == "pending") {
+      String scheduleStatus = currentRideModel.value?.scheduleStatus ?? "";
+      bool isSchedule = currentRideModel.value?.isScheduled ?? false;
+      if (scheduleStatus == "assigned" && isSchedule) {
+        Get.offAll(
+          () => TripDetailsScreen(
+            rideId: currentRideModel.value?.id ?? "",
+            driverId: currentRideModel.value?.driverUserId ?? "",
+          ),
+        );
+        return;
+      } else if (currentRideModel.value?.status == "pending") {
         String fromLoactionName =
             currentRideModel.value!.pickupLocation?.address ?? "";
         String toLoactionName =

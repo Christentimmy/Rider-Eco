@@ -153,6 +153,10 @@ class SocketController extends GetxController {
           chats.map((e) => ChatModel.fromJson(e)).toList();
       chatModelList.value = needMap;
     });
+
+    socket?.on("rideCancelled", (data) {
+      _userController.fetchRideHistory();
+    });
   }
 
   void disConnectListeners() async {

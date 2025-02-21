@@ -33,7 +33,9 @@ class _SplashScreenState extends State<SplashScreen> {
         Get.off(() => SignUpScreen());
         return;
       }
-      await _userController.getUserStatus();
+      bool hasNavigated = await _userController.getUserStatus();
+      if (hasNavigated) return;
+
       await _userController.getCurrentRide();
       _socketController.initializeSocket();
     });
