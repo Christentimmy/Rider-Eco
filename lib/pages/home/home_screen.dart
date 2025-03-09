@@ -244,10 +244,16 @@ class BuildSideBar extends StatelessWidget {
                 Obx(() {
                   String image =
                       _userController.userModel.value?.profilePicture ?? "";
-                  return CircleAvatar(
-                    radius: 25,
-                    backgroundImage: NetworkImage(image),
-                  );
+                  if (image.isEmpty) {
+                    return const CircleAvatar(
+                      radius: 25,
+                    );
+                  } else {
+                    return CircleAvatar(
+                      radius: 25,
+                      backgroundImage: NetworkImage(image),
+                    );
+                  }
                 }),
                 const SizedBox(width: 10),
                 Obx(() {

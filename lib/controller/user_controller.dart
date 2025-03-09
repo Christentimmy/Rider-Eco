@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -106,7 +107,6 @@ class UserController extends GetxController {
         return true;
       }
       return false;
-      // Get.to(() => const HomeScreen());
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -163,9 +163,9 @@ class UserController extends GetxController {
       if (response == null) return null;
       print(response.body);
       final decoded = json.decode(response.body);
-      String message = decoded["message"];
+      // String message = decoded["message"];
       if (response.statusCode != 200) {
-        CustomSnackbar.showErrorSnackBar(message);
+        // CustomSnackbar.showErrorSnackBar(message);
         return null;
       }
       var userData = decoded["data"];
@@ -266,6 +266,12 @@ class UserController extends GetxController {
       final storageController = Get.find<StorageController>();
       String? token = await storageController.getToken();
       if (token == null || token.isEmpty) return;
+      const prefs = FlutterSecureStorage();
+      String? savedId = await prefs.read(key: "one_signal_id");
+      if (savedId != null || savedId == oneSignalId) {
+        return;
+      }
+      await prefs.write(key: "one_signal_id", value: oneSignalId);
       final response = await _userService.saveUserOneSignalId(
         token: token,
         id: oneSignalId,
@@ -399,7 +405,7 @@ class UserController extends GetxController {
       getUserPaymentHistory();
       Get.offAll(
         () => ReviewScreen(
-          reviews: reviews,
+          // reviews: reviews,
           driverUserId: driverUserId,
         ),
       );
@@ -752,15 +758,24 @@ class UserController extends GetxController {
           ),
         );
         return;
-      } else if (currentRideModel.value?.status == "completed") {
+      } else if (currentRideModel.value?.status == "completed" &&
+          currentRideModel.value?.paymentStatus == "paid" &&
+          currentRideModel.value?.rated == false) {
+        Get.offAll(
+          () => ReviewScreen(driverUserId: currentRideModel.value!.driverId!),
+        );
+      } else if (currentRideModel.value?.status == "completed" &&
+          currentRideModel.value?.paymentStatus == "pending") {
         Get.offAll(
           () => TripPaymentScreen(
             rideId: currentRideModel.value?.id ?? "",
             driverUserId: currentRideModel.value?.driverUserId ?? "",
-            reviews: Reviews.fromJson(currentRideModel.value?.reviews),
+            reviews: currentRideModel.value?.reviews ?? Reviews(),
           ),
         );
         return;
+      } else {
+        Get.offAll(() => const HomeScreen());
       }
     } catch (e) {
       debugPrint(e.toString());

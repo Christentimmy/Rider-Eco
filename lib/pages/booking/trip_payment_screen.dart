@@ -32,11 +32,12 @@ class _TripPaymentScreenState extends State<TripPaymentScreen> {
   @override
   void initState() {
     super.initState();
-    getPriceBrakeDown();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      getPriceBrakeDown();
+    });
   }
 
   void getPriceBrakeDown() async {
-    print(widget.rideId);
     String rideId = widget.rideId;
     await _userController.getRideFareBreakDown(
       rideId: rideId,

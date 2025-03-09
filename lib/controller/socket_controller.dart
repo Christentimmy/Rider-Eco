@@ -15,13 +15,19 @@ import 'package:rider/utils/base_url.dart';
 import 'package:rider/widgets/snack_bar.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-class SocketController extends GetxController {
+class SocketController extends GetxController with WidgetsBindingObserver {
   IO.Socket? socket;
   RxList<ChatModel> chatModelList = <ChatModel>[].obs;
   RxBool isloading = false.obs;
   final _userController = Get.find<UserController>();
   int _reconnectAttempts = 0;
   final int _maxReconnectAttempts = 5;
+
+  @override
+  void onInit() {
+    super.onInit();
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   void initializeSocket() async {
     String? token = await StorageController().getToken();
@@ -132,7 +138,9 @@ class SocketController extends GetxController {
     socket?.on('schedule-status', (data) {
       final message = data["message"];
       _userController.getUserScheduledRides();
-      if (data.containsKey("driver") && data["driver"] != null && message.contains("assigned")) {
+      if (data.containsKey("driver") &&
+          data["driver"] != null &&
+          message.contains("assigned")) {
         final driver = DriverModel.fromJson(data["driver"]);
         String rideId = data["rideId"] ?? "";
         Get.to(() => TripDetailsScreen(driver: driver, rideId: rideId));
@@ -222,7 +230,20 @@ class SocketController extends GetxController {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      await _userController.getCurrentRide();
+      print("📲 App resumed, checking socket connection...");
+      if (socket == null || socket?.disconnected == true) {
+        print("🔄 Reconnecting socket...");
+        initializeSocket();
+      }
+    }
+  }
+
+  @override
   void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
     socket?.dispose();
     super.onClose();
     socket = null;

@@ -1,7 +1,6 @@
 import 'dart:ui';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/controller/user_controller.dart';
-import 'package:rider/models/review_model.dart';
 import 'package:rider/models/user_model.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
@@ -11,11 +10,11 @@ import 'package:get/get.dart';
 import 'package:rider/widgets/loader.dart';
 
 class ReviewScreen extends StatefulWidget {
-  final Reviews reviews;
+  // final Reviews reviews;
   final String driverUserId;
   const ReviewScreen({
     super.key,
-    required this.reviews,
+    // required this.reviews,
     required this.driverUserId,
   });
 

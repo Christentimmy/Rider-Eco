@@ -21,6 +21,7 @@ class Ride {
   String? driverUserId;
   String? driverProfilePicture;
   Reviews? reviews;
+  bool? rated;
 
   Ride({
     this.id,
@@ -42,6 +43,7 @@ class Ride {
     this.driverUserId,
     this.driverProfilePicture,
     this.reviews,
+    this.rated,
   });
 
   factory Ride.fromJson(json) {
@@ -85,6 +87,7 @@ class Ride {
       reviews: isDriverPopulated
           ? Reviews.fromJson(json["driver"]["reviews"])
           : Reviews(),
+          rated: json["rated"] ?? false,
     );
   }
 

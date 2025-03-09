@@ -26,6 +26,8 @@ class AuthController extends GetxController {
     try {
       final response = await _authService.signUpUser(userModel: userModel);
       if (response == null) return;
+      print(response.body);
+      print(response.statusCode);
       final decoded = json.decode(response.body);
       var message = decoded["message"] ?? "";
       if (response.statusCode != 201) {
@@ -39,6 +41,8 @@ class AuthController extends GetxController {
         await launchStripeOnboarding(url);
       }
 
+      _userController.getUserDetails();
+
       Get.to(
         () => VerifyPhoneNumberScreen(
           email: userModel.email,
@@ -47,8 +51,6 @@ class AuthController extends GetxController {
           ),
         ),
       );
-
-      await _userController.getUserDetails();
     } catch (e) {
       debugPrint("Error From Auth Controller: ${e.toString()}");
     } finally {
@@ -124,7 +126,8 @@ class AuthController extends GetxController {
       if (response == null) return;
       final responseBody = await response.stream.bytesToString();
       final decoded = json.decode(responseBody);
-
+      print(decoded);
+      print(response.statusCode);
       String message = decoded["message"] ?? "";
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorSnackBar(message);

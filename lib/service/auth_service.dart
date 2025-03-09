@@ -17,8 +17,7 @@ class AuthService {
             Uri.parse("$baseUrl/auth/register"),
             body: userModel.toJson(),
           )
-          .timeout(const Duration(seconds: 15));
-
+          .timeout(const Duration(seconds: 60));
       return response;
     } on SocketException catch (e) {
       CustomSnackbar.showErrorSnackBar("Check internet connection");
@@ -134,6 +133,16 @@ class AuthService {
 
       var response = await request.send().timeout(const Duration(seconds: 15));
       return response;
+    } on SocketException catch (e) {
+      CustomSnackbar.showErrorSnackBar("Check internet connection, $e");
+      debugPrint("No internet connection");
+      return null;
+    } on TimeoutException {
+      CustomSnackbar.showErrorSnackBar(
+        "Request timeout, probably bad network, try again",
+      );
+      debugPrint("Request timeout");
+      return null;
     } catch (e) {
       debugPrint(e.toString());
     }

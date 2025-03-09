@@ -117,7 +117,7 @@ class CreateProfileScreen extends StatelessWidget {
                 const SizedBox(height: 15),
                 Obx(
                   () => CustomTextField(
-                    validator: (value){
+                    validator: (value) {
                       return null;
                     },
                     hintStyle: const TextStyle(
@@ -235,6 +235,11 @@ class CreateProfileScreen extends StatelessWidget {
     }
     if (_selectedDate.value == null) {
       CustomSnackbar.showErrorSnackBar("Date of Birth Required");
+      return;
+    }
+    const maxFileSize = 5 * 1024 * 1024; // 5 MB
+    if (_image.value!.lengthSync() > maxFileSize) {
+      CustomSnackbar.showErrorSnackBar("Image size must be less than 5 MB");
       return;
     }
     final userModel = UserModel(
