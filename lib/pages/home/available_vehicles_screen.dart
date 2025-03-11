@@ -424,9 +424,12 @@ class _EachCarDetailsState extends State<EachCarDetails> {
                           ),
                           Row(
                             children: [
-                              const Icon(Icons.star,
-                                  color: Colors.yellow, size: 15),
-                              Text(widget.driverModel.reviews?.averageRating
+                              const Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                                size: 15,
+                              ),
+                              Text(widget.driverModel.reviews?.totalRatings
                                       .toString() ??
                                   ""),
                               // Icon(Icons.star, color: Colors.yellow, size: 15),

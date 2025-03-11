@@ -367,6 +367,7 @@ class UserController extends GetxController {
 
       if (response == null) return;
       final decoded = json.decode(response.body);
+      print(decoded);
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorSnackBar(decoded["message"]);
         return;
@@ -377,6 +378,7 @@ class UserController extends GetxController {
         clientSecret: clientSecret,
         reviews: reviews,
         driverUserId: driverUserId,
+        transactionId: decoded["transactionId"],
       );
       await fetchRideHistory();
       await getUserScheduledRides();
@@ -391,6 +393,7 @@ class UserController extends GetxController {
     required String clientSecret,
     required Reviews reviews,
     required String driverUserId,
+    required String transactionId,
   }) async {
     try {
       await Stripe.instance.initPaymentSheet(
@@ -404,15 +407,43 @@ class UserController extends GetxController {
       CustomSnackbar.showSuccessSnackBar("Payment processing!");
       getUserPaymentHistory();
       Get.offAll(
-        () => ReviewScreen(
-          // reviews: reviews,
-          driverUserId: driverUserId,
-        ),
+        () => ReviewScreen(driverUserId: driverUserId),
       );
+    } on StripeException catch (e) {
+      if (e.error.localizedMessage?.toLowerCase().contains("canceled") ??
+          false) {
+        await cancelledPayment(transactionId: transactionId);
+
+        CustomSnackbar.showErrorSnackBar("Payment was canceled by user");
+      }
     } catch (e) {
-      print(e);
       debugPrint("Stripe Payment Error: $e");
-      CustomSnackbar.showErrorSnackBar("Payment failed");
+    }
+  }
+
+  Future<void> cancelledPayment({
+    required String transactionId,
+  }) async {
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) {
+        CustomSnackbar.showErrorSnackBar("Authentication required");
+        return;
+      }
+      final response = await _userService.cancelledPayment(
+        transactionId: transactionId,
+        token: token,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"] ?? "";
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
@@ -693,6 +724,7 @@ class UserController extends GetxController {
       if (token == null || token.isEmpty) return;
 
       final response = await _userService.getCurrentRide(token: token);
+      print(response?.body);
       if (response == null) {
         Get.offAll(() => const HomeScreen());
         return;

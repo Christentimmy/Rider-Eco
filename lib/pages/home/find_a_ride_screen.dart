@@ -78,7 +78,7 @@ class _FindARideScreenState extends State<FindARideScreen> {
       double durationInMinutes = durationInSeconds / 60;
 
       estimatedTime.value =
-          "${durationInMinutes.toStringAsFixed(2)} min / ${distanceInKm}Km";
+          "${durationInMinutes.toStringAsFixed(2)} min / ${distanceInKm.toStringAsFixed(2)}Km";
 
       setState(() {
         _polylines.add(Polyline(

@@ -553,4 +553,29 @@ class UserService {
     }
     return null;
   }
+
+  Future<http.Response?> cancelledPayment({
+    required String transactionId,
+    required String token,
+  }) async {
+    try {
+      final url = Uri.parse("$baseUrl/user/ride/cancelled-payment/$transactionId");
+      final response = await http.post(
+        url,
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
+        },
+      );
+      return response;
+    } on SocketException catch (e) {
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
 }

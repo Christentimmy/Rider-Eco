@@ -69,9 +69,8 @@ class SocketController extends GetxController with WidgetsBindingObserver {
     });
 
     socket?.on('driverLocationUpdated', (data) {
-      double lat = double.tryParse(data['lat']) ?? 0.0;
-      double lng = double.tryParse(data['lng']) ?? 0.0;
-      print(data['lat'].runtimeType);
+      double lat = (data['lat'] as num).toDouble();
+      double lng = (data['lng'] as num).toDouble();
       LatLng driverLocation = LatLng(lat, lng);
       print('Driver location updated: $lat, $lng');
       _userController.driverLocation.value = driverLocation;
@@ -232,10 +231,7 @@ class SocketController extends GetxController with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
-      await _userController.getCurrentRide();
-      print("📲 App resumed, checking socket connection...");
       if (socket == null || socket?.disconnected == true) {
-        print("🔄 Reconnecting socket...");
         initializeSocket();
       }
     }
