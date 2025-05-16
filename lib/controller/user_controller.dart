@@ -674,6 +674,29 @@ class UserController extends GetxController {
     }
   }
 
+  Future<void> refreshCurrentRide() async {
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+
+      final response = await _userService.getCurrentRide(token: token);
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+      if (response.statusCode != 200) {
+        debugPrint(message);
+        return;
+      }
+      var rideData = decoded["data"] ?? "";
+      if (rideData == null) return;
+      currentRideModel.value = Ride.fromJson(decoded["data"]);
+      currentRideModel.refresh();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
   Future<void> getCurrentRide() async {
     try {
       final storageController = Get.find<StorageController>();
@@ -702,55 +725,75 @@ class UserController extends GetxController {
       String scheduleStatus = currentRideModel.value?.scheduleStatus ?? "";
       bool isSchedule = currentRideModel.value?.isScheduled ?? false;
       String status = currentRideModel.value?.status ?? "";
-      if (scheduleStatus == "assigned" && isSchedule) {
-        Get.offAll(
-          () => TripDetailsScreen(
-            rideId: currentRideModel.value?.id ?? "",
-            driverId: currentRideModel.value?.driverUserId ?? "",
-          ),
-        );
-        return;
-      } else if (status == "pending") {
-        String fromLoactionName =
-            currentRideModel.value!.pickupLocation?.address ?? "";
-        String toLoactionName =
-            currentRideModel.value!.dropoffLocation?.address ?? "";
-        Get.to(
-          () => WaitingRideScreen(
-            fromLoactionName: fromLoactionName,
-            toLoactionName: toLoactionName,
-          ),
-        );
-        return;
-      } else if (status == "accepted" || status == "progress") {
-        Get.offAll(
-          () => TripDetailsScreen(
-            rideId: currentRideModel.value?.id ?? "",
-            driverId: currentRideModel.value?.driverUserId ?? "",
-          ),
-        );
-        return;
-      } else if (status == "completed" &&
-          currentRideModel.value?.paymentStatus == "paid" &&
-          currentRideModel.value?.rated == false) {
-        Get.offAll(
-          () => ReviewScreen(driverUserId: currentRideModel.value!.driverId!),
-        );
-      } else if (status == "completed" &&
-          currentRideModel.value?.paymentStatus == "pending") {
-        Get.offAll(
-          () => TripPaymentScreen(
-            rideId: currentRideModel.value?.id ?? "",
-            driverUserId: currentRideModel.value?.driverUserId ?? "",
-            reviews: currentRideModel.value?.reviews ?? Reviews(),
-          ),
-        );
-        return;
-      } else {
-        Get.offAll(() => const HomeScreen());
-      }
+      eachRideStatusScreen(
+        status: status,
+        isSchedule: isSchedule,
+        scheduleStatus: scheduleStatus,
+      );
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+
+  void eachRideStatusScreen({
+    required String status,
+    required bool isSchedule,
+    required String scheduleStatus,
+  }) {
+    if (scheduleStatus == "assigned" && isSchedule) {
+      Get.offAll(
+        () => TripDetailsScreen(
+          rideId: currentRideModel.value?.id ?? "",
+          driverId: currentRideModel.value?.driverUserId ?? "",
+        ),
+      );
+      return;
+    } else if (status == "pending") {
+      String fromLoactionName =
+          currentRideModel.value!.pickupLocation?.address ?? "";
+      String toLoactionName =
+          currentRideModel.value!.dropoffLocation?.address ?? "";
+      Get.to(
+        () => WaitingRideScreen(
+          fromLoactionName: fromLoactionName,
+          toLoactionName: toLoactionName,
+        ),
+      );
+      return;
+    } else if (status == "accepted" || status == "progress") {
+      Get.offAll(
+        () => TripDetailsScreen(
+          rideId: currentRideModel.value?.id ?? "",
+          driverId: currentRideModel.value?.driverUserId ?? "",
+        ),
+      );
+      return;
+    } else if (status == "completed" &&
+        currentRideModel.value?.paymentStatus == "paid" &&
+        currentRideModel.value?.rated == false) {
+      Get.offAll(
+        () => ReviewScreen(driverUserId: currentRideModel.value!.driverId!),
+      );
+    } else if (status == "completed" &&
+        currentRideModel.value?.paymentStatus == "pending") {
+      Get.offAll(
+        () => TripPaymentScreen(
+          rideId: currentRideModel.value?.id ?? "",
+          driverUserId: currentRideModel.value?.driverUserId ?? "",
+          reviews: currentRideModel.value?.reviews ?? Reviews(),
+        ),
+      );
+      return;
+    } else if (status == "panic") {
+      Get.offAll(
+        () => TripDetailsScreen(
+          rideId: currentRideModel.value?.id ?? "",
+          driverId: currentRideModel.value?.driverUserId ?? "",
+        ),
+      );
+      return;
+    } else {
+      Get.offAll(() => const HomeScreen());
     }
   }
 
@@ -814,6 +857,59 @@ class UserController extends GetxController {
     return null;
   }
 
+  Future<void> panicMode({required String rideId}) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+      final response = await _userService.panicMode(
+        token: token,
+        rideId: rideId,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return;
+      }
+      await refreshCurrentRide();
+      Get.back();
+      CustomSnackbar.showSuccessSnackBar(message);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
+  Future<void> reportDriver({required String rideId}) async {
+    isloading.value = true;
+    try {
+      final storageController = Get.find<StorageController>();
+      String? token = await storageController.getToken();
+      if (token == null || token.isEmpty) return;
+      final response = await _userService.reportDriver(
+        token: token,
+        rideId: rideId,
+      );
+      if (response == null) return;
+      final decoded = json.decode(response.body);
+      String message = decoded["message"];
+      if (response.statusCode != 200) {
+        CustomSnackbar.showErrorSnackBar(message);
+        return;
+      }
+      Get.back();
+      CustomSnackbar.showSuccessSnackBar(message);
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isloading.value = false;
+    }
+  }
+
   String getStatusTitle() {
     String title = "";
     String status = currentRideModel.value?.status ?? "";
@@ -829,6 +925,9 @@ class UserController extends GetxController {
         break;
       case "cancelled":
         title = "RIDE CANCELLED";
+        break;
+      case "panic":
+        title = "PANIC MODE";
         break;
       default:
         title = "RIDE PENDING";

@@ -130,17 +130,35 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     return const SizedBox.shrink();
                   }
                   String title = _userController.getStatusTitle();
+                  String status =
+                      _userController.currentRideModel.value?.status ?? "";
                   return Text(
                     title,
-                    style: TextStyle(color: AppColors.primaryColor),
+                    style: TextStyle(
+                      color:
+                          status == "panic"
+                              ? Colors.red
+                              : AppColors.primaryColor,
+                    ),
                   );
                 }),
-
-                CircleAvatar(
-                  radius: 10,
-                  backgroundColor: AppColors.primaryColor,
-                  child: const Icon(Icons.done, color: Colors.white, size: 12),
-                ),
+                Obx(() {
+                  if (_userController.isloading.value) {
+                    return const SizedBox.shrink();
+                  }
+                  String status =
+                      _userController.currentRideModel.value?.status ?? "";
+                  return CircleAvatar(
+                    radius: 10,
+                    backgroundColor:
+                        status == "panic" ? Colors.red : AppColors.primaryColor,
+                    child: const Icon(
+                      Icons.done,
+                      color: Colors.white,
+                      size: 12,
+                    ),
+                  );
+                }),
               ],
             ),
           ),
@@ -213,101 +231,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
               ),
               InkWell(
                 onTap: () async {
-                  // await _callController.callDriver(
-                  //   _driverUserModel.value.phoneNumber ?? "",
-                  // );
-                  // Get.to(()=> PanicModeScreen());
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25),
-                        ),
-                        child: Container(
-                          color: const Color.fromARGB(255, 24, 24, 24),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: const Icon(
-                                  Icons.call,
-                                  color: Colors.white,
-                                ),
-                                title: const Text(
-                                  "Call Driver",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onTap: () {
-                                  _callController.callDriver(
-                                    _driverUserModel.value.phoneNumber ?? "",
-                                  );
-                                  Get.back();
-                                },
-                              ),
-                              ListTile(
-                                leading: const Icon(
-                                  Icons.support_agent,
-                                  color: Colors.white,
-                                ),
-                                title: const Text(
-                                  "Contact Support",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onTap: () {
-                                  _callController.callDriver(
-                                    _driverUserModel.value.phoneNumber ?? "",
-                                  );
-                                  Get.back();
-                                },
-                              ),
-                              ListTile(
-                                leading: const Icon(
-                                  Icons.security,
-                                  color: Colors.red,
-                                ),
-                                title: const Text(
-                                  "Panic Mode",
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                                onTap: () {
-                                  Get.to(() => PanicModeScreen());
-                                  Get.back();
-                                },
-                              ),
-                              ListTile(
-                                leading: const Icon(
-                                  Icons.support_agent,
-                                  color: Colors.white,
-                                ),
-                                title: const Text(
-                                  "Rude Driver and attitude",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onTap: () {
-                                  Get.off(() => SupportScreen());
-                                },
-                              ),
-                              ListTile(
-                                leading: const Icon(
-                                  Icons.support_agent,
-                                  color: Colors.white,
-                                ),
-                                title: const Text(
-                                  "Car been hijacked",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                onTap: () {
-                                  Get.off(() => SupportScreen());
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                  displayEmergency();
                 },
                 child: Container(
                   height: 45,
@@ -407,6 +331,84 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<dynamic> displayEmergency() {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(25),
+            topRight: Radius.circular(25),
+          ),
+          child: Container(
+            color: const Color.fromARGB(255, 24, 24, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.call, color: Colors.white),
+                  title: const Text(
+                    "Call Driver",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    _callController.callDriver(
+                      _driverUserModel.value.phoneNumber ?? "",
+                    );
+                    Get.back();
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.support_agent, color: Colors.white),
+                  title: const Text(
+                    "Contact Support",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    Get.off(() => SupportScreen());
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.security, color: Colors.red),
+                  title: const Text(
+                    "Panic Mode",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                  onTap: () {
+                    Get.off(() => PanicModeScreen(rideId: widget.rideId));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.support_agent, color: Colors.white),
+                  title: Obx(
+                    () =>
+                        _userController.isloading.value
+                            ? LinearProgressIndicator(color: Colors.green)
+                            : const Text(
+                              "Rude Driver and attitude",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                  ),
+                  onTap: () async {
+                    await _userController.reportDriver(rideId: widget.rideId);
+                  },
+                ),
+                // ListTile(
+                //   leading: const Icon(Icons.dangerous, color: Colors.red),
+                //   title: const Text(
+                //     "Car been hijacked",
+                //     style: TextStyle(color: Colors.red),
+                //   ),
+                //   onTap: () {},
+                // ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

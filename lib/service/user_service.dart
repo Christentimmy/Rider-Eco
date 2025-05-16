@@ -10,16 +10,14 @@ import 'package:rider/widgets/snack_bar.dart';
 class UserService {
   http.Client client = http.Client();
 
-  Future<http.Response?> getUserStatus({
-    required String token,
-  }) async {
+  Future<http.Response?> getUserStatus({required String token}) async {
     try {
-      final response = await client.get(
-        Uri.parse('$baseUrl/user/user-status'),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-      ).timeout(const Duration(seconds: 9));
+      final response = await client
+          .get(
+            Uri.parse('$baseUrl/user/user-status'),
+            headers: {'Authorization': 'Bearer $token'},
+          )
+          .timeout(const Duration(seconds: 9));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
@@ -70,13 +68,15 @@ class UserService {
     required String userId,
   }) async {
     try {
-      final response = await client.get(
-        Uri.parse('$baseUrl/user/get-user-with-id/$userId'),
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
-        },
-      ).timeout(const Duration(seconds: 15));
+      final response = await client
+          .get(
+            Uri.parse('$baseUrl/user/get-user-with-id/$userId'),
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+          )
+          .timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
       CustomSnackbar.showErrorSnackBar("Check internet connection, $e");
@@ -108,22 +108,20 @@ class UserService {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
         },
-        body: jsonEncode(
-          {
-            "driverId": driverId,
-            "pickup_location": {
-              "lng": fromLocation.longitude,
-              "lat": fromLocation.latitude,
-              "address": fromLocationName,
-            },
-            "dropoff_location": {
-              "lat": toLocation.latitude,
-              "lng": toLocation.longitude,
-              "address": toLocationName,
-            },
-            "payment_method": paymentMethod.toLowerCase(),
+        body: jsonEncode({
+          "driverId": driverId,
+          "pickup_location": {
+            "lng": fromLocation.longitude,
+            "lat": fromLocation.latitude,
+            "address": fromLocationName,
           },
-        ),
+          "dropoff_location": {
+            "lat": toLocation.latitude,
+            "lng": toLocation.longitude,
+            "address": toLocationName,
+          },
+          "payment_method": paymentMethod.toLowerCase(),
+        }),
       );
       return response;
     } on SocketException catch (e) {
@@ -142,13 +140,15 @@ class UserService {
 
   Future<http.Response?> getUserDetails({required String token}) async {
     try {
-      final response = await client.get(
-        Uri.parse("$baseUrl/user/get-user-details"),
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
-        },
-      ).timeout(const Duration(seconds: 15));
+      final response = await client
+          .get(
+            Uri.parse("$baseUrl/user/get-user-details"),
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+          )
+          .timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
@@ -165,13 +165,15 @@ class UserService {
     required String id,
   }) async {
     try {
-      final response = await client.post(
-        Uri.parse("$baseUrl/user/save-signal-id/$id"),
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
-        },
-      ).timeout(const Duration(seconds: 15));
+      final response = await client
+          .post(
+            Uri.parse("$baseUrl/user/save-signal-id/$id"),
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+          )
+          .timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
@@ -189,12 +191,14 @@ class UserService {
   }) async {
     try {
       final response = await client
-          .put(Uri.parse('$baseUrl/user/ride/cancel-ride-request'),
-              headers: {
-                'Authorization': 'Bearer $token',
-                'Content-Type': 'application/json',
-              },
-              body: json.encode({'rideId': rideId}))
+          .put(
+            Uri.parse('$baseUrl/user/ride/cancel-ride-request'),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({'rideId': rideId}),
+          )
           .timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
@@ -264,13 +268,15 @@ class UserService {
     required String rideId,
   }) async {
     try {
-      final response = await client.get(
-        Uri.parse('$baseUrl/user/ride/get-fare-breakdown/$rideId'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      ).timeout(const Duration(seconds: 15));
+      final response = await client
+          .get(
+            Uri.parse('$baseUrl/user/ride/get-fare-breakdown/$rideId'),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+          )
+          .timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection: $e");
@@ -343,13 +349,15 @@ class UserService {
         },
       );
 
-      final response = await client.get(
-        uri,
-        headers: {
-          "Authorization": "Bearer $token",
-          "Content-Type": "application/json",
-        },
-      ).timeout(const Duration(seconds: 15));
+      final response = await client
+          .get(
+            uri,
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+          )
+          .timeout(const Duration(seconds: 15));
 
       return response;
     } on SocketException catch (e) {
@@ -382,13 +390,15 @@ class UserService {
         url += "&endDate=$endDate";
       }
       Uri uri = Uri.parse(url);
-      final response = await client.get(
-        uri,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      ).timeout(const Duration(seconds: 15));
+      final response = await client
+          .get(
+            uri,
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+          )
+          .timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
@@ -410,13 +420,15 @@ class UserService {
           if (status != null && status.isNotEmpty) "status": status,
         },
       );
-      final response = await client.get(
-        uri,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      ).timeout(const Duration(seconds: 15));
+      final response = await client
+          .get(
+            uri,
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+          )
+          .timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
@@ -482,13 +494,15 @@ class UserService {
 
   Future<http.Response?> getCurrentRide({required String token}) async {
     try {
-      final response = await http.get(
-        Uri.parse("$baseUrl/user/ride/get-current-ride"),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      ).timeout(const Duration(seconds: 15));
+      final response = await http
+          .get(
+            Uri.parse("$baseUrl/user/ride/get-current-ride"),
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+          )
+          .timeout(const Duration(seconds: 15));
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection $e");
@@ -513,10 +527,7 @@ class UserService {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
         },
-        body: jsonEncode({
-          "rating": rating,
-          "rideId": rideId,
-        }),
+        body: jsonEncode({"rating": rating, "rideId": rideId}),
       );
       return response;
     } on SocketException catch (e) {
@@ -558,7 +569,9 @@ class UserService {
     required String token,
   }) async {
     try {
-      final url = Uri.parse("$baseUrl/user/ride/cancelled-payment/$transactionId");
+      final url = Uri.parse(
+        "$baseUrl/user/ride/cancelled-payment/$transactionId",
+      );
       final response = await http.post(
         url,
         headers: {
@@ -571,6 +584,60 @@ class UserService {
       debugPrint("No internet connection $e");
     } on TimeoutException {
       debugPrint("Request timeout");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> panicMode({
+    required String token,
+    required String rideId,
+  }) async {
+    try {
+      final url = Uri.parse("$baseUrl/user/panic-mode");
+      final response = await http
+          .post(
+            url,
+            headers: {"Authorization": "Bearer $token"},
+            body: {"rideId": rideId},
+          )
+          .timeout(Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      CustomSnackbar.showErrorSnackBar("Check internet connection");
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      CustomSnackbar.showErrorSnackBar(
+        "Request timeout, probably bad network, try again",
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    return null;
+  }
+
+  Future<http.Response?> reportDriver({
+    required String token,
+    required String rideId,
+  }) async {
+    try {
+      final url = Uri.parse("$baseUrl/user/report-driver");
+      final response = await http
+          .post(
+            url,
+            headers: {"Authorization": "Bearer $token"},
+            body: {"rideId": rideId},
+          )
+          .timeout(Duration(seconds: 60));
+      return response;
+    } on SocketException catch (e) {
+      CustomSnackbar.showErrorSnackBar("Check internet connection");
+      debugPrint("No internet connection $e");
+    } on TimeoutException {
+      CustomSnackbar.showErrorSnackBar(
+        "Request timeout, probably bad network, try again",
+      );
     } catch (e) {
       debugPrint(e.toString());
     }
