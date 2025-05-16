@@ -31,8 +31,9 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
   final RxList<Map<String, dynamic>> _places = <Map<String, dynamic>>[].obs;
 
   void searchPlaces(String query) async {
-    List<Map<String, dynamic>> results =
-        await LocationService.searchPlaces(query);
+    List<Map<String, dynamic>> results = await LocationService.searchPlaces(
+      query,
+    );
     _places.value = results;
   }
 
@@ -49,10 +50,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15,
-              vertical: 30,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -66,10 +64,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
                       borderRadius: BorderRadius.circular(20),
                       color: Colors.black,
                     ),
-                    child: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                    ),
+                    child: const Icon(Icons.arrow_back, color: Colors.white),
                   ),
                 ),
                 SizedBox(height: Get.height * 0.03),
@@ -91,10 +86,7 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
                       color: AppColors.primaryColor,
                     ),
                   ),
-                  hintStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                  ),
+                  hintStyle: const TextStyle(color: Colors.black, fontSize: 15),
                   textController: _fromController,
                   bgColor: const Color(0xffDADADA),
                   prefixIcon: Icons.search,
@@ -118,53 +110,52 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
                       color: AppColors.primaryColor,
                     ),
                   ),
-                  hintStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                  ),
+                  hintStyle: const TextStyle(color: Colors.black, fontSize: 15),
                   textController: _searchController,
                   bgColor: const Color(0xffDADADA),
                   prefixIcon: Icons.search,
                 ),
                 const SizedBox(height: 10),
                 Obx(
-                  () => _places.isEmpty
-                      ? const SizedBox.shrink()
-                      : ListView.builder(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          itemCount: _places.length,
-                          itemBuilder: (context, index) {
-                            String title = _places[index]["name"];
-                            String lat = _places[index]["lat"];
-                            String lng = _places[index]["lon"];
-                            return ListTile(
-                              onTap: () {
-                                print(fromLocaion);
-                                print(_places);
-                                _searchController.clear();
-                                _searchController.text += title;
-                                _places.clear();
+                  () =>
+                      _places.isEmpty
+                          ? const SizedBox.shrink()
+                          : ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            itemCount: _places.length,
+                            itemBuilder: (context, index) {
+                              String title = _places[index]["name"] ?? "";
+                              String lat = _places[index]["lat"] ?? "";
+                              String lng = _places[index]["lon"] ?? "";
+                              if (title.isEmpty || lat.isEmpty || lng.isEmpty) {
+                                return const SizedBox.shrink();
+                              }
+                              return ListTile(
+                                onTap: () {
+                                  _searchController.clear();
+                                  _searchController.text += title;
+                                  _places.clear();
 
-                                fromLocaion = LatLng(
-                                  double.parse(lat),
-                                  double.parse(lng),
-                                );
+                                  fromLocaion = LatLng(
+                                    double.parse(lat),
+                                    double.parse(lng),
+                                  );
 
-                                _fromLocationName.value = title;
-                              },
-                              contentPadding: EdgeInsets.zero,
-                              leading: const Icon(Icons.timelapse_sharp),
-                              title: Text(
-                                title,
-                                style: const TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
+                                  _fromLocationName.value = title;
+                                },
+                                contentPadding: EdgeInsets.zero,
+                                leading: const Icon(Icons.timelapse_sharp),
+                                title: Text(
+                                  title,
+                                  style: const TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
+                              );
+                            },
+                          ),
                 ),
                 const SizedBox(height: 30),
                 CommonButton(
@@ -235,26 +226,26 @@ class _SoureDestinationScreenState extends State<SoureDestinationScreen> {
     );
   }
 
-  ListView _recentSearched() {
-    return ListView.builder(
-      itemCount: 1,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return const ListTile(
-          // onTap: () => Get.to(() => const FindARideScreen()),
-          contentPadding: EdgeInsets.zero,
-          leading: Icon(Icons.timelapse_sharp),
-          title: Text(
-            "Soft Bank",
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          // subtitle: const Text("364 Stillwater Ave. Attleboro, MA 027"),
-        );
-      },
-    );
-  }
+  // ListView _recentSearched() {
+  //   return ListView.builder(
+  //     itemCount: 1,
+  //     shrinkWrap: true,
+  //     physics: const NeverScrollableScrollPhysics(),
+  //     itemBuilder: (context, index) {
+  //       return const ListTile(
+  //         // onTap: () => Get.to(() => const FindARideScreen()),
+  //         contentPadding: EdgeInsets.zero,
+  //         leading: Icon(Icons.timelapse_sharp),
+  //         title: Text(
+  //           "Soft Bank",
+  //           style: TextStyle(
+  //             fontSize: 17,
+  //             fontWeight: FontWeight.bold,
+  //           ),
+  //         ),
+  //         // subtitle: const Text("364 Stillwater Ave. Attleboro, MA 027"),
+  //       );
+  //     },
+  //   );
+  // }
 }

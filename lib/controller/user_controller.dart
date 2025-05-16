@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+// import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rider/controller/storage_controller.dart';
@@ -19,9 +19,9 @@ import 'package:rider/pages/booking/review_screen.dart';
 import 'package:rider/pages/booking/trip_payment_screen.dart';
 import 'package:rider/pages/home/home_screen.dart';
 import 'package:rider/pages/home/trip_details_screen.dart';
-import 'package:rider/pages/home/trip_started_screen.dart';
 import 'package:rider/pages/home/waiting_ride_screen.dart';
 import 'package:rider/service/user_service.dart';
+import 'package:rider/utils/url_launcher.dart';
 import 'package:rider/widgets/snack_bar.dart';
 
 class UserController extends GetxController {
@@ -94,11 +94,14 @@ class UserController extends GetxController {
       }
       if (!isEmailVerified && !isPhoneNumberVerified) {
         CustomSnackbar.showErrorSnackBar("Your account email is not verified.");
-        Get.offAll(() => VerifyPhoneNumberScreen(
+        Get.offAll(
+          () => VerifyPhoneNumberScreen(
             email: email,
             nextScreenMethod: () {
               Get.offAll(() => const HomeScreen());
-            }));
+            },
+          ),
+        );
         return true;
       }
       if (!isProfileCompleted) {
@@ -146,9 +149,7 @@ class UserController extends GetxController {
     }
   }
 
-  Future<UserModel?> getUserById({
-    required String userId,
-  }) async {
+  Future<UserModel?> getUserById({required String userId}) async {
     isGetUserIdLoading.value = true;
     try {
       final storageController = Get.find<StorageController>();
@@ -259,9 +260,7 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> saveUserOneSignalId({
-    required String oneSignalId,
-  }) async {
+  Future<void> saveUserOneSignalId({required String oneSignalId}) async {
     try {
       final storageController = Get.find<StorageController>();
       String? token = await storageController.getToken();
@@ -283,9 +282,7 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> cancelRideRequest({
-    required String rideId,
-  }) async {
+  Future<void> cancelRideRequest({required String rideId}) async {
     isloading.value = true;
     try {
       final storageController = Get.find<StorageController>();
@@ -367,19 +364,20 @@ class UserController extends GetxController {
 
       if (response == null) return;
       final decoded = json.decode(response.body);
-      print(decoded);
       if (response.statusCode != 200) {
         CustomSnackbar.showErrorSnackBar(decoded["message"]);
         return;
       }
 
-      String clientSecret = decoded["paymentResult"]["clientSecret"];
-      await _presentStripePaymentSheet(
-        clientSecret: clientSecret,
-        reviews: reviews,
-        driverUserId: driverUserId,
-        transactionId: decoded["transactionId"],
-      );
+      String url = decoded["paymentResult"]["url"] ?? "";
+      print("URL: $url");
+      await launchStripeOnboarding(url);
+      // await _presentStripePaymentSheet(
+      //   clientSecret: clientSecret,
+      //   reviews: reviews,
+      //   driverUserId: driverUserId,
+      //   transactionId: decoded["transactionId"],
+      // );
       await fetchRideHistory();
       await getUserScheduledRides();
     } catch (e) {
@@ -389,41 +387,7 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> _presentStripePaymentSheet({
-    required String clientSecret,
-    required Reviews reviews,
-    required String driverUserId,
-    required String transactionId,
-  }) async {
-    try {
-      await Stripe.instance.initPaymentSheet(
-        paymentSheetParameters: SetupPaymentSheetParameters(
-          paymentIntentClientSecret: clientSecret,
-          style: ThemeMode.dark,
-          merchantDisplayName: 'SIM',
-        ),
-      );
-      await Stripe.instance.presentPaymentSheet();
-      CustomSnackbar.showSuccessSnackBar("Payment processing!");
-      getUserPaymentHistory();
-      Get.offAll(
-        () => ReviewScreen(driverUserId: driverUserId),
-      );
-    } on StripeException catch (e) {
-      if (e.error.localizedMessage?.toLowerCase().contains("canceled") ??
-          false) {
-        await cancelledPayment(transactionId: transactionId);
-
-        CustomSnackbar.showErrorSnackBar("Payment was canceled by user");
-      }
-    } catch (e) {
-      debugPrint("Stripe Payment Error: $e");
-    }
-  }
-
-  Future<void> cancelledPayment({
-    required String transactionId,
-  }) async {
+  Future<void> cancelledPayment({required String transactionId}) async {
     try {
       final storageController = Get.find<StorageController>();
       String? token = await storageController.getToken();
@@ -447,9 +411,7 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> getRideFareBreakDown({
-    required String rideId,
-  }) async {
+  Future<void> getRideFareBreakDown({required String rideId}) async {
     isRideBreakDownLoading.value = true;
     try {
       final storageController = Get.find<StorageController>();
@@ -565,7 +527,8 @@ class UserController extends GetxController {
       }
 
       userPaymentList.addAll(
-          payments.map((payment) => PaymentModel.fromJson(payment)).toList());
+        payments.map((payment) => PaymentModel.fromJson(payment)).toList(),
+      );
 
       this.totalPages.value = totalPages;
       this.currentPage.value = currentPage;
@@ -613,9 +576,7 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> scheduleRide({
-    required Map<String, dynamic> rideData,
-  }) async {
+  Future<void> scheduleRide({required Map<String, dynamic> rideData}) async {
     isScheduleLoading.value = true;
     try {
       final storageController = Get.find<StorageController>();
@@ -646,9 +607,7 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> cancelScheduleRide({
-    required String rideId,
-  }) async {
+  Future<void> cancelScheduleRide({required String rideId}) async {
     isScheduleLoading.value = true;
     try {
       final storageController = Get.find<StorageController>();
@@ -679,9 +638,7 @@ class UserController extends GetxController {
     }
   }
 
-  Future<void> fetchRideHistory({
-    String? status,
-  }) async {
+  Future<void> fetchRideHistory({String? status}) async {
     isloading.value = false;
     isloading.value = true;
     try {
@@ -724,7 +681,6 @@ class UserController extends GetxController {
       if (token == null || token.isEmpty) return;
 
       final response = await _userService.getCurrentRide(token: token);
-      print(response?.body);
       if (response == null) {
         Get.offAll(() => const HomeScreen());
         return;
@@ -745,6 +701,7 @@ class UserController extends GetxController {
       currentRideModel.value = Ride.fromJson(decoded["data"]);
       String scheduleStatus = currentRideModel.value?.scheduleStatus ?? "";
       bool isSchedule = currentRideModel.value?.isScheduled ?? false;
+      String status = currentRideModel.value?.status ?? "";
       if (scheduleStatus == "assigned" && isSchedule) {
         Get.offAll(
           () => TripDetailsScreen(
@@ -753,7 +710,7 @@ class UserController extends GetxController {
           ),
         );
         return;
-      } else if (currentRideModel.value?.status == "pending") {
+      } else if (status == "pending") {
         String fromLoactionName =
             currentRideModel.value!.pickupLocation?.address ?? "";
         String toLoactionName =
@@ -765,7 +722,7 @@ class UserController extends GetxController {
           ),
         );
         return;
-      } else if (currentRideModel.value?.status == "accepted") {
+      } else if (status == "accepted" || status == "progress") {
         Get.offAll(
           () => TripDetailsScreen(
             rideId: currentRideModel.value?.id ?? "",
@@ -773,30 +730,13 @@ class UserController extends GetxController {
           ),
         );
         return;
-      } else if (currentRideModel.value?.status == "progress") {
-        final fromLocation = LatLng(
-          currentRideModel.value?.pickupLocation?.lat ?? 0.0,
-          currentRideModel.value?.pickupLocation?.lng ?? 0.0,
-        );
-        final toLocation = LatLng(
-          currentRideModel.value?.dropoffLocation?.lat ?? 0.0,
-          currentRideModel.value?.dropoffLocation?.lng ?? 0.0,
-        );
-        Get.offAll(
-          () => TripStartedScreen(
-            fromLocation: fromLocation,
-            toLocation: toLocation,
-            rideId: currentRideModel.value?.id ?? "",
-          ),
-        );
-        return;
-      } else if (currentRideModel.value?.status == "completed" &&
+      } else if (status == "completed" &&
           currentRideModel.value?.paymentStatus == "paid" &&
           currentRideModel.value?.rated == false) {
         Get.offAll(
           () => ReviewScreen(driverUserId: currentRideModel.value!.driverId!),
         );
-      } else if (currentRideModel.value?.status == "completed" &&
+      } else if (status == "completed" &&
           currentRideModel.value?.paymentStatus == "pending") {
         Get.offAll(
           () => TripPaymentScreen(
@@ -845,9 +785,7 @@ class UserController extends GetxController {
     }
   }
 
-  Future<DriverModel?> getDriverWithId({
-    required String driverId,
-  }) async {
+  Future<DriverModel?> getDriverWithId({required String driverId}) async {
     isloading.value = true;
     try {
       final storageController = Get.find<StorageController>();
@@ -874,6 +812,29 @@ class UserController extends GetxController {
       isloading.value = false;
     }
     return null;
+  }
+
+  String getStatusTitle() {
+    String title = "";
+    String status = currentRideModel.value?.status ?? "";
+    switch (status) {
+      case "accepted":
+        title = "RIDE ACCEPTED";
+        break;
+      case "progress":
+        title = "RIDE STARTED";
+        break;
+      case "completed":
+        title = "RIDE COMPLETED";
+        break;
+      case "cancelled":
+        title = "RIDE CANCELLED";
+        break;
+      default:
+        title = "RIDE PENDING";
+        break;
+    }
+    return title;
   }
 
   void clearUserData() {

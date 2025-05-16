@@ -35,22 +35,25 @@ class _TripStartedScreenState extends State<TripStartedScreen> {
   }
 
   void _setMarkers() {
-    _markers.add(Marker(
-      markerId: const MarkerId("start"),
-      position: widget.fromLocation,
-      infoWindow: const InfoWindow(title: "Start Location"),
-    ));
-    _markers.add(Marker(
-      markerId: const MarkerId("end"),
-      position: widget.toLocation,
-      infoWindow: const InfoWindow(title: "End Location"),
-    ));
+    _markers.add(
+      Marker(
+        markerId: const MarkerId("start"),
+        position: widget.fromLocation,
+        infoWindow: const InfoWindow(title: "Start Location"),
+      ),
+    );
+    _markers.add(
+      Marker(
+        markerId: const MarkerId("end"),
+        position: widget.toLocation,
+        infoWindow: const InfoWindow(title: "End Location"),
+      ),
+    );
     setState(() {});
   }
 
   Future<void> _getPolyline() async {
-    print("From Location: ${widget.fromLocation}");
-    print("To Location: ${widget.toLocation}");
+    debugPrint("FromLocation: ${widget.fromLocation}");
     final String url =
         "https://us1.locationiq.com/v1/directions/driving/${widget.fromLocation.longitude},${widget.fromLocation.latitude};${widget.toLocation.longitude},${widget.toLocation.latitude}?key=pk.d074964679caaa4f8b75ed81cd6b038a&overview=full&geometries=geojson";
 
@@ -62,19 +65,23 @@ class _TripStartedScreenState extends State<TripStartedScreen> {
 
       var route = data["routes"][0]["geometry"]["coordinates"];
       for (var point in route) {
-        polylineCoordinates.add(
-          LatLng(point[1], point[0]),
-        );
+        polylineCoordinates.add(LatLng(point[1], point[0]));
       }
 
       setState(() {
-        _polylines.add(Polyline(
-          polylineId: const PolylineId("route"),
-          color: Colors.blue,
-          width: 5,
-          points: polylineCoordinates,
-        ));
+        _polylines.add(
+          Polyline(
+            polylineId: const PolylineId("route"),
+            color: Colors.blue,
+            width: 5,
+            points: polylineCoordinates,
+          ),
+        );
       });
+
+      debugPrint("PolyLines: $polylineCoordinates");
+    } else {
+      debugPrint("No routes found");
     }
   }
 
@@ -85,35 +92,33 @@ class _TripStartedScreenState extends State<TripStartedScreen> {
       floatingActionButton: CommonButton(
         width: Get.width / 1.5,
         ontap: () async {
-          await _userController.cancelTrip(
-            rideId: widget.rideId,
-          );
+          await _userController.cancelTrip(rideId: widget.rideId);
         },
         child: const Text(
           "Cancel Trip",
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontSize: 14, color: Colors.white),
         ),
       ),
       body: Obx(() {
+        LatLng driverLocation = _userController.driverLocation.value;
+        debugPrint("Driver Location: $driverLocation");
         if (_mapController != null) {
-          _mapController?.animateCamera(
-            CameraUpdate.newLatLng(_userController.driverLocation.value),
-          );
+          _mapController?.animateCamera(CameraUpdate.newLatLng(driverLocation));
         }
 
         return GoogleMap(
           initialCameraPosition: CameraPosition(
-            target: _userController.driverLocation.value,
-            zoom: 8,
+            target: driverLocation,
+            zoom: 14,
           ),
           mapType: MapType.hybrid,
           markers: {
             Marker(
               markerId: const MarkerId('driver'),
-              position: _userController.driverLocation.value,
+              position: driverLocation,
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                BitmapDescriptor.hueGreen,
+              ),
               infoWindow: const InfoWindow(title: 'Driver'),
             ),
           },
@@ -123,15 +128,6 @@ class _TripStartedScreenState extends State<TripStartedScreen> {
           },
         );
       }),
-      // body: GoogleMap(
-      //   mapType: MapType.hybrid,
-      //   initialCameraPosition: CameraPosition(
-      //     target: widget.fromLocation,
-      //     zoom: 15,
-      //   ),
-      //   markers: _markers,
-      //   polylines: _polylines,
-      // ),
     );
   }
 }

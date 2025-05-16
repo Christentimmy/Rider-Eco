@@ -92,24 +92,26 @@ class VehicleDocumentScreen extends StatelessWidget {
     );
   }
 
-  Container _buildBottomSheet() {
-    return Container(
-      height: 120,
-      alignment: Alignment.center,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(20),
-          topLeft: Radius.circular(20),
-        ),
-        color: Color.fromARGB(255, 22, 22, 22),
-      ),
-      child: CommonButton(
-        text: "Next",
-        ontap: () {
-          Get.to(() => VehichleDocumentScreen2());
-        },
-      ),
-    );
-  }
+  // Container _buildBottomSheet() {
+  //   return Container(
+  //     height: 120,
+  //     alignment: Alignment.center,
+  //     padding: const EdgeInsets.symmetric(horizontal: 20),
+  //     decoration: const BoxDecoration(
+  //       borderRadius: BorderRadius.only(
+  //         topRight: Radius.circular(20),
+  //         topLeft: Radius.circular(20),
+  //       ),
+  //       color: Color.fromARGB(255, 22, 22, 22),
+  //     ),
+  //     child: CommonButton(
+  //       text: "Next",
+  //       ontap: () {
+  //         Get.to(() => VehichleDocumentScreen2());
+  //       },
+  //     ),
+  //   );
+  // }
+
+
 }

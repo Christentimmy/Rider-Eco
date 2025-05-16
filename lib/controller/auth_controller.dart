@@ -22,12 +22,9 @@ class AuthController extends GetxController {
 
   Future<void> signUpUSer({required UserModel userModel}) async {
     isLoading.value = true;
-
     try {
       final response = await _authService.signUpUser(userModel: userModel);
       if (response == null) return;
-      print(response.body);
-      print(response.statusCode);
       final decoded = json.decode(response.body);
       var message = decoded["message"] ?? "";
       if (response.statusCode != 201) {
@@ -184,7 +181,8 @@ class AuthController extends GetxController {
       }
       await storageController.storeToken(token);
       await _userController.getUserDetails();
-      Get.offAll(() => const HomeScreen());
+      // Get.offAll(() => const HomeScreen());
+      await _userController.getCurrentRide();
     } catch (e) {
       debugPrint(e.toString());
     } finally {

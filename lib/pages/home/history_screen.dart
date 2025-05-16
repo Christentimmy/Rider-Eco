@@ -435,28 +435,29 @@ class ScheduleCard extends StatelessWidget {
     }
   }
 
-  // 📍 Location Row
-  Widget _locationRow(
-    IconData icon,
-    Color iconColor,
-    String location,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        children: [
-          Icon(icon, color: iconColor, size: 18),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Text(
-              location,
-              style: GoogleFonts.poppins(
-                  fontSize: 14, fontWeight: FontWeight.w500),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // // 📍 Location Row
+  // Widget _locationRow(
+  //   IconData icon,
+  //   Color iconColor,
+  //   String location,
+  // ) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 2),
+  //     child: Row(
+  //       children: [
+  //         Icon(icon, color: iconColor, size: 18),
+  //         const SizedBox(width: 6),
+  //         Expanded(
+  //           child: Text(
+  //             location,
+  //             style: GoogleFonts.poppins(
+  //                 fontSize: 14, fontWeight: FontWeight.w500),
+  //             overflow: TextOverflow.ellipsis,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
 }

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:rider/controller/user_controller.dart';
-import 'package:rider/pages/home/schedule_payment_screen.dart';
 import 'package:rider/service/location_service.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/custom_textfield.dart';
@@ -351,32 +350,32 @@ class CreateNewScheduleScreen extends StatelessWidget {
     );
   }
 
-  ListView _recentSearched() {
-    return ListView.builder(
-      itemCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return ListTile(
-          onTap: () => Get.to(() => SchedulePaymentScreen()),
-          contentPadding: EdgeInsets.zero,
-          leading: CircleAvatar(
-            radius: 18,
-            backgroundColor: Colors.grey.shade300,
-            child: const Icon(Icons.location_on_outlined),
-          ),
-          title: const Text(
-            "Soft Bank",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          subtitle: const Text("364 Stillwater Ave. Attleboro"),
-        );
-      },
-    );
-  }
+  // ListView _recentSearched() {
+  //   return ListView.builder(
+  //     itemCount: 2,
+  //     shrinkWrap: true,
+  //     physics: const NeverScrollableScrollPhysics(),
+  //     itemBuilder: (context, index) {
+  //       return ListTile(
+  //         onTap: () => Get.to(() => SchedulePaymentScreen()),
+  //         contentPadding: EdgeInsets.zero,
+  //         leading: CircleAvatar(
+  //           radius: 18,
+  //           backgroundColor: Colors.grey.shade300,
+  //           child: const Icon(Icons.location_on_outlined),
+  //         ),
+  //         title: const Text(
+  //           "Soft Bank",
+  //           style: TextStyle(
+  //             fontSize: 14,
+  //             fontWeight: FontWeight.w600,
+  //           ),
+  //         ),
+  //         subtitle: const Text("364 Stillwater Ave. Attleboro"),
+  //       );
+  //     },
+  //   );
+  // }
 
   AppBar _buildAppBar() {
     return AppBar(

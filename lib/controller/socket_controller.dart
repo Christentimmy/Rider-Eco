@@ -10,7 +10,6 @@ import 'package:rider/models/review_model.dart';
 import 'package:rider/models/ride_model.dart';
 import 'package:rider/pages/booking/trip_payment_screen.dart';
 import 'package:rider/pages/home/trip_details_screen.dart';
-import 'package:rider/pages/home/trip_started_screen.dart';
 import 'package:rider/utils/base_url.dart';
 import 'package:rider/widgets/snack_bar.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -64,15 +63,16 @@ class SocketController extends GetxController with WidgetsBindingObserver {
   }
 
   void listenToEvents() {
-    socket?.on("userDetails", (data) {
-      debugPrint(data.toString());
+    socket?.on("refresh", (data) async {
+      await _userController.getCurrentRide();
+      await _userController.getUserDetails();
+      await _userController.getUserPaymentHistory();
     });
 
     socket?.on('driverLocationUpdated', (data) {
       double lat = (data['lat'] as num).toDouble();
       double lng = (data['lng'] as num).toDouble();
       LatLng driverLocation = LatLng(lat, lng);
-      print('Driver location updated: $lat, $lng');
       _userController.driverLocation.value = driverLocation;
       _userController.driverLocation.refresh();
     });
@@ -84,7 +84,6 @@ class SocketController extends GetxController with WidgetsBindingObserver {
       if (message == "Driver has accepted your ride") {
         if (rideData != null && driverData != null) {
           String roomId = rideData["_id"];
-          print("Room ID: $roomId");
           DriverModel driver = DriverModel.fromJson(driverData);
           socket?.emit("joinRoom", {"roomId": roomId});
           Get.to(() => TripDetailsScreen(driver: driver, rideId: roomId));
@@ -95,20 +94,24 @@ class SocketController extends GetxController with WidgetsBindingObserver {
       if (message == "Your trip has started") {
         if (rideData != null) {
           final ride = Ride.fromJson(rideData);
-          final fromLocation = LatLng(
-            ride.pickupLocation!.lat,
-            ride.pickupLocation!.lng,
-          );
-          final toLocation = LatLng(
-            ride.dropoffLocation!.lat,
-            ride.dropoffLocation!.lng,
-          );
+          var driver = DriverModel.fromJson(driverData);
+          // final fromLocation = LatLng(
+          //   ride.pickupLocation!.lat,
+          //   ride.pickupLocation!.lng,
+          // );
+          // final toLocation = LatLng(
+          //   ride.dropoffLocation!.lat,
+          //   ride.dropoffLocation!.lng,
+          // );
+          // Get.to(
+          //   () => TripStartedScreen(
+          //     fromLocation: fromLocation,
+          //     toLocation: toLocation,
+          //     rideId: ride.id!,
+          //   ),
+          // );
           Get.to(
-            () => TripStartedScreen(
-              fromLocation: fromLocation,
-              toLocation: toLocation,
-              rideId: ride.id!,
-            ),
+            () => TripDetailsScreen(driver: driver, rideId: ride.id ?? ""),
           );
         } else {
           print("Error: Missing ride data");
@@ -173,6 +176,10 @@ class SocketController extends GetxController with WidgetsBindingObserver {
       socket?.off("driverLocationUpdated");
       socket?.off("tripStatus");
       socket?.off("rideCancelled");
+      socket?.off("schedule-status");
+      socket?.off("receiveMessage");
+      socket?.off("chat-history");
+      socket?.off("connect_error");
     }
   }
 
@@ -184,14 +191,8 @@ class SocketController extends GetxController with WidgetsBindingObserver {
     print('Socket disconnected and deleted');
   }
 
-  void sendMessage({
-    required String message,
-    required String rideId,
-  }) {
-    final payload = {
-      "rideId": rideId,
-      "message": message,
-    };
+  void sendMessage({required String message, required String rideId}) {
+    final payload = {"rideId": rideId, "message": message};
     socket?.emit('sendMessage', payload);
   }
 
@@ -203,10 +204,7 @@ class SocketController extends GetxController with WidgetsBindingObserver {
     socket?.emit("history", {"rideId": rideId});
   }
 
-  void markRead({
-    required String channedId,
-    required String messageId,
-  }) async {
+  void markRead({required String channedId, required String messageId}) async {
     socket?.emit("MARK_MESSAGE_READ", {
       "channel_id": channedId,
       "message_ids": [messageId],

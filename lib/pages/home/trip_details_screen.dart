@@ -7,6 +7,8 @@ import 'package:rider/models/driver_model.dart';
 import 'package:rider/models/user_model.dart';
 import 'package:rider/pages/chat/chat_screen.dart';
 import 'package:rider/pages/home/notifcation_screen.dart';
+import 'package:rider/pages/home/panic_mode_screen.dart';
+import 'package:rider/pages/home/support_screen.dart';
 import 'package:rider/resources/color_resources.dart';
 import 'package:rider/widgets/custom_button.dart';
 import 'package:rider/widgets/loader.dart';
@@ -116,31 +118,29 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
             margin: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                width: 1,
-                color: AppColors.primaryColor,
-              ),
+              border: Border.all(width: 1, color: AppColors.primaryColor),
               color: Colors.white,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "RIDE ACCEPTED",
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                  ),
-                ),
+                Obx(() {
+                  if (_userController.isloading.value) {
+                    return const SizedBox.shrink();
+                  }
+                  String title = _userController.getStatusTitle();
+                  return Text(
+                    title,
+                    style: TextStyle(color: AppColors.primaryColor),
+                  );
+                }),
+
                 CircleAvatar(
                   radius: 10,
                   backgroundColor: AppColors.primaryColor,
-                  child: const Icon(
-                    Icons.done,
-                    color: Colors.white,
-                    size: 12,
-                  ),
-                )
+                  child: const Icon(Icons.done, color: Colors.white, size: 12),
+                ),
               ],
             ),
           ),
@@ -175,22 +175,22 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     widget.driver?.reviews == null
                         ? const SizedBox.shrink()
                         : Row(
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                color: Colors.yellowAccent,
-                                size: 12,
+                          children: [
+                            const Icon(
+                              Icons.star,
+                              color: Colors.yellowAccent,
+                              size: 12,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              "${widget.driver?.reviews?.averageRating} ${widget.driver?.reviews?.totalRatings}",
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
                               ),
-                              const SizedBox(width: 5),
-                              Text(
-                                "${widget.driver?.reviews?.averageRating} ${widget.driver?.reviews?.totalRatings}",
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          )
+                            ),
+                          ],
+                        ),
                   ],
                 );
               }),
@@ -208,16 +208,105 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     borderRadius: BorderRadius.circular(15),
                     color: AppColors.primaryColor,
                   ),
-                  child: const Icon(
-                    Icons.message,
-                    color: Colors.white,
-                  ),
+                  child: const Icon(Icons.message, color: Colors.white),
                 ),
               ),
               InkWell(
                 onTap: () async {
-                  await _callController.callDriver(
-                    _driverUserModel.value.phoneNumber ?? "",
+                  // await _callController.callDriver(
+                  //   _driverUserModel.value.phoneNumber ?? "",
+                  // );
+                  // Get.to(()=> PanicModeScreen());
+                  showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          topRight: Radius.circular(25),
+                        ),
+                        child: Container(
+                          color: const Color.fromARGB(255, 24, 24, 24),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: const Icon(
+                                  Icons.call,
+                                  color: Colors.white,
+                                ),
+                                title: const Text(
+                                  "Call Driver",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onTap: () {
+                                  _callController.callDriver(
+                                    _driverUserModel.value.phoneNumber ?? "",
+                                  );
+                                  Get.back();
+                                },
+                              ),
+                              ListTile(
+                                leading: const Icon(
+                                  Icons.support_agent,
+                                  color: Colors.white,
+                                ),
+                                title: const Text(
+                                  "Contact Support",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onTap: () {
+                                  _callController.callDriver(
+                                    _driverUserModel.value.phoneNumber ?? "",
+                                  );
+                                  Get.back();
+                                },
+                              ),
+                              ListTile(
+                                leading: const Icon(
+                                  Icons.security,
+                                  color: Colors.red,
+                                ),
+                                title: const Text(
+                                  "Panic Mode",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                onTap: () {
+                                  Get.to(() => PanicModeScreen());
+                                  Get.back();
+                                },
+                              ),
+                              ListTile(
+                                leading: const Icon(
+                                  Icons.support_agent,
+                                  color: Colors.white,
+                                ),
+                                title: const Text(
+                                  "Rude Driver and attitude",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onTap: () {
+                                  Get.off(() => SupportScreen());
+                                },
+                              ),
+                              ListTile(
+                                leading: const Icon(
+                                  Icons.support_agent,
+                                  color: Colors.white,
+                                ),
+                                title: const Text(
+                                  "Car been hijacked",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                onTap: () {
+                                  Get.off(() => SupportScreen());
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
                 child: Container(
@@ -229,10 +318,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     borderRadius: BorderRadius.circular(15),
                     color: Colors.redAccent,
                   ),
-                  child: const Icon(
-                    Icons.call,
-                    color: Colors.white,
-                  ),
+                  child: const Icon(Icons.security, color: Colors.white),
                 ),
               ),
             ],
@@ -240,10 +326,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
           const SizedBox(height: 20),
           Row(
             children: [
-              const Icon(
-                Icons.location_on,
-                color: Colors.white,
-              ),
+              const Icon(Icons.location_on, color: Colors.white),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
@@ -258,26 +341,24 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     ),
                     Obx(
                       () => Text(
-                        _userController.currentRideModel.value?.pickupLocation
+                        _userController
+                                .currentRideModel
+                                .value
+                                ?.pickupLocation
                                 ?.address ??
                             "",
-                        style: TextStyle(
-                          color: AppColors.primaryColor,
-                        ),
+                        style: TextStyle(color: AppColors.primaryColor),
                       ),
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
           Divider(color: AppColors.primaryColor),
           Row(
             children: [
-              const Icon(
-                Icons.location_on,
-                color: Colors.white,
-              ),
+              const Icon(Icons.location_on, color: Colors.white),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
@@ -292,31 +373,30 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                     ),
                     Obx(
                       () => Text(
-                        _userController.currentRideModel.value?.dropoffLocation
+                        _userController
+                                .currentRideModel
+                                .value
+                                ?.dropoffLocation
                                 ?.address ??
                             "",
-                        style: TextStyle(
-                          color: AppColors.primaryColor,
-                        ),
+                        style: TextStyle(color: AppColors.primaryColor),
                       ),
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
           const SizedBox(height: 20),
           Obx(
             () => CommonButton(
-              child: _userController.isloading.value
-                  ? const CarLoader()
-                  : const Text(
-                      "Cancel Trip",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
+              child:
+                  _userController.isloading.value
+                      ? const CarLoader()
+                      : const Text(
+                        "Cancel Trip",
+                        style: TextStyle(fontSize: 15, color: Colors.white),
                       ),
-                    ),
               ontap: () async {
                 String? rideId = _userController.currentRideModel.value?.id;
                 await _userController.cancelTrip(
@@ -340,10 +420,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
             child: const CircleAvatar(
               radius: 20,
               backgroundColor: Colors.white,
-              child: Icon(
-                Icons.arrow_back,
-                size: 15,
-              ),
+              child: Icon(Icons.arrow_back, size: 15),
             ),
           ),
           const Spacer(),
@@ -359,10 +436,7 @@ class _TripDetailsScreenState extends State<TripDetailsScreen> {
                 color: AppColors.primaryColor,
                 borderRadius: BorderRadius.circular(4),
               ),
-              child: const Icon(
-                Icons.notifications_active,
-                size: 18,
-              ),
+              child: const Icon(Icons.notifications_active, size: 18),
             ),
           ),
         ],

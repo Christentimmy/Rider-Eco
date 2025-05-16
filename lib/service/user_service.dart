@@ -248,7 +248,6 @@ class UserService {
             body: jsonEncode({'rideId': rideId}),
           )
           .timeout(const Duration(seconds: 15));
-      print(response.body);
       return response;
     } on SocketException catch (e) {
       debugPrint("No internet connection: $e");
